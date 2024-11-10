@@ -10,6 +10,7 @@ A web application for exploring the intersection of science and poetry. This pla
 - User profiles and dashboards
 - Featured book showcase
 - Responsive design for all devices
+- Internationalization support (English and Chinese)
 
 ## Tech Stack
 
@@ -19,6 +20,7 @@ A web application for exploring the intersection of science and poetry. This pla
 - React Query for data fetching
 - React Router for navigation
 - Formik & Yup for form handling
+- i18next for internationalization
 - Axios for API requests
 
 ### Backend
@@ -37,6 +39,9 @@ scientism-poetry/
 │   │   ├── components/     # Reusable components
 │   │   ├── contexts/       # React contexts
 │   │   ├── hooks/         # Custom hooks
+│   │   ├── i18n/          # Internationalization
+│   │   │   ├── locales/   # Translation files
+│   │   │   └── i18n.js    # i18n configuration
 │   │   ├── pages/         # Page components
 │   │   ├── services/      # API services
 │   │   └── utils/         # Utility functions
@@ -65,46 +70,36 @@ git clone https://github.com/yourusername/scientism-poetry.git
 cd scientism-poetry
 ```
 
-2. Install backend dependencies:
+2. Run the setup script:
 ```bash
-cd backend
-npm install
+./setup.sh
 ```
 
-3. Install frontend dependencies:
+This will:
+- Install all dependencies
+- Create necessary environment files
+- Set up the development environment
+
+3. Start the development servers:
 ```bash
-cd ../frontend
-npm install
-```
-
-4. Create a `.env` file in the backend directory:
-```
-NODE_ENV=development
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/scientism-poetry
-JWT_SECRET=your_jwt_secret_key_here
-```
-
-5. Create a `.env` file in the frontend directory:
-```
-REACT_APP_API_URL=http://localhost:5000/api
-```
-
-### Running the Application
-
-1. Start the backend server:
-```bash
-cd backend
 npm run dev
 ```
 
-2. Start the frontend development server:
-```bash
-cd frontend
-npm start
-```
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend: http://localhost:5000
 
-The application will be available at `http://localhost:3000`
+## Internationalization
+
+The application supports multiple languages:
+- English (default)
+- Chinese (简体中文)
+
+To add a new language:
+1. Create a new translation file in `frontend/src/i18n/locales/[lang]/translation.json`
+2. Add the language to the supported languages list in `frontend/src/contexts/LanguageContext.js`
+
+Users can switch languages using the language selector in the navigation bar.
 
 ## API Documentation
 
