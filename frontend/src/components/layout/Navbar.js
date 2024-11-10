@@ -14,18 +14,23 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../contexts/AuthContext';
+import LanguageSwitcher from '../shared/LanguageSwitcher';
 
-const pages = [
-  { title: 'Home', path: '/' },
-  { title: 'About', path: '/about' },
-  { title: 'Book', path: '/book' },
-  { title: 'Poems', path: '/poems' },
-];
-
-const Navbar = ({ isAuthenticated, user, logout }) => {
+const Navbar = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { isAuthenticated, user, logout } = useAuth();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+
+  const pages = [
+    { title: t('nav.home'), path: '/' },
+    { title: t('nav.about'), path: '/about' },
+    { title: t('nav.book'), path: '/book' },
+    { title: t('nav.poems'), path: '/poems' },
+  ];
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -67,7 +72,7 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
               textDecoration: 'none',
             }}
           >
-            Scientism Poetry
+            {t('common.appName', 'Scientism Poetry')}
           </Typography>
 
           {/* Mobile Menu */}
@@ -101,7 +106,7 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
             >
               {pages.map((page) => (
                 <MenuItem
-                  key={page.title}
+                  key={page.path}
                   onClick={handleCloseNavMenu}
                   component={Link}
                   to={page.path}
@@ -127,14 +132,14 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
               textDecoration: 'none',
             }}
           >
-            Scientism Poetry
+            {t('common.appName', 'Scientism Poetry')}
           </Typography>
 
           {/* Desktop Menu */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page.title}
+                key={page.path}
                 component={Link}
                 to={page.path}
                 onClick={handleCloseNavMenu}
@@ -145,11 +150,16 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
             ))}
           </Box>
 
+          {/* Language Switcher */}
+          <Box sx={{ mr: 2 }}>
+            <LanguageSwitcher />
+          </Box>
+
           {/* User Menu */}
           <Box sx={{ flexGrow: 0 }}>
             {isAuthenticated ? (
               <>
-                <Tooltip title="Open settings">
+                <Tooltip title={t('nav.profile')}>
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar alt={user?.name} src="/static/images/avatar/2.jpg" />
                   </IconButton>
@@ -171,13 +181,13 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem component={Link} to="/dashboard" onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">Dashboard</Typography>
+                    <Typography textAlign="center">{t('nav.dashboard')}</Typography>
                   </MenuItem>
                   <MenuItem component={Link} to="/profile" onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">Profile</Typography>
+                    <Typography textAlign="center">{t('nav.profile')}</Typography>
                   </MenuItem>
                   <MenuItem onClick={handleLogout}>
-                    <Typography textAlign="center">Logout</Typography>
+                    <Typography textAlign="center">{t('nav.logout')}</Typography>
                   </MenuItem>
                 </Menu>
               </>
@@ -189,7 +199,7 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
                   variant="outlined"
                   sx={{ color: 'white', borderColor: 'white' }}
                 >
-                  Login
+                  {t('nav.login')}
                 </Button>
                 <Button
                   component={Link}
@@ -197,7 +207,7 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
                   variant="contained"
                   sx={{ bgcolor: 'secondary.main' }}
                 >
-                  Join Club
+                  {t('common.joinNow')}
                 </Button>
               </Box>
             )}
