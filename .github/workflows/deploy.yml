@@ -40,7 +40,7 @@ jobs:
       run: |
         mkdir -p ~/.ssh
         # Save the private key to a file and set permissions immediately
-        echo "${{ secrets.SSL_PRIVATE_KEY }}" > ~/.ssh/private.key
+        echo "${{ secrets.SSL_PRIVATE_KEY }}" | base64 -d > ~/.ssh/private.key
         chmod 600 ~/.ssh/private.key
         # Convert to OpenSSH format if needed
         ssh-keygen -p -N "" -m pem -f ~/.ssh/private.key
