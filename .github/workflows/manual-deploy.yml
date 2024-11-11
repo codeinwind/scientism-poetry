@@ -1,0 +1,71 @@
+name: Manual Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install Backend Dependencies
+      run: |
+        cd backend
+        npm ci
+
+    - name: Install Frontend Dependencies
+      run: |
+        cd frontend
+        npm ci
+
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm run build
+      env:
+        CI: false
+
+    - name: Deploy
+      env:
+        DEPLOY_KEY: ${{ secrets.VPS_SSH_KEY }}
+        DEPLOY_HOST: ${{ secrets.VPS_HOST }}
+        DEPLOY_USER: ${{ secrets.VPS_USER }}
+        DEPLOY_PATH: ${{ secrets.VPS_DEPLOY_PATH }}
+      run: |
+        # Setup SSH
+        mkdir -p ~/.ssh
+        echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+        echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+        # Deploy backend
+        rsync -avz -e "ssh -i ~/.ssh/deploy_key" \
+          --exclude 'node_modules' \
+          --exclude '.env' \
+          ./backend/ $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/backend/
+
+        # Deploy frontend build
+        rsync -avz -e "ssh -i ~/.ssh/deploy_key" \
+          ./frontend/build/ $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/frontend/build/
+
+        # Restart services
+        ssh -i ~/.ssh/deploy_key $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && ./deploy/setup-vps.sh"
