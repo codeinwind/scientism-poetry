@@ -90,7 +90,8 @@ fi
 
 # Create PM2 ecosystem file
 echo "Creating PM2 ecosystem file..."
-cat > ecosystem.config.js << EOL
+# First create the file in a temporary location
+cat > /tmp/ecosystem.config.js << EOL
 module.exports = {
   apps: [{
     name: 'scientism-poetry-backend',
@@ -106,6 +107,11 @@ module.exports = {
   }]
 };
 EOL
+
+# Move the file to the correct location with proper permissions
+sudo mv /tmp/ecosystem.config.js /var/www/scientism-poetry/ecosystem.config.js
+sudo chown $USER:$USER /var/www/scientism-poetry/ecosystem.config.js
+sudo chmod 644 /var/www/scientism-poetry/ecosystem.config.js
 
 # Setup PM2 startup script
 echo "Setting up PM2 startup script..."
