@@ -93,7 +93,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        key_path: ~/.ssh/id_rsa
         port: ${{ secrets.VPS_PORT }}
         source: "frontend/build/,backend/,deploy.sh"
         target: "/tmp/scientism-poetry-deploy"
@@ -104,7 +104,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        key_path: ~/.ssh/id_rsa
         port: ${{ secrets.VPS_PORT }}
         script: |
           cd /tmp/scientism-poetry-deploy
@@ -117,7 +117,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        key_path: ~/.ssh/id_rsa
         port: ${{ secrets.VPS_PORT }}
         script: |
           pm2 list
@@ -131,7 +131,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        key_path: ~/.ssh/id_rsa
         port: ${{ secrets.VPS_PORT }}
         script: |
           rm -rf /tmp/scientism-poetry-deploy
