@@ -90,6 +90,9 @@ jobs:
         mkdir -p /tmp/scientism-poetry-deploy
         cp -r frontend/build backend deploy.sh /tmp/scientism-poetry-deploy/
         
+        # Create the target directory on the remote server
+        ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} "mkdir -p /tmp/scientism-poetry-deploy"
+   
         # Use scp to copy files to the server
         scp -i ~/.ssh/id_rsa -P ${{ secrets.VPS_PORT }} -r /tmp/scientism-poetry-deploy/* ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/tmp/scientism-poetry-deploy/
         
