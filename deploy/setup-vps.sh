@@ -47,7 +47,7 @@ echo "Would you like to set up SSL now? (y/n)"
 read -r setup_ssl
 if [ "$setup_ssl" = "y" ]; then
     echo "Setting up SSL with Certbot..."
-    sudo certbot --nginx -d scientism-poetry.com -d www.scientism-poetry.com
+    sudo certbot --nginx -d scientismpoetry.com -d www.scientismpoetry.com
 fi
 
 # Create PM2 ecosystem file
