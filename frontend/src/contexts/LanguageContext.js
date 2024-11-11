@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const LanguageContext = createContext();
@@ -7,18 +7,18 @@ export const LanguageProvider = ({ children }) => {
   const { i18n } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
 
-  const changeLanguage = (language) => {
+  const changeLanguage = useCallback((language) => {
     i18n.changeLanguage(language);
     setCurrentLanguage(language);
     localStorage.setItem('language', language);
-  };
+  }, [i18n]);
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language');
     if (savedLanguage) {
       changeLanguage(savedLanguage);
     }
-  }, []);
+  }, [changeLanguage]);
 
   const value = {
     currentLanguage,

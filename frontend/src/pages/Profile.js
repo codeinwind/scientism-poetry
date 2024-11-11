@@ -10,7 +10,6 @@ import {
   Avatar,
   Divider,
   Alert,
-  CircularProgress,
   Card,
   CardContent,
 } from '@mui/material';

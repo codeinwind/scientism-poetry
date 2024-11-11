@@ -7,11 +7,6 @@ import {
   Button,
   Card,
   CardContent,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Divider,
 } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
