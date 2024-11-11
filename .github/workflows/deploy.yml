@@ -40,7 +40,7 @@ jobs:
       run: |
         mkdir -p ~/.ssh
         # Save the private key to a file and set permissions immediately
-        echo "${{ secrets.SSL_PRIVATE_KEY }}" | base64 -d > ~/.ssh/private.key
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/private.key
         chmod 600 ~/.ssh/private.key
         # Convert to OpenSSH format if needed
         ssh-keygen -p -N "" -m pem -f ~/.ssh/private.key
@@ -93,7 +93,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSL_PRIVATE_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.VPS_PORT }}
         source: "frontend/build/,backend/,deploy.sh"
         target: "/tmp/scientism-poetry-deploy"
@@ -104,7 +104,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSL_PRIVATE_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.VPS_PORT }}
         script: |
           cd /tmp/scientism-poetry-deploy
@@ -117,7 +117,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSL_PRIVATE_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.VPS_PORT }}
         script: |
           pm2 list
@@ -131,7 +131,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSL_PRIVATE_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.VPS_PORT }}
         script: |
           rm -rf /tmp/scientism-poetry-deploy
