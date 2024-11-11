@@ -5,6 +5,13 @@ set -e
 
 echo "Setting up VPS for Scientism Poetry deployment..."
 
+# Add MongoDB GPG key and repository
+echo "Adding MongoDB repository..."
+curl -fsSL https://pgp.mongodb.com/server-6.0.asc | \
+   sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg \
+   --dearmor
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+
 # Update system
 echo "Updating system packages..."
 sudo apt-get update
@@ -12,7 +19,12 @@ sudo apt-get upgrade -y
 
 # Install required packages
 echo "Installing required packages..."
-sudo apt-get install -y nginx nodejs npm mongodb certbot python3-certbot-nginx
+sudo apt-get install -y nginx nodejs npm mongodb-org certbot python3-certbot-nginx
+
+# Start MongoDB
+echo "Starting MongoDB..."
+sudo systemctl start mongod
+sudo systemctl enable mongod
 
 # Install PM2 globally
 echo "Installing PM2..."
