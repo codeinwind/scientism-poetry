@@ -40,13 +40,10 @@ jobs:
       run: |
         mkdir -p ~/.ssh
         # Save the private key to a file and set permissions immediately
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/private.key
-        chmod 600 ~/.ssh/private.key
-        # Convert to OpenSSH format if needed
-        ssh-keygen -p -N "" -m pem -f ~/.ssh/private.key
-        # Create proper id_rsa file
-        cp ~/.ssh/private.key ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/id_rsa       
         chmod 600 ~/.ssh/id_rsa
+        echo "$SSH_PRIVATE_KEY" | base64 -d > /tmp/deploy_key
+        chmod 600 /tmp/deploy_key
         # Clean up
         rm ~/.ssh/private.key
         # Add host to known_hosts
@@ -99,7 +96,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key_path: /home/runner/.ssh/id_rsa
+        key: "$(cat /tmp/deploy_key)"   # Pass the decoded key directly as a string
         port: ${{ secrets.VPS_PORT }}
         source: "frontend/build/,backend/,deploy.sh"
         target: "/tmp/scientism-poetry-deploy"
