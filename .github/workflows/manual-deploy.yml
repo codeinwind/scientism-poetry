@@ -25,31 +25,27 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18'
-        cache: 'npm'
 
     - name: Install Backend Dependencies
-      run: |
-        cd backend
-        npm ci
+      working-directory: ./backend
+      run: npm ci
 
     - name: Install Frontend Dependencies
-      run: |
-        cd frontend
-        npm ci
+      working-directory: ./frontend
+      run: npm ci
 
     - name: Build Frontend
-      run: |
-        cd frontend
-        npm run build
+      working-directory: ./frontend
+      run: npm run build
       env:
         CI: false
 
     - name: Deploy
       env:
-        DEPLOY_KEY: ${{ secrets.VPS_SSH_KEY }}
-        DEPLOY_HOST: ${{ secrets.VPS_HOST }}
-        DEPLOY_USER: ${{ secrets.VPS_USER }}
-        DEPLOY_PATH: ${{ secrets.VPS_DEPLOY_PATH }}
+        DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
       run: |
         # Setup SSH
         mkdir -p ~/.ssh
