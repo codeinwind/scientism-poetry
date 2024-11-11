@@ -66,17 +66,17 @@ if [ "$setup_ssl" = "y" ]; then
     # Prompt for certificate file paths
     echo "Please enter the path to your SSL certificate file (.crt):"
     read -r cert_path
-    echo "Please enter the path to your SSL private key file (.key):"
-    read -r key_path
+    echo "Please enter the path to your SSL private key file (.pem):"
+    read -r pem_path
     
     # Copy certificates to Nginx directory
-    if [ -f "$cert_path" ] && [ -f "$key_path" ]; then
+    if [ -f "$cert_path" ] && [ -f "$pem_path" ]; then
         sudo cp "$cert_path" /etc/nginx/ssl/scientism-poetry/certificate.crt
-        sudo cp "$key_path" /etc/nginx/ssl/scientism-poetry/private.key
+        sudo cp "$pem_path" /etc/nginx/ssl/scientism-poetry/private.pem
         
         # Set proper permissions
         sudo chmod 644 /etc/nginx/ssl/scientism-poetry/certificate.crt
-        sudo chmod 600 /etc/nginx/ssl/scientism-poetry/private.key
+        sudo chmod 600 /etc/nginx/ssl/scientism-poetry/private.pem
         
         echo "SSL certificates have been installed successfully!"
         
