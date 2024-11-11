@@ -75,11 +75,20 @@ cd scientism-poetry
 ```bash
 ./setup.sh
 ```
+This will:
+- Install all dependencies
+- Create necessary environment files
+- Set up the development environment
 
 3. Start the development servers:
 ```bash
 npm run dev
 ```
+
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend: http://localhost:5000
+
 
 ## Deployment
 
@@ -158,6 +167,29 @@ pm2 restart scientism-poetry-backend
 sudo tail -f /var/log/nginx/access.log
 sudo tail -f /var/log/nginx/error.log
 ```
+
+## Internationalization
+
+The application supports multiple languages:
+- English (default)
+- Chinese (简体中文)
+
+To add a new language:
+1. Create a new translation file in `frontend/src/i18n/locales/[lang]/translation.json`
+2. Add the language to the supported languages list in `frontend/src/contexts/LanguageContext.js`
+
+Users can switch languages using the language selector in the navigation bar.
+
+## API Documentation
+
+### Authentication Endpoints
+
+- POST `/api/auth/register` - Register a new user
+- POST `/api/auth/login` - Login user
+- GET `/api/auth/me` - Get current user
+- PUT `/api/auth/profile` - Update user profile
+
+### Poems Endpoints
 
 ### SSL Certificate Renewal
 ```bash
