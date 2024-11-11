@@ -40,7 +40,7 @@ jobs:
       run: |
         mkdir -p ~/.ssh
         # Decode the base64 key and store in environment
-        echo "DEPLOY_KEY=$(echo '${{ secrets.SSL_PRIVATE_KEY }}' | base64 -d)" >> $GITHUB_ENV
+        echo "DEPLOY_KEY=$(echo '${{ secrets.SSH_PRIVATE_KEY }}' | base64 -d)" >> $GITHUB_ENV
         ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
         chmod 600 ~/.ssh/known_hosts
 
