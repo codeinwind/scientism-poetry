@@ -54,6 +54,12 @@ jobs:
         chmod 600 ~/.ssh/known_hosts
         # Debug SSH setup
         ls -la ~/.ssh/
+    
+    - name: Verify SSH Access
+      run: |
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "echo 'SSH connection successful'"
+        # This step helps confirm that SSH can use the key without issues
+      
 
     # Create deployment script
     - name: Create deploy script
