@@ -44,8 +44,7 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         echo "$SSH_PRIVATE_KEY" | base64 -d > /tmp/deploy_key
         chmod 600 /tmp/deploy_key
-        # Clean up
-        rm ~/.ssh/private.key
+       
         # Add host to known_hosts
         ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
         chmod 600 ~/.ssh/known_hosts
