@@ -35,14 +35,20 @@ jobs:
         npm ci
         cd ..
 
-    # Setup SSH using the .crt and .pem files
+    # Setup SSH key
     - name: Setup SSH
       run: |
         mkdir -p ~/.ssh
-        # Create SSH key from the .pem file (private key)
-        echo "${{ secrets.SSL_PRIVATE_KEY }}" | base64 -d > ~/.ssh/id_rsa
-        # Set proper permissions
+        # Save the private key to a file
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/private.key
+        # Convert to OpenSSH format if needed
+        ssh-keygen -p -N "" -m pem -f ~/.ssh/private.key
+        # Create proper id_rsa file
+        cp ~/.ssh/private.key ~/.ssh/id_rsa
+        # Set correct permissions
         chmod 600 ~/.ssh/id_rsa
+        # Clean up
+        rm ~/.ssh/private.key
         # Add host to known_hosts
         ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
@@ -84,7 +90,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSL_PRIVATE_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.VPS_PORT }}
         source: "frontend/build/,backend/,deploy.sh"
         target: "/tmp/scientism-poetry-deploy"
@@ -95,7 +101,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSL_PRIVATE_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.VPS_PORT }}
         script: |
           cd /tmp/scientism-poetry-deploy
@@ -108,7 +114,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSL_PRIVATE_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.VPS_PORT }}
         script: |
           pm2 list
@@ -122,7 +128,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSL_PRIVATE_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.VPS_PORT }}
         script: |
           rm -rf /tmp/scientism-poetry-deploy
