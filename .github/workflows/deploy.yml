@@ -35,27 +35,14 @@ jobs:
         npm ci
         cd ..
 
-    # Setup SSH key
+    # Setup SSH and decode key
     - name: Setup SSH
       run: |
         mkdir -p ~/.ssh
-        # Save the private key to a file and set permissions immediately
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/id_rsa       
-        chmod 600 ~/.ssh/id_rsa
-        echo "$SSH_PRIVATE_KEY" | base64 -d > /tmp/deploy_key
-        chmod 600 /tmp/deploy_key
-       
-        # Add host to known_hosts
+        # Decode the base64 key and store in environment
+        echo "DEPLOY_KEY=$(echo '${{ secrets.SSL_PRIVATE_KEY }}' | base64 -d)" >> $GITHUB_ENV
         ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
         chmod 600 ~/.ssh/known_hosts
-        # Debug SSH setup
-        ls -la ~/.ssh/
-    
-    - name: Verify SSH Access
-      run: |
-        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} "echo 'SSH connection successful'"
-        # This step helps confirm that SSH can use the key without issues
-      
 
     # Create deployment script
     - name: Create deploy script
@@ -95,7 +82,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: "$(cat /tmp/deploy_key)"   # Pass the decoded key directly as a string
+        key: ${{ env.DEPLOY_KEY }}
         port: ${{ secrets.VPS_PORT }}
         source: "frontend/build/,backend/,deploy.sh"
         target: "/tmp/scientism-poetry-deploy"
@@ -106,7 +93,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key_path: /home/runner/.ssh/id_rsa
+        key: ${{ env.DEPLOY_KEY }}
         port: ${{ secrets.VPS_PORT }}
         script: |
           cd /tmp/scientism-poetry-deploy
@@ -119,7 +106,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key_path: /home/runner/.ssh/id_rsa
+        key: ${{ env.DEPLOY_KEY }}
         port: ${{ secrets.VPS_PORT }}
         script: |
           pm2 list
@@ -133,7 +120,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key_path: /home/runner/.ssh/id_rsa
+        key: ${{ env.DEPLOY_KEY }}
         port: ${{ secrets.VPS_PORT }}
         script: |
           rm -rf /tmp/scientism-poetry-deploy
