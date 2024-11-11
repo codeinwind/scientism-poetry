@@ -54,12 +54,38 @@ sudo nginx -t
 echo "Restarting Nginx..."
 sudo systemctl restart nginx
 
-# Setup SSL with Certbot
-echo "Would you like to set up SSL now? (y/n)"
+# Setup SSL certificates
+echo "Would you like to set up SSL certificates now? (y/n)"
 read -r setup_ssl
 if [ "$setup_ssl" = "y" ]; then
-    echo "Setting up SSL with Certbot..."
-    sudo certbot --nginx -d scientismpoetry.com -d www.scientismpoetry.com
+    echo "Setting up SSL certificates..."
+    
+    # Create SSL certificate directory if it doesn't exist
+    sudo mkdir -p /etc/nginx/ssl/scientism-poetry
+    
+    # Prompt for certificate file paths
+    echo "Please enter the path to your SSL certificate file (.crt):"
+    read -r cert_path
+    echo "Please enter the path to your SSL private key file (.key):"
+    read -r key_path
+    
+    # Copy certificates to Nginx directory
+    if [ -f "$cert_path" ] && [ -f "$key_path" ]; then
+        sudo cp "$cert_path" /etc/nginx/ssl/scientism-poetry/certificate.crt
+        sudo cp "$key_path" /etc/nginx/ssl/scientism-poetry/private.key
+        
+        # Set proper permissions
+        sudo chmod 644 /etc/nginx/ssl/scientism-poetry/certificate.crt
+        sudo chmod 600 /etc/nginx/ssl/scientism-poetry/private.key
+        
+        echo "SSL certificates have been installed successfully!"
+        
+        # Restart Nginx to apply SSL changes
+        sudo systemctl restart nginx
+    else
+        echo "Error: Certificate files not found. Please check the paths and try again."
+        exit 1
+    fi
 fi
 
 # Create PM2 ecosystem file
