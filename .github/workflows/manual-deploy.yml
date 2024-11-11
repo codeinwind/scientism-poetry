@@ -40,10 +40,10 @@ jobs:
 
     - name: Deploy
       env:
-        DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-        DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-        DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-        DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        DEPLOY_KEY: ${{ secrets.VPS_SSH_KEY }}
+        DEPLOY_HOST: ${{ secrets.VPS_HOST }}
+        DEPLOY_USER: ${{ secrets.VPS_USERNAME }}
+        DEPLOY_PATH: ${{ secrets.VPS_DEPLOY_PATH }}
       run: |
         # Setup SSH
         mkdir -p ~/.ssh
