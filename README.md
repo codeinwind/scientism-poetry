@@ -11,6 +11,7 @@ A web application for exploring the intersection of science and poetry. This pla
 - Featured book showcase
 - Responsive design for all devices
 - Internationalization support (English and Chinese)
+- Automated deployment to GoDaddy VPS
 
 ## Tech Stack
 
@@ -30,6 +31,12 @@ A web application for exploring the intersection of science and poetry. This pla
 - JWT for authentication
 - Express Validator for input validation
 
+### DevOps
+- GitHub Actions for CI/CD
+- Nginx for reverse proxy
+- PM2 for process management
+- Certbot for SSL
+
 ## Project Structure
 
 ```
@@ -40,29 +47,23 @@ scientism-poetry/
 │   │   ├── contexts/       # React contexts
 │   │   ├── hooks/         # Custom hooks
 │   │   ├── i18n/          # Internationalization
-│   │   │   ├── locales/   # Translation files
-│   │   │   └── i18n.js    # i18n configuration
 │   │   ├── pages/         # Page components
 │   │   ├── services/      # API services
 │   │   └── utils/         # Utility functions
 │   └── public/            # Static files
 │
-└── backend/               # Node.js backend application
-    ├── config/           # Configuration files
-    ├── middleware/       # Express middleware
-    ├── models/          # Mongoose models
-    └── routes/          # API routes
+├── backend/               # Node.js backend application
+│   ├── config/           # Configuration files
+│   ├── middleware/       # Express middleware
+│   ├── models/          # Mongoose models
+│   └── routes/          # API routes
+│
+└── deploy/              # Deployment configuration
+    ├── nginx.conf       # Nginx configuration
+    └── setup-vps.sh     # VPS setup script
 ```
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v14 or higher)
-- MongoDB
-- npm or yarn
-
-### Installation
+## Development Setup
 
 1. Clone the repository:
 ```bash
@@ -74,7 +75,6 @@ cd scientism-poetry
 ```bash
 ./setup.sh
 ```
-
 This will:
 - Install all dependencies
 - Create necessary environment files
@@ -88,6 +88,85 @@ npm run dev
 The application will be available at:
 - Frontend: http://localhost:3000
 - Backend: http://localhost:5000
+
+
+## Deployment
+
+### Prerequisites
+
+1. A GoDaddy VPS server
+2. Domain name pointing to your VPS
+3. GitHub repository secrets configured:
+   - `VPS_HOST`: Your VPS IP address
+   - `VPS_USERNAME`: SSH username
+   - `VPS_SSH_KEY`: SSH private key
+   - `VPS_PORT`: SSH port (usually 22)
+   - `REACT_APP_API_URL`: Backend API URL
+
+### Initial VPS Setup
+
+1. SSH into your VPS
+2. Clone the repository
+3. Run the VPS setup script:
+```bash
+cd scientism-poetry/deploy
+chmod +x setup-vps.sh
+./setup-vps.sh
+```
+
+### GitHub Actions Deployment
+
+The project uses GitHub Actions for automated deployment. When you push to the master branch, it will:
+
+1. Build the frontend
+2. Prepare the backend
+3. Deploy both to the VPS
+4. Restart services
+
+To deploy manually:
+
+1. Push your changes to master:
+```bash
+git push origin master
+```
+
+2. Monitor the deployment:
+   - Go to GitHub repository
+   - Click "Actions" tab
+   - Watch the deployment progress
+
+### Environment Variables
+
+#### Backend (.env)
+```
+NODE_ENV=production
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/scientism-poetry
+JWT_SECRET=your_jwt_secret
+```
+
+#### Frontend (.env)
+```
+REACT_APP_API_URL=https://your-domain.com/api
+```
+
+## Monitoring and Maintenance
+
+### View Backend Logs
+```bash
+pm2 logs scientism-poetry-backend
+```
+
+### Restart Backend
+```bash
+pm2 restart scientism-poetry-backend
+```
+
+### View Nginx Logs
+```bash
+sudo tail -f /var/log/nginx/access.log
+sudo tail -f /var/log/nginx/error.log
+```
 
 ## Internationalization
 
@@ -112,13 +191,10 @@ Users can switch languages using the language selector in the navigation bar.
 
 ### Poems Endpoints
 
-- GET `/api/poems` - Get all poems
-- GET `/api/poems/:id` - Get single poem
-- POST `/api/poems` - Create new poem
-- PUT `/api/poems/:id` - Update poem
-- DELETE `/api/poems/:id` - Delete poem
-- POST `/api/poems/:id/like` - Like/unlike poem
-- POST `/api/poems/:id/comments` - Add comment to poem
+### SSL Certificate Renewal
+```bash
+sudo certbot renew
+```
 
 ## Contributing
 
@@ -127,6 +203,20 @@ Users can switch languages using the language selector in the navigation bar.
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+## Troubleshooting
+
+### Deployment Issues
+1. Check GitHub Actions logs for errors
+2. Verify VPS connectivity
+3. Check PM2 logs: `pm2 logs`
+4. Check Nginx logs: `sudo nginx -t`
+
+### Common Solutions
+- Restart Nginx: `sudo systemctl restart nginx`
+- Restart PM2: `pm2 restart all`
+- Check disk space: `df -h`
+- Check MongoDB status: `sudo systemctl status mongodb`
 
 ## License
 

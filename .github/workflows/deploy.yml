@@ -1,0 +1,118 @@
+name: Deploy to GoDaddy VPS
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    # Install dependencies and build frontend
+    - name: Build Frontend
+      env:
+        REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+      run: |
+        cd frontend
+        npm ci
+        npm run build
+        cd ..
+
+    # Install dependencies for backend
+    - name: Prepare Backend
+      run: |
+        cd backend
+        npm ci
+        cd ..
+
+    # Create deployment script
+    - name: Create deploy script
+      run: |
+        echo '#!/bin/bash
+        
+        # Stop existing PM2 processes
+        pm2 stop scientism-poetry-backend || true
+        pm2 delete scientism-poetry-backend || true
+
+        # Remove old backend files
+        rm -rf /var/www/scientism-poetry/backend/*
+
+        # Copy new backend files
+        cp -r ./backend/* /var/www/scientism-poetry/backend/
+
+        # Install backend dependencies
+        cd /var/www/scientism-poetry/backend
+        npm ci --production
+
+        # Start backend with PM2
+        pm2 start server.js --name scientism-poetry-backend
+
+        # Remove old frontend files
+        rm -rf /var/www/scientism-poetry/frontend/*
+
+        # Copy new frontend files
+        cp -r ./frontend/build/* /var/www/scientism-poetry/frontend/
+
+        # Reload Nginx
+        sudo systemctl reload nginx' > deploy.sh
+        chmod +x deploy.sh
+
+    # Deploy to VPS using SSH
+    - name: Deploy to VPS
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: ${{ secrets.VPS_PORT }}
+        source: "frontend/build/,backend/,deploy.sh"
+        target: "/tmp/scientism-poetry-deploy"
+
+    # Execute deployment script
+    - name: Execute deploy script
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: ${{ secrets.VPS_PORT }}
+        script: |
+          cd /tmp/scientism-poetry-deploy
+          sudo ./deploy.sh
+          rm -rf /tmp/scientism-poetry-deploy
+
+    # Verify deployment
+    - name: Verify deployment
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: ${{ secrets.VPS_PORT }}
+        script: |
+          pm2 list
+          curl -s http://localhost:5000/api/health
+          echo "Deployment verification complete"
+
+    # Cleanup
+    - name: Cleanup
+      if: always()
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: ${{ secrets.VPS_PORT }}
+        script: |
+          rm -rf /tmp/scientism-poetry-deploy
