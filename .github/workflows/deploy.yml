@@ -57,7 +57,7 @@ jobs:
     
     - name: Verify SSH Access
       run: |
-        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "echo 'SSH connection successful'"
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} "echo 'SSH connection successful'"
         # This step helps confirm that SSH can use the key without issues
       
 
