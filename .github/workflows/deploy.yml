@@ -90,17 +90,27 @@ jobs:
         mkdir -p /tmp/scientism-poetry-deploy
         cp -r frontend/build backend deploy.sh /tmp/scientism-poetry-deploy/
         
+        # Create remote directory using SSH
+        ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} 'mkdir -p /tmp/scientism-poetry-deploy'
+
         # Use scp to copy files to the server
         scp -i ~/.ssh/id_rsa -P ${{ secrets.VPS_PORT }} -r /tmp/scientism-poetry-deploy/* ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/tmp/scientism-poetry-deploy/
         
+        # Verify files were copied correctly
+        ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} '
+          echo "Verifying deployed files:" &&
+          ls -la /tmp/scientism-poetry-deploy/ &&
+          echo "Checking deploy script:" &&
+          cat /tmp/scientism-poetry-deploy/deploy.sh &&
+          echo "Checking backend files:" &&
+          ls -la /tmp/scientism-poetry-deploy/backend/ &&
+          echo "Checking frontend files:" &&
+          ls -la /tmp/scientism-poetry-deploy/frontend/build/
+        '
+        
         # Clean up local temporary directory
         rm -rf /tmp/scientism-poetry-deploy
-    
-    # Confirm files on remote server
-    - name: Verify Files on VPS
-      run: |
-        ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} "ls -la /tmp/scientism-poetry-deploy"
-      
+
     # Execute deployment script
     - name: Execute deploy script
       run: |
