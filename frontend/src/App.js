@@ -24,7 +24,6 @@ import TitleUpdater from './components/shared/TitleUpdater';
 // Pages
 import Home from './pages/Home';
 import About from './pages/About';
-import Book from './pages/Book';
 import Poems from './pages/Poems';
 import Login from './pages/Login';
 import Register from './pages/Register';

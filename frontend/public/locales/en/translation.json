@@ -36,6 +36,36 @@
     "profile": "Profile",
     "logout": "Logout"
   },
+  "about": {
+    "title": "About Scientism Poetry",
+    "subtitle": "Where Scientific Understanding Meets Poetic Expression",
+    "whatIs": {
+      "title": "What is Scientism Poetry?",
+      "description1": "Scientism Poetry is a unique form of artistic expression that bridges the gap between scientific understanding and poetic creativity. It seeks to explore and explain scientific concepts, discoveries, and phenomena through the lens of poetry.",
+      "description2": "Our poets combine technical accuracy with creative metaphors, making complex scientific ideas accessible and emotionally resonant for readers of all backgrounds.",
+      "readButton": "Read Our Poems"
+    },
+    "mission": {
+      "title": "Our Mission",
+      "promote": {
+        "title": "Promote Scientific Understanding",
+        "description": "Make scientific concepts more accessible and engaging through creative expression and poetic interpretation."
+      },
+      "foster": {
+        "title": "Foster Creativity",
+        "description": "Encourage poets to explore scientific themes in their work and develop unique ways to communicate complex ideas."
+      },
+      "build": {
+        "title": "Build Community",
+        "description": "Create a space for like-minded individuals to share their work and passion for both science and poetry."
+      }
+    },
+    "join": {
+      "title": "Join Our Community",
+      "description": "Become part of our growing community of poets and science enthusiasts. Share your work, participate in workshops, and connect with others who share your passion.",
+      "button": "Join Now"
+    }
+  },
   "home": {
     "hero": {
       "title": "Where Science Meets Poetry",
@@ -61,40 +91,6 @@
       "publish": {
         "title": "Get Published",
         "description": "Submit your poems for our monthly featured collection and get a chance to be published in our upcoming anthologies."
-      }
-    }
-  },
-  "association": {
-    "welcome": {
-      "title": "Join the International Scientism Poetry Association",
-      "intro": "Join the International Scientism Poetry Association and become part of a global community filled with creativity and passion, dedicated to combining scientific rationality with poetic artistic expression. The association aims to explore the infinite possibilities of scientism poetry through diverse creation and exchange, promoting the deep integration of science and art. Here are important reasons to join:",
-      "reasons": {
-        "1": "Creation and Display Platform: The association provides an exclusive platform for members to share and showcase their original poems in the 'Poems' section, receive feedback from other members, and continuously improve their creative skills.",
-        "2": "Diverse Activities: Members can participate in various events organized by the association, such as poetry competitions, international recitation events, creative workshops, and interdisciplinary seminars, broadening horizons and inspiring creativity.",
-        "3": "Association Journal 'Cosmic Poetry': Members' works will have priority publication in the association's journal 'Cosmic Poetry'. This journal showcases excellent scientism poetry works and creative theories, providing interdisciplinary inspiration and rich thinking resources.",
-        "4": "Canadian Beaver Press: The association collaborates with Canadian Beaver Press to publish scientism poetry and related books. Members enjoy priority publishing opportunities and exclusive preferential policies.",
-        "5": "Global Network: Upon joining, you'll become part of the international scientism poetry network, establishing connections with global members and engaging in cross-cultural, interdisciplinary exchanges.",
-        "6": "Interdisciplinary Exchange: The association is committed to promoting the combination of science and art. Members have opportunities to engage in deep discussions with scientists, artists, and experts from other fields.",
-        "7": "Personal Development: Participating in association activities and exchanges will enhance your writing skills, critical thinking, and interdisciplinary understanding."
-      },
-      "conclusion": "Join the International Scientism Poetry Association, experience the rich inspiration and creativity brought by the interweaving of science and art, and become an important member in promoting the global spread and development of scientism poetry."
-    },
-    "cards": {
-      "purpose": {
-        "title": "Purpose",
-        "content": "The International Scientism Poetry Association is a non-profit organization registered in Canada, dedicated to promoting scientism poetry globally. The association aims to foster deep integration between science and literary arts, gathering poets, scientists, writers, and enthusiasts passionate about the intersection of science and art from around the world."
-      },
-      "mission": {
-        "title": "Mission",
-        "content": "The association's core mission is to spread scientism poetry internationally, allowing more people to experience the beauty and profundity of science. We organize diverse activities, including global poetry competitions, international recitation events, interdisciplinary seminars, and creative workshops."
-      },
-      "publishing": {
-        "title": "Publishing",
-        "content": "The association is committed to publishing books and journals related to scientism poetry, showcasing members' excellent works, creative methods, and theoretical research. Publications include modern poetry, analysis of historical classics, and exploration of science-literature integration."
-      },
-      "vision": {
-        "title": "Vision",
-        "content": "The International Scientism Poetry Association believes that science and art are not separate poles but can achieve deep resonance through poetry, jointly pursuing truth and aesthetic sense. We advocate using scientism poetry to awaken public interest in science, transforming it from serious laboratory knowledge into a cultural experience full of emotion and artistic value."
       }
     }
   },
