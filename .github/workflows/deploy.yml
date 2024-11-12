@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,8 +18,8 @@ jobs:
       with:
         node-version: '18'
 
-    # Install dependencies and build frontend
-    - name: Build Frontend
+    # Test build on GitHub Actions
+    - name: Test Frontend Build
       env:
         REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
       run: |
@@ -28,14 +28,14 @@ jobs:
         npm run build
         cd ..
 
-    # Install dependencies for backend
-    - name: Prepare Backend
+    # Test backend
+    - name: Test Backend
       run: |
         cd backend
         npm ci
         cd ..
 
-    # Setup SSH and decode key
+    # Setup SSH
     - name: Setup SSH
       run: |
         mkdir -p ~/.ssh
@@ -51,88 +51,49 @@ jobs:
         ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
         chmod 600 ~/.ssh/known_hosts
 
-    # Create deployment script
-    - name: Create deploy script
-      run: |
-        echo '#!/bin/bash
-        
-        # Stop existing PM2 processes
-        pm2 stop scientism-poetry-backend || true
-        pm2 delete scientism-poetry-backend || true
-
-        # Remove old backend files
-        rm -rf /var/www/scientism-poetry/backend/*
-
-        # Copy new backend files
-        cp -r ./backend/* /var/www/scientism-poetry/backend/
-
-        # Install backend dependencies
-        cd /var/www/scientism-poetry/backend
-        npm ci --production
-
-        # Start backend with PM2
-        pm2 start server.js --name scientism-poetry-backend
-
-        # Remove old frontend files
-        rm -rf /var/www/scientism-poetry/frontend/*
-
-        # Copy new frontend files
-        cp -r ./frontend/build/* /var/www/scientism-poetry/frontend/
-
-        # Reload Nginx
-        sudo systemctl reload nginx' > deploy.sh
-        chmod +x deploy.sh
-
-    # Deploy to VPS using SSH
+    # Deploy to VPS
     - name: Deploy to VPS
       run: |
-        # Create a temporary directory for deployment
-        mkdir -p /tmp/scientism-poetry-deploy
-        cp -r frontend/build backend deploy.sh /tmp/scientism-poetry-deploy/
-        
-        # Create remote directory using SSH
-        ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} 'mkdir -p /tmp/scientism-poetry-deploy'
-
-        # Use scp to copy files to the server
-        scp -i ~/.ssh/id_rsa -P ${{ secrets.VPS_PORT }} -r /tmp/scientism-poetry-deploy/* ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/tmp/scientism-poetry-deploy/
-        
-        # Verify files were copied correctly
         ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} '
-          echo "Verifying deployed files:" &&
-          ls -la /tmp/scientism-poetry-deploy/ &&
-          echo "Checking deploy script:" &&
-          cat /tmp/scientism-poetry-deploy/deploy.sh &&
-          echo "Checking backend files:" &&
-          ls -la /tmp/scientism-poetry-deploy/backend/ &&
-          echo "Checking frontend files:" &&
-          ls -la /tmp/scientism-poetry-deploy/frontend/build/
-        '
-        
-        # Clean up local temporary directory
-        rm -rf /tmp/scientism-poetry-deploy
+          # Navigate to project directory
+          cd /var/www/scientism-poetry &&
 
-    # Execute deployment script
-    - name: Execute deploy script
-      run: |
-        ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} '
-          cd /tmp/scientism-poetry-deploy && 
-          sudo ./deploy.sh &&
-          rm -rf /tmp/scientism-poetry-deploy
+          # Pull latest changes
+          git pull origin master &&
+
+          # Build frontend
+          echo "Building frontend..." &&
+          cd frontend &&
+          npm ci &&
+          npm run build &&
+          cd .. &&
+
+          # Build and restart backend
+          echo "Building backend..." &&
+          cd backend &&
+          npm ci --production &&
+          
+          # Stop existing PM2 processes
+          pm2 stop scientism-poetry-backend || true &&
+          pm2 delete scientism-poetry-backend || true &&
+          
+          # Start with PM2
+          pm2 start server.js --name scientism-poetry-backend &&
+          cd .. &&
+
+          # Reload Nginx
+          sudo systemctl reload nginx &&
+
+          echo "Deployment completed successfully!"
         '
 
     # Verify deployment
     - name: Verify deployment
       run: |
         ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} '
+          echo "Checking PM2 status:" &&
           pm2 list &&
+          echo "Checking API health:" &&
           curl -s http://localhost:5000/api/health &&
           echo "Deployment verification complete"
-        '
-
-    # Cleanup
-    - name: Cleanup
-      if: always()
-      run: |
-        ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} '
-          rm -rf /tmp/scientism-poetry-deploy
         '
