@@ -1,76 +1,96 @@
-# Getting Started with Create React App
+# Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the frontend application for Scientism Poetry.
 
-## Available Scripts
+## Getting Started
 
-In the project directory, you can run:
+1. Install dependencies:
+```bash
+npm install
+```
 
-### `npm start`
+2. Start the development server:
+```bash
+npm start
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Project Structure
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+frontend/
+├── public/
+│   ├── images/              # Public images
+│   │   ├── hero-bg.jpg     # Homepage hero background
+│   │   ├── book-cover.jpg  # Featured book cover
+│   │   ├── community.jpg   # Community feature image
+│   │   ├── workshops.jpg   # Workshops feature image
+│   │   ├── publish.jpg     # Publish feature image
+│   │   └── science-poetry.jpg  # About page image
+│   ├── static/
+│   │   └── images/
+│   │       └── avatar/     # User avatar images
+│   └── locales/           # Translation files
+│       ├── en/
+│       └── zh/
+├── src/
+│   ├── components/
+│   ├── contexts/
+│   ├── hooks/
+│   ├── pages/
+│   ├── services/
+│   └── utils/
+```
 
-### `npm test`
+## Image Requirements
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The following images are required for the application:
 
-### `npm run build`
+### Homepage Images
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. `/images/hero-bg.jpg`
+   - Used as: Hero section background
+   - Recommended size: 1920x1080px
+   - Content: Science and poetry themed background with dark overlay
+   - Note: Should work well with white text overlay
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. `/images/book-cover.jpg`
+   - Used in: Featured book section
+   - Recommended size: 800x1200px
+   - Content: "The Quantum Verses" book cover
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. `/images/community.jpg`
+   - Used in: Community feature card
+   - Recommended size: 600x400px
+   - Content: Community/collaboration themed image
 
-### `npm run eject`
+4. `/images/workshops.jpg`
+   - Used in: Workshops feature card
+   - Recommended size: 600x400px
+   - Content: Workshop/learning themed image
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+5. `/images/publish.jpg`
+   - Used in: Publish feature card
+   - Recommended size: 600x400px
+   - Content: Publishing/writing themed image
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### About Page Images
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+6. `/images/science-poetry.jpg`
+   - Used on: About page
+   - Recommended size: 1200x600px
+   - Content: Science and poetry themed image
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### User Images
 
-## Learn More
+7. `/static/images/avatar/*.jpg`
+   - Used for: User avatars
+   - Recommended size: 150x150px
+   - Format: Square images
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Development Notes
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-
-
-===== To be Deleted and never commit anywhere
-username : spadmin
-password : eK6wi18j%cQy
+- Images in `/public` are served as static assets
+- Use relative paths starting with `/` for image src attributes
+- Optimize images before deployment to reduce load times
+- Consider using WebP format with JPG fallback for better performance
+- Ensure images have good contrast for text overlays where applicable
