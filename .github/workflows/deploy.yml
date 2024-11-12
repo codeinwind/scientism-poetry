@@ -90,6 +90,10 @@ jobs:
           sudo cp -r frontend/build/* /var/www/scientism-poetry/frontend/ &&
           sudo cp -r backend/* /var/www/scientism-poetry/backend/ &&
 
+          # Recreate the symbolic link after deployment
+          sudo ln -s /var/www/scientism-poetry/env/.env /var/www/scientism-poetry/backend/.env
+
+
           # Start backend with PM2
           cd /var/www/scientism-poetry/backend &&
           pm2 start server.js --name scientism-poetry-backend &&
