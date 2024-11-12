@@ -1,0 +1,137 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "cancel": "取消",
+    "save": "保存",
+    "edit": "编辑",
+    "delete": "删除",
+    "confirm": "确认",
+    "submit": "提交",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "readMore": "阅读更多",
+    "seeAll": "查看全部",
+    "joinNow": "立即加入",
+    "learnMore": "了解更多"
+  },
+  "nav": {
+    "home": "首页",
+    "about": "关于",
+    "book": "书籍",
+    "poems": "诗歌",
+    "login": "登录",
+    "register": "注册",
+    "dashboard": "控制台",
+    "profile": "个人资料",
+    "logout": "退出登录"
+  },
+  "auth": {
+    "login": {
+      "title": "欢迎回来",
+      "subtitle": "登录以继续您的诗歌之旅",
+      "email": "电子邮箱",
+      "password": "密码",
+      "forgotPassword": "忘记密码？",
+      "noAccount": "还没有账号？",
+      "signUp": "立即注册"
+    },
+    "register": {
+      "title": "加入科学诗歌",
+      "subtitle": "创建账号分享您的科学诗歌",
+      "name": "姓名",
+      "email": "电子邮箱",
+      "password": "密码",
+      "confirmPassword": "确认密码",
+      "hasAccount": "已有账号？",
+      "signIn": "立即登录",
+      "terms": "注册即表示您同意我们的服务条款和隐私政策"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "科学与诗歌的交汇",
+      "subtitle": "通过诗歌艺术探索科学概念的美",
+      "cta": "加入我们的诗人社区，将科学洞见与创意表达融为一体"
+    },
+    "features": {
+      "community": {
+        "title": "加入社区",
+        "description": "与志同道合的诗人交流，分享对科学和创意表达的热情"
+      },
+      "workshops": {
+        "title": "每月工作坊",
+        "description": "参与我们的月度工作坊，探索不同的科学概念"
+      },
+      "publish": {
+        "title": "作品发表",
+        "description": "提交您的诗歌参与月度精选集"
+      }
+    }
+  },
+  "poems": {
+    "create": {
+      "title": "创作新诗",
+      "poemTitle": "标题",
+      "content": "内容",
+      "tags": "标签（用逗号分隔）"
+    },
+    "filters": {
+      "all": "全部诗歌",
+      "published": "已发布",
+      "underReview": "审核中",
+      "drafts": "草稿",
+      "search": "搜索诗歌..."
+    },
+    "status": {
+      "published": "已发布",
+      "underReview": "审核中",
+      "draft": "草稿"
+    }
+  },
+  "profile": {
+    "title": "个人资料",
+    "editProfile": "编辑资料",
+    "personalInfo": "个人信息",
+    "changePassword": "修改密码",
+    "stats": {
+      "title": "活动统计",
+      "publishedPoems": "已发布诗歌",
+      "totalLikes": "获赞总数",
+      "comments": "评论数"
+    }
+  },
+  "book": {
+    "title": "量子诗篇",
+    "subtitle": "科学诗歌集",
+    "description": "深入我们最新的科学诗歌集，在这里量子力学的奥秘与艺术表达的美完美融合",
+    "buyNow": "在亚马逊购买",
+    "preview": "阅读预览"
+  },
+  "footer": {
+    "about": {
+      "title": "科学诗歌",
+      "description": "探索科学与诗歌的交汇，为科学表达创造独特空间"
+    },
+    "links": {
+      "title": "快速链接",
+      "about": "关于我们",
+      "book": "我们的书",
+      "poems": "会员诗歌",
+      "contact": "联系我们"
+    },
+    "social": {
+      "title": "关注我们",
+      "twitter": "推特",
+      "facebook": "脸书",
+      "instagram": "Instagram"
+    },
+    "copyright": "© {{year}} 科学诗歌。保留所有权利",
+    "legal": {
+      "privacy": "隐私政策",
+      "terms": "服务条款"
+    }
+  }
+}
