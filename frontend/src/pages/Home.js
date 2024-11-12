@@ -12,9 +12,10 @@ import {
   Link,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 
 const HeroSection = styled(Box)(({ theme }) => ({
-  background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-bg.jpg')`,
+  background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-bg.png')`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   color: 'white',
@@ -34,6 +35,8 @@ const FeatureCard = styled(Card)(({ theme }) => ({
 }));
 
 const Home = () => {
+  const { t } = useTranslation();
+
   return (
     <Box>
       <HeroSection>
@@ -46,11 +49,10 @@ const Home = () => {
                 gutterBottom
                 sx={{ fontWeight: 'bold' }}
               >
-                Where Science Meets Poetry
+                {t('home.hero.title')}
               </Typography>
               <Typography variant="h5" paragraph>
-                Explore the beauty of scientific concepts through the art of verse.
-                Join our community of poets who blend scientific insight with creative expression.
+                {t('home.hero.subtitle')}
               </Typography>
               <Box sx={{ mt: 4 }}>
                 <Button
@@ -61,7 +63,7 @@ const Home = () => {
                   color="secondary"
                   sx={{ mr: 2 }}
                 >
-                  Join the Club
+                  {t('home.hero.joinButton')}
                 </Button>
                 <Button
                   component={RouterLink}
@@ -70,7 +72,7 @@ const Home = () => {
                   size="large"
                   sx={{ color: 'white', borderColor: 'white' }}
                 >
-                  Read Poems
+                  {t('home.hero.readButton')}
                 </Button>
               </Box>
             </Grid>
@@ -82,26 +84,24 @@ const Home = () => {
         {/* Featured Book Section */}
         <Box sx={{ mb: 8 }}>
           <Typography variant="h3" gutterBottom align="center">
-            Featured Book
+            {t('home.featuredBook.title')}
           </Typography>
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={6}>
               <CardMedia
                 component="img"
                 height="400"
-                image="/images/book-cover.jpg"
+                image="/images/book-cover.png"
                 alt="Book Cover"
                 sx={{ objectFit: 'contain' }}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h4" gutterBottom>
-                "The Quantum Verses"
+                {t('home.featuredBook.bookTitle')}
               </Typography>
               <Typography variant="body1" paragraph>
-                Dive into our latest collection of scientism poetry, where the
-                mysteries of quantum mechanics meet the beauty of artistic expression.
-                Available now on Amazon.
+                {t('home.featuredBook.description')}
               </Typography>
               <Button
                 variant="contained"
@@ -112,7 +112,7 @@ const Home = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Get the Book
+                {t('home.featuredBook.button')}
               </Button>
             </Grid>
           </Grid>
@@ -125,16 +125,15 @@ const Home = () => {
               <CardMedia
                 component="img"
                 height="200"
-                image="/images/community.jpg"
+                image="/images/community.png"
                 alt="Community"
               />
               <CardContent>
                 <Typography variant="h5" gutterBottom>
-                  Join Our Community
+                  {t('home.features.community.title')}
                 </Typography>
                 <Typography variant="body1">
-                  Connect with fellow poets who share your passion for science and
-                  creative expression. Share your work and get inspired.
+                  {t('home.features.community.description')}
                 </Typography>
               </CardContent>
             </FeatureCard>
@@ -144,16 +143,15 @@ const Home = () => {
               <CardMedia
                 component="img"
                 height="200"
-                image="/images/workshops.jpg"
+                image="/images/workshops.png"
                 alt="Workshops"
               />
               <CardContent>
                 <Typography variant="h5" gutterBottom>
-                  Monthly Workshops
+                  {t('home.features.workshops.title')}
                 </Typography>
                 <Typography variant="body1">
-                  Participate in our monthly workshops where we explore different
-                  scientific concepts through poetry writing exercises.
+                  {t('home.features.workshops.description')}
                 </Typography>
               </CardContent>
             </FeatureCard>
@@ -163,16 +161,15 @@ const Home = () => {
               <CardMedia
                 component="img"
                 height="200"
-                image="/images/publish.jpg"
+                image="/images/publish.png"
                 alt="Publish"
               />
               <CardContent>
                 <Typography variant="h5" gutterBottom>
-                  Get Published
+                  {t('home.features.publish.title')}
                 </Typography>
                 <Typography variant="body1">
-                  Submit your poems for our monthly featured collection and get a
-                  chance to be published in our upcoming anthologies.
+                  {t('home.features.publish.description')}
                 </Typography>
               </CardContent>
             </FeatureCard>

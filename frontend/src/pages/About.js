@@ -13,17 +13,20 @@ import {
 import ScienceIcon from '@mui/icons-material/Science';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import GroupsIcon from '@mui/icons-material/Groups';
+import { useTranslation } from 'react-i18next';
 
 const About = () => {
+  const { t } = useTranslation();
+
   return (
     <Container maxWidth="lg">
       {/* Main Introduction */}
       <Box sx={{ mb: 6, textAlign: 'center' }}>
         <Typography variant="h2" component="h1" gutterBottom>
-          About Scientism Poetry
+          {t('about.title')}
         </Typography>
         <Typography variant="h5" color="text.secondary" paragraph>
-          Where Scientific Understanding Meets Poetic Expression
+          {t('about.subtitle')}
         </Typography>
       </Box>
 
@@ -31,18 +34,13 @@ const About = () => {
       <Grid container spacing={4} sx={{ mb: 8 }}>
         <Grid item xs={12} md={6}>
           <Typography variant="h4" gutterBottom>
-            What is Scientism Poetry?
+            {t('about.whatIs.title')}
           </Typography>
           <Typography variant="body1" paragraph>
-            Scientism Poetry is a unique form of artistic expression that bridges
-            the gap between scientific understanding and poetic creativity. It
-            seeks to explore and explain scientific concepts, discoveries, and
-            phenomena through the lens of poetry.
+            {t('about.whatIs.description1')}
           </Typography>
           <Typography variant="body1" paragraph>
-            Our poets combine technical accuracy with creative metaphors,
-            making complex scientific ideas accessible and emotionally resonant
-            for readers of all backgrounds.
+            {t('about.whatIs.description2')}
           </Typography>
           <Button
             component={RouterLink}
@@ -51,13 +49,13 @@ const About = () => {
             color="primary"
             sx={{ mt: 2 }}
           >
-            Read Our Poems
+            {t('about.whatIs.readButton')}
           </Button>
         </Grid>
         <Grid item xs={12} md={6}>
           <Box
             component="img"
-            src="/images/science-poetry.jpg"
+            src="/images/science-poetry.png"
             alt="Science meets Poetry"
             sx={{
               width: '100%',
@@ -73,7 +71,7 @@ const About = () => {
       {/* Our Mission */}
       <Box sx={{ mb: 8 }}>
         <Typography variant="h4" gutterBottom align="center">
-          Our Mission
+          {t('about.mission.title')}
         </Typography>
         <Grid container spacing={4} sx={{ mt: 2 }}>
           <Grid item xs={12} md={4}>
@@ -81,11 +79,10 @@ const About = () => {
               <CardContent sx={{ textAlign: 'center' }}>
                 <ScienceIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
                 <Typography variant="h6" gutterBottom>
-                  Promote Scientific Understanding
+                  {t('about.mission.promote.title')}
                 </Typography>
                 <Typography variant="body1">
-                  Make scientific concepts more accessible and engaging through
-                  creative expression and poetic interpretation.
+                  {t('about.mission.promote.description')}
                 </Typography>
               </CardContent>
             </Card>
@@ -95,11 +92,10 @@ const About = () => {
               <CardContent sx={{ textAlign: 'center' }}>
                 <MenuBookIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
                 <Typography variant="h6" gutterBottom>
-                  Foster Creativity
+                  {t('about.mission.foster.title')}
                 </Typography>
                 <Typography variant="body1">
-                  Encourage poets to explore scientific themes in their work
-                  and develop unique ways to communicate complex ideas.
+                  {t('about.mission.foster.description')}
                 </Typography>
               </CardContent>
             </Card>
@@ -109,11 +105,10 @@ const About = () => {
               <CardContent sx={{ textAlign: 'center' }}>
                 <GroupsIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
                 <Typography variant="h6" gutterBottom>
-                  Build Community
+                  {t('about.mission.build.title')}
                 </Typography>
                 <Typography variant="body1">
-                  Create a space for like-minded individuals to share their work
-                  and passion for both science and poetry.
+                  {t('about.mission.build.description')}
                 </Typography>
               </CardContent>
             </Card>
@@ -132,12 +127,10 @@ const About = () => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          Join Our Community
+          {t('about.join.title')}
         </Typography>
         <Typography variant="body1" paragraph>
-          Become part of our growing community of poets and science enthusiasts.
-          Share your work, participate in workshops, and connect with others who
-          share your passion.
+          {t('about.join.description')}
         </Typography>
         <Button
           component={RouterLink}
@@ -147,7 +140,7 @@ const About = () => {
           size="large"
           sx={{ mt: 2 }}
         >
-          Join Now
+          {t('about.join.button')}
         </Button>
       </Box>
     </Container>
