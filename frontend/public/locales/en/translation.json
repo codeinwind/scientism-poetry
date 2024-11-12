@@ -15,7 +15,8 @@
     "readMore": "Read More",
     "seeAll": "See All",
     "joinNow": "Join Now",
-    "learnMore": "Learn More"
+    "learnMore": "Learn More",
+    "appName": "Scientism Poetry"
   },
   "meta": {
     "title": "Scientism Poetry - Where Science Meets Poetry",
@@ -23,119 +24,100 @@
   },
   "nav": {
     "home": "Home",
+    "poemsAndComments": "Poems",
+    "association": "Association",
+    "journal": "Journal",
+    "press": "Press",
+    "newsAndEvents": "News",
     "about": "About",
-    "book": "Book",
-    "poems": "Poems",
     "login": "Login",
     "register": "Register",
     "dashboard": "Dashboard",
     "profile": "Profile",
     "logout": "Logout"
   },
-  "auth": {
-    "login": {
-      "title": "Welcome Back",
-      "subtitle": "Sign in to continue your poetic journey",
-      "email": "Email Address",
-      "password": "Password",
-      "forgotPassword": "Forgot password?",
-      "noAccount": "Don't have an account?",
-      "signUp": "Sign up here"
-    },
-    "register": {
-      "title": "Join Scientism Poetry",
-      "subtitle": "Create an account to share your scientific poetry",
-      "name": "Full Name",
-      "email": "Email Address",
-      "password": "Password",
-      "confirmPassword": "Confirm Password",
-      "hasAccount": "Already have an account?",
-      "signIn": "Sign in here",
-      "terms": "By signing up, you agree to our Terms of Service and Privacy Policy"
-    }
-  },
   "home": {
     "hero": {
       "title": "Where Science Meets Poetry",
-      "subtitle": "Explore the beauty of scientific concepts through the art of verse",
-      "cta": "Join our community of poets who blend scientific insight with creative expression"
+      "subtitle": "Explore the beauty of scientific concepts through the art of verse. Join our community of poets who blend scientific insight with creative expression.",
+      "joinButton": "Join the Club",
+      "readButton": "Read Poems"
+    },
+    "featuredBook": {
+      "title": "Featured Book",
+      "bookTitle": "The Quantum Verses",
+      "description": "Dive into our latest collection of scientism poetry, where the mysteries of quantum mechanics meet the beauty of artistic expression. Available now on Amazon.",
+      "button": "Get the Book"
     },
     "features": {
       "community": {
         "title": "Join Our Community",
-        "description": "Connect with fellow poets who share your passion for science and creative expression"
+        "description": "Connect with fellow poets who share your passion for science and creative expression. Share your work and get inspired."
       },
       "workshops": {
         "title": "Monthly Workshops",
-        "description": "Participate in our monthly workshops exploring different scientific concepts"
+        "description": "Participate in our monthly workshops where we explore different scientific concepts through poetry writing exercises."
       },
       "publish": {
         "title": "Get Published",
-        "description": "Submit your poems for our monthly featured collection"
+        "description": "Submit your poems for our monthly featured collection and get a chance to be published in our upcoming anthologies."
       }
     }
   },
-  "poems": {
-    "create": {
-      "title": "Create New Poem",
-      "poemTitle": "Title",
-      "content": "Content",
-      "tags": "Tags (comma separated)"
+  "association": {
+    "welcome": {
+      "title": "Join the International Scientism Poetry Association",
+      "intro": "Join the International Scientism Poetry Association and become part of a global community filled with creativity and passion, dedicated to combining scientific rationality with poetic artistic expression. The association aims to explore the infinite possibilities of scientism poetry through diverse creation and exchange, promoting the deep integration of science and art. Here are important reasons to join:",
+      "reasons": {
+        "1": "Creation and Display Platform: The association provides an exclusive platform for members to share and showcase their original poems in the 'Poems' section, receive feedback from other members, and continuously improve their creative skills.",
+        "2": "Diverse Activities: Members can participate in various events organized by the association, such as poetry competitions, international recitation events, creative workshops, and interdisciplinary seminars, broadening horizons and inspiring creativity.",
+        "3": "Association Journal 'Cosmic Poetry': Members' works will have priority publication in the association's journal 'Cosmic Poetry'. This journal showcases excellent scientism poetry works and creative theories, providing interdisciplinary inspiration and rich thinking resources.",
+        "4": "Canadian Beaver Press: The association collaborates with Canadian Beaver Press to publish scientism poetry and related books. Members enjoy priority publishing opportunities and exclusive preferential policies.",
+        "5": "Global Network: Upon joining, you'll become part of the international scientism poetry network, establishing connections with global members and engaging in cross-cultural, interdisciplinary exchanges.",
+        "6": "Interdisciplinary Exchange: The association is committed to promoting the combination of science and art. Members have opportunities to engage in deep discussions with scientists, artists, and experts from other fields.",
+        "7": "Personal Development: Participating in association activities and exchanges will enhance your writing skills, critical thinking, and interdisciplinary understanding."
+      },
+      "conclusion": "Join the International Scientism Poetry Association, experience the rich inspiration and creativity brought by the interweaving of science and art, and become an important member in promoting the global spread and development of scientism poetry."
     },
-    "filters": {
-      "all": "All Poems",
-      "published": "Published",
-      "underReview": "Under Review",
-      "drafts": "Drafts",
-      "search": "Search poems..."
-    },
-    "status": {
-      "published": "Published",
-      "underReview": "Under Review",
-      "draft": "Draft"
+    "cards": {
+      "purpose": {
+        "title": "Purpose",
+        "content": "The International Scientism Poetry Association is a non-profit organization registered in Canada, dedicated to promoting scientism poetry globally. The association aims to foster deep integration between science and literary arts, gathering poets, scientists, writers, and enthusiasts passionate about the intersection of science and art from around the world."
+      },
+      "mission": {
+        "title": "Mission",
+        "content": "The association's core mission is to spread scientism poetry internationally, allowing more people to experience the beauty and profundity of science. We organize diverse activities, including global poetry competitions, international recitation events, interdisciplinary seminars, and creative workshops."
+      },
+      "publishing": {
+        "title": "Publishing",
+        "content": "The association is committed to publishing books and journals related to scientism poetry, showcasing members' excellent works, creative methods, and theoretical research. Publications include modern poetry, analysis of historical classics, and exploration of science-literature integration."
+      },
+      "vision": {
+        "title": "Vision",
+        "content": "The International Scientism Poetry Association believes that science and art are not separate poles but can achieve deep resonance through poetry, jointly pursuing truth and aesthetic sense. We advocate using scientism poetry to awaken public interest in science, transforming it from serious laboratory knowledge into a cultural experience full of emotion and artistic value."
+      }
     }
   },
-  "profile": {
-    "title": "Profile",
-    "editProfile": "Edit Profile",
-    "personalInfo": "Personal Information",
-    "changePassword": "Change Password",
-    "stats": {
-      "title": "Activity Stats",
-      "publishedPoems": "Published Poems",
-      "totalLikes": "Total Likes",
-      "comments": "Comments Made"
-    }
-  },
-  "book": {
-    "title": "The Quantum Verses",
-    "subtitle": "A Collection of Scientific Poetry",
-    "description": "Dive into our latest collection of scientism poetry, where the mysteries of quantum mechanics meet the beauty of artistic expression",
-    "buyNow": "Buy on Amazon",
-    "preview": "Read Preview"
-  },
-  "footer": {
-    "about": {
-      "title": "Scientism Poetry",
-      "description": "Exploring the intersection of science and poetry, creating a unique space for scientific expression through verse"
+  "press": {
+    "intro": "Canadian Beaver Press is a publishing institution dedicated to integrating scientific philosophy, theory, and methodology into poetic creation. In collaboration with the International Scientism Poetry Association (ISPA), we aim to explore the deep connections between nature, the universe, and the human spiritual world through the fusion of rationality and sensibility, presenting their unique aesthetic and philosophical depth in diverse forms.",
+    "services": {
+      "title": "Services",
+      "items": {
+        "1": "Poetry Publishing: Focus on publishing poetry works that integrate scientific elements, encouraging authors to reflect the fusion of science and art in their creations.",
+        "2": "Editorial Services: Provide a professional editorial team to assist authors in perfecting their works, ensuring a balance between scientific accuracy and artistic expression.",
+        "3": "Translation Services: Offer high-quality translation services for authors wishing to promote their works to international markets, expanding their readership.",
+        "4": "Marketing: Utilize multi-channel marketing strategies to enhance the visibility and influence of works, including online and offline events, media promotion, etc.",
+        "5": "Author Support: Regularly organize seminars, workshops, and other activities to promote exchange and collaboration among authors, collectively improving creative standards."
+      }
     },
-    "links": {
-      "title": "Quick Links",
-      "about": "About Us",
-      "book": "Our Book",
-      "poems": "Member Poems",
-      "contact": "Contact Us"
+    "benefits": {
+      "title": "Preferential Policies",
+      "items": {
+        "1": "New Author Support Program: Provide special offers for first-time authors, including publishing fee discounts and free editorial consultation services.",
+        "2": "Member Exclusive Discounts: ISPA members enjoy special discounts when publishing works with Beaver Press. Contact the press for detailed information about specific benefits.",
+        "3": "Long-term Collaboration Benefits: Authors establishing long-term partnerships with the press can enjoy ongoing publishing fee discounts and priority publishing rights."
+      }
     },
-    "social": {
-      "title": "Connect With Us",
-      "twitter": "Twitter",
-      "facebook": "Facebook",
-      "instagram": "Instagram"
-    },
-    "copyright": "© {{year}} Scientism Poetry. All rights reserved",
-    "legal": {
-      "privacy": "Privacy Policy",
-      "terms": "Terms of Service"
-    }
+    "contact": "For more information or to apply for membership, please visit our official website: www.scientismpoetry.com"
   }
 }

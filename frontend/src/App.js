@@ -31,6 +31,10 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
+import Association from './pages/Association';
+import Journal from './pages/Journal';
+import Press from './pages/Press';
+import News from './pages/News';
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -75,18 +79,42 @@ function App() {
                         }
                       />
                       <Route
-                        path="/book"
-                        element={
-                          <Layout>
-                            <Book />
-                          </Layout>
-                        }
-                      />
-                      <Route
                         path="/poems"
                         element={
                           <Layout>
                             <Poems />
+                          </Layout>
+                        }
+                      />
+                      <Route
+                        path="/association"
+                        element={
+                          <Layout>
+                            <Association />
+                          </Layout>
+                        }
+                      />
+                      <Route
+                        path="/journal"
+                        element={
+                          <Layout>
+                            <Journal />
+                          </Layout>
+                        }
+                      />
+                      <Route
+                        path="/press"
+                        element={
+                          <Layout>
+                            <Press />
+                          </Layout>
+                        }
+                      />
+                      <Route
+                        path="/news"
+                        element={
+                          <Layout>
+                            <News />
                           </Layout>
                         }
                       />

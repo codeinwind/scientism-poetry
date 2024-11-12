@@ -27,9 +27,12 @@ const Navbar = () => {
 
   const pages = [
     { title: t('nav.home'), path: '/' },
-    { title: t('nav.about'), path: '/about' },
-    { title: t('nav.book'), path: '/book' },
-    { title: t('nav.poems'), path: '/poems' },
+    { title: t('nav.poemsAndComments'), path: '/poems' },
+    { title: t('nav.association'), path: '/association' },
+    { title: t('nav.journal'), path: '/journal' },
+    { title: t('nav.press'), path: '/press' },
+    { title: t('nav.newsAndEvents'), path: '/news' },
+    { title: t('nav.about'), path: '/about' }
   ];
 
   const handleOpenNavMenu = (event) => {
@@ -72,7 +75,7 @@ const Navbar = () => {
               textDecoration: 'none',
             }}
           >
-            {t('common.appName', 'Scientism Poetry')}
+            {t('common.appName')}
           </Typography>
 
           {/* Mobile Menu */}
@@ -132,7 +135,7 @@ const Navbar = () => {
               textDecoration: 'none',
             }}
           >
-            {t('common.appName', 'Scientism Poetry')}
+            {t('common.appName')}
           </Typography>
 
           {/* Desktop Menu */}
