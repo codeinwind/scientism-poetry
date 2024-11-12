@@ -19,6 +19,7 @@ import ErrorBoundary from './components/shared/ErrorBoundary';
 import ScrollToTop from './components/shared/ScrollToTop';
 import PrivateRoute from './components/auth/PrivateRoute';
 import LoadingSpinner from './components/shared/LoadingSpinner';
+import TitleUpdater from './components/shared/TitleUpdater';
 
 // Pages
 import Home from './pages/Home';
@@ -53,6 +54,7 @@ function App() {
               <LanguageProvider>
                 <AlertMessageProvider>
                   <Router>
+                    <TitleUpdater />
                     <ScrollToTop />
                     <Routes>
                       {/* Public Routes */}
