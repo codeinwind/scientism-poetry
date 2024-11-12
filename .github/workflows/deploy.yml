@@ -95,7 +95,12 @@ jobs:
         
         # Clean up local temporary directory
         rm -rf /tmp/scientism-poetry-deploy
-
+    
+    # Confirm files on remote server
+    - name: Verify Files on VPS
+      run: |
+        ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} "ls -la /tmp/scientism-poetry-deploy"
+      
     # Execute deployment script
     - name: Execute deploy script
       run: |
