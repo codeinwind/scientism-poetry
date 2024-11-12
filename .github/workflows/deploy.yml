@@ -55,11 +55,13 @@ jobs:
     - name: Deploy to VPS
       run: |
         ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} '
-          # Navigate to project directory
-          cd /var/www/scientism-poetry &&
+          # Create temporary directory
+          TEMP_DIR=$(mktemp -d) &&
+          echo "Created temporary directory: $TEMP_DIR" &&
 
-          # Pull latest changes
-          git pull origin master &&
+          # Clone repository to temporary directory
+          git clone https://github.com/codeinwind/scientism-poetry.git $TEMP_DIR &&
+          cd $TEMP_DIR &&
 
           # Build frontend
           echo "Building frontend..." &&
@@ -68,21 +70,36 @@ jobs:
           npm run build &&
           cd .. &&
 
-          # Build and restart backend
+          # Build backend
           echo "Building backend..." &&
           cd backend &&
           npm ci --production &&
+          cd .. &&
+
+          # If builds are successful, stop the current service and update production
+          echo "Updating production..." &&
           
           # Stop existing PM2 processes
           pm2 stop scientism-poetry-backend || true &&
           pm2 delete scientism-poetry-backend || true &&
+
+          # Update production directories
+          sudo rm -rf /var/www/scientism-poetry/frontend/* &&
+          sudo rm -rf /var/www/scientism-poetry/backend/* &&
           
-          # Start with PM2
+          sudo cp -r frontend/build/* /var/www/scientism-poetry/frontend/ &&
+          sudo cp -r backend/* /var/www/scientism-poetry/backend/ &&
+
+          # Start backend with PM2
+          cd /var/www/scientism-poetry/backend &&
           pm2 start server.js --name scientism-poetry-backend &&
-          cd .. &&
 
           # Reload Nginx
           sudo systemctl reload nginx &&
+
+          # Cleanup
+          cd / &&
+          rm -rf $TEMP_DIR &&
 
           echo "Deployment completed successfully!"
         '
