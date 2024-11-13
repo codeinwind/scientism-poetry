@@ -63,6 +63,7 @@ jobs:
           # Create frontend production env file
           echo "Creating frontend production env file..." &&
           echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > frontend/.env.production &&
+          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > frontend/.env &&
 
           # Build frontend
           echo "Building frontend..." &&
@@ -95,7 +96,12 @@ jobs:
           sudo rm -rf /var/www/scientism-poetry/frontend/* &&
           sudo rm -rf /var/www/scientism-poetry/backend/* &&
           
+          # Copy frontend files including .env
           sudo cp -r frontend/build/* /var/www/scientism-poetry/frontend/ &&
+          sudo cp frontend/.env /var/www/scientism-poetry/frontend/ &&
+          sudo cp frontend/.env.production /var/www/scientism-poetry/frontend/ &&
+          
+          # Copy backend files
           sudo cp -r backend/* /var/www/scientism-poetry/backend/ &&
 
           # Ensure log directory exists with proper permissions
@@ -109,6 +115,10 @@ jobs:
 
           # Reload Nginx
           sudo systemctl reload nginx &&
+
+          # Verify frontend env files
+          echo "Verifying frontend env files:" &&
+          ls -la /var/www/scientism-poetry/frontend/.env* &&
 
           # Cleanup
           cd / &&
@@ -130,5 +140,7 @@ jobs:
           curl -s ${API_BASE_URL}/api/health &&
           echo \"Checking logs directory:\" &&
           ls -la /var/log/scientism-poetry &&
+          echo \"Checking frontend env files:\" &&
+          ls -la /var/www/scientism-poetry/frontend/.env* &&
           echo \"Deployment verification complete\"
         "
