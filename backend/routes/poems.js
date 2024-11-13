@@ -41,6 +41,26 @@ router.post(
   }
 );
 
+// @route   GET /api/poems/user/:id
+// @desc    Get all poems by user
+// @access  Private
+router.get('/user/:id', protect, async (req, res) => {
+  try {
+    const poems = await Poem.find({ author: req.params.id })
+      .populate('author', 'name')
+      .sort('-createdAt');
+
+    // Return empty array if no poems found
+    res.json({
+      success: true,
+      data: poems || [],
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 // @route   GET /api/poems
 // @desc    Get all published poems
 // @access  Public

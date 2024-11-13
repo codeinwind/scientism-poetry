@@ -64,6 +64,11 @@
     "welcome": "欢迎回来，{{name}}",
     "createPoem": "创作新诗",
     "editPoem": "编辑诗歌",
+    "emptyState": {
+      "title": "开启您的诗歌之旅",
+      "description": "您还没有创作任何诗歌。与我们的社区分享您的科学见解。",
+      "button": "创作您的第一首诗"
+    },
     "tabs": {
       "all": "全部诗歌",
       "published": "已发布",
@@ -103,160 +108,25 @@
       "loadPoems": "加载诗歌失败，请稍后重试。"
     }
   },
-  "profile": {
-    "title": "个人资料",
-    "editProfile": "编辑资料",
-    "saveChanges": "保存更改",
-    "profileInfo": "个人信息",
-    "form": {
-      "name": {
-        "label": "姓名",
-        "required": "请输入姓名",
-        "minLength": "姓名至少需要2个字符"
-      },
-      "email": {
-        "label": "电子邮箱",
-        "required": "请输入电子邮箱",
-        "invalid": "邮箱格式不正确"
-      },
-      "bio": {
-        "label": "个人简介",
-        "maxLength": "个人简介不能超过500个字符"
-      },
-      "password": {
-        "current": "当前密码",
-        "new": "新密码",
-        "confirm": "确认新密码",
-        "minLength": "密码至少需要6个字符",
-        "mismatch": "两次输入的密码不一致",
-        "changeTitle": "修改密码（可选）"
-      }
+  "poems": {
+    "title": "会员诗作",
+    "subtitle": "探索我们的科学诗歌集",
+    "search": {
+      "placeholder": "搜索诗歌..."
     },
-    "stats": {
-      "title": "活动统计",
-      "memberSince": "注册时间：{{date}}",
-      "publishedPoems": "已发布诗歌：{{count}}",
-      "totalLikes": "获赞总数：{{count}}",
-      "commentsMade": "评论数：{{count}}"
+    "poem": {
+      "by": "作者：{{author}}",
+      "readMore": "阅读更多",
+      "likes": "{{count}}个赞",
+      "comments": "{{count}}条评论"
     },
-    "messages": {
-      "updateSuccess": "个人资料更新成功",
-      "updateError": "更新个人资料失败"
-    }
-  },
-  "register": {
-    "title": "加入科学诗歌",
-    "subtitle": "创建账号，与我们的社区分享您的科学诗歌",
-    "form": {
-      "name": {
-        "label": "姓名",
-        "required": "请输入姓名",
-        "minLength": "姓名至少需要2个字符"
-      },
-      "email": {
-        "label": "电子邮箱",
-        "required": "请输入电子邮箱",
-        "invalid": "邮箱格式不正确"
-      },
-      "password": {
-        "label": "密码",
-        "required": "请输入密码",
-        "minLength": "密码至少需要6个字符"
-      },
-      "confirmPassword": {
-        "label": "确认密码",
-        "required": "请确认密码",
-        "mismatch": "两次输入的密码不一致"
-      },
-      "submit": "创建账号"
+    "errors": {
+      "loadFailed": "加载诗歌失败，请稍后重试。"
     },
-    "hasAccount": "已有账号？",
-    "signIn": "立即登录",
-    "terms": {
-      "text": "注册即表示您同意我们的",
-      "termsLink": "服务条款",
-      "and": "和",
-      "privacyLink": "隐私政策"
-    }
-  },
-  "about": {
-    "title": "关于科学诗歌",
-    "subtitle": "科学理解与诗歌表达的交汇",
-    "whatIs": {
-      "title": "什么是科学诗歌？",
-      "description1": "科学诗歌是一种独特的艺术表达形式，架起了科学理解与诗歌创造力之间的桥梁。它致力于通过诗歌的视角探索和解释科学概念、发现和现象。",
-      "description2": "我们的诗人将技术准确性与创造性的隐喻相结合，使复杂的科学理念对各种背景的读者都能产生共鸣和理解。",
-      "readButton": "阅读诗歌"
-    },
-    "mission": {
-      "title": "我们的使命",
-      "promote": {
-        "title": "推广科学理解",
-        "description": "通过创造性表达和诗意诠释，使科学概念更容易理解和引人入胜。"
-      },
-      "foster": {
-        "title": "培养创造力",
-        "description": "鼓励诗人在作品中探索科学主题，开发传达复杂理念的独特方式。"
-      },
-      "build": {
-        "title": "建设社区",
-        "description": "为志同道合的人创造一个分享作品、热爱科学和诗歌的空间。"
-      }
-    },
-    "join": {
-      "title": "加入我们的社区",
-      "description": "成为我们不断发展的诗人和科学爱好者社区的一员。分享您的作品，参与工作坊，与志同道合的人建立联系。",
+    "cta": {
+      "title": "想要分享您的诗作？",
+      "description": "加入我们的社区，发布您的科学诗歌，与其他诗人交流。",
       "button": "立即加入"
     }
-  },
-  "home": {
-    "hero": {
-      "title": "科学与诗歌的交汇",
-      "subtitle": "通过诗歌艺术探索科学概念的美。加入我们的诗人社区，将科学洞见与创意表达融为一体。",
-      "joinButton": "加入社区",
-      "readButton": "阅读诗歌"
-    },
-    "featuredBook": {
-      "title": "精选图书",
-      "bookTitle": "《量子诗篇》",
-      "description": "深入我们最新的科学主义诗歌集，在这里量子力学的奥秘与艺术表达的美完美融合。现已在亚马逊上架。",
-      "button": "购买图书"
-    },
-    "features": {
-      "community": {
-        "title": "加入社区",
-        "description": "与志同道合的诗人交流，分享对科学和创意表达的热情。分享您的作品并获得灵感。"
-      },
-      "workshops": {
-        "title": "每月工作坊",
-        "description": "参与我们的月度工作坊，通过诗歌创作练习探索不同的科学概念。"
-      },
-      "publish": {
-        "title": "作品发表",
-        "description": "提交您的诗歌参与月度精选集，有机会在我们即将出版的选集中发表。"
-      }
-    }
-  },
-  "press": {
-    "intro": "加拿大海狸出版社（Canadian Beaver Press）是一家致力于将科学哲学、理论和方法融入诗歌创作的出版机构。我们与国际科学主义诗歌协会（International Scientism Poetry Association，ISPA）合作，旨在通过理性与感性的融合，深入探讨自然、宇宙与人类精神世界的深层联系，并以多样化形式展现其独特的美学与思想深度。",
-    "services": {
-      "title": "服务项目",
-      "items": {
-        "1": "诗歌出版：专注于出版融合科学元素的诗歌作品，鼓励作者在创作中体现科学与艺术的交融。",
-        "2": "编辑服务：提供专业的编辑团队，协助作者完善作品，确保内容的科学性与艺术性的平衡。",
-        "3": "翻译服务：为希望将作品推广至国际市场的作者提供高质量的翻译服务，扩大读者群体。",
-        "4": "市场推广：利用多渠道营销策略，提升作品的知名度和影响力，包括线上线下活动、媒体宣传等。",
-        "5": "作者支持：定期举办研讨会、工作坊等活动，促进作者之间的交流与合作，共同提升创作水平。"
-      }
-    },
-    "benefits": {
-      "title": "优惠政策",
-      "items": {
-        "1": "新作者支持计划：为首次出版的作者提供特别优惠，包括出版费用折扣和免费编辑咨询服务。",
-        "2": "会员专享折扣：ISPA会员在海狸出版社出版作品可享受特别折扣，具体优惠请联系出版社获取详细信息。",
-        "3": "长期合作优惠：与出版社建立长期合作关系的作者，可享受持续的出版费用优惠和优先出版权。"
-      }
-    },
-    "contact": "如需了解更多信息或申请成为会员，请访问我们的官方网站：www.scientismpoetry.com"
   }
 }

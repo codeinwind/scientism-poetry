@@ -12,25 +12,26 @@ import {
   Alert,
 } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
-
-const validationSchema = Yup.object({
-  email: Yup.string()
-    .email('Invalid email address')
-    .required('Email is required'),
-  password: Yup.string()
-    .required('Password is required')
-    .min(6, 'Password must be at least 6 characters'),
-});
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [error, setError] = React.useState('');
+  const { t } = useTranslation();
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email(t('login.form.email.invalid'))
+      .required(t('login.form.email.required')),
+    password: Yup.string()
+      .required(t('login.form.password.required'))
+      .min(6, t('login.form.password.minLength')),
+  });
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       setError('');
-      // TODO: Replace with actual API call
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: {
@@ -42,7 +43,7 @@ const Login = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to login');
+        throw new Error(data.message || t('login.errors.failed'));
       }
 
       login(data.user, data.token);
@@ -65,10 +66,10 @@ const Login = () => {
         }}
       >
         <Typography component="h1" variant="h4" gutterBottom>
-          Welcome Back
+          {t('login.title')}
         </Typography>
         <Typography variant="body1" color="text.secondary" align="center" sx={{ mb: 3 }}>
-          Sign in to continue your poetic journey
+          {t('login.subtitle')}
         </Typography>
 
         {error && (
@@ -91,7 +92,7 @@ const Login = () => {
                 fullWidth
                 id="email"
                 name="email"
-                label="Email Address"
+                label={t('login.form.email.label')}
                 value={values.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -103,7 +104,7 @@ const Login = () => {
                 fullWidth
                 id="password"
                 name="password"
-                label="Password"
+                label={t('login.form.password.label')}
                 type="password"
                 value={values.password}
                 onChange={handleChange}
@@ -120,7 +121,7 @@ const Login = () => {
                 disabled={isSubmitting}
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+                {t('login.form.submit')}
               </Button>
             </Form>
           )}
@@ -128,14 +129,14 @@ const Login = () => {
 
         <Box sx={{ mt: 2 }}>
           <Typography variant="body2" align="center">
-            Don't have an account?{' '}
+            {t('login.noAccount')}{' '}
             <Link component={RouterLink} to="/register">
-              Sign up here
+              {t('login.signUp')}
             </Link>
           </Typography>
           <Typography variant="body2" align="center" sx={{ mt: 1 }}>
             <Link component={RouterLink} to="/forgot-password">
-              Forgot password?
+              {t('login.forgotPassword')}
             </Link>
           </Typography>
         </Box>
