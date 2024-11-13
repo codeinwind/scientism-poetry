@@ -13,31 +13,32 @@ import {
   Paper,
 } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
-
-const validationSchema = Yup.object({
-  name: Yup.string()
-    .required('Name is required')
-    .min(2, 'Name must be at least 2 characters'),
-  email: Yup.string()
-    .email('Invalid email address')
-    .required('Email is required'),
-  password: Yup.string()
-    .required('Password is required')
-    .min(6, 'Password must be at least 6 characters'),
-  confirmPassword: Yup.string()
-    .required('Please confirm your password')
-    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
-});
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [error, setError] = React.useState('');
+  const { t } = useTranslation();
+
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .required(t('register.form.name.required'))
+      .min(2, t('register.form.name.minLength')),
+    email: Yup.string()
+      .email(t('register.form.email.invalid'))
+      .required(t('register.form.email.required')),
+    password: Yup.string()
+      .required(t('register.form.password.required'))
+      .min(6, t('register.form.password.minLength')),
+    confirmPassword: Yup.string()
+      .required(t('register.form.confirmPassword.required'))
+      .oneOf([Yup.ref('password'), null], t('register.form.confirmPassword.mismatch')),
+  });
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       setError('');
-      // TODO: Replace with actual API call
       const response = await fetch('http://localhost:5000/api/auth/register', {
         method: 'POST',
         headers: {
@@ -76,10 +77,10 @@ const Register = () => {
           }}
         >
           <Typography component="h1" variant="h4" gutterBottom>
-            Join Scientism Poetry
+            {t('register.title')}
           </Typography>
           <Typography variant="body1" color="text.secondary" align="center" sx={{ mb: 3 }}>
-            Create an account to share your scientific poetry with our community
+            {t('register.subtitle')}
           </Typography>
 
           {error && (
@@ -104,7 +105,7 @@ const Register = () => {
                   fullWidth
                   id="name"
                   name="name"
-                  label="Full Name"
+                  label={t('register.form.name.label')}
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -116,7 +117,7 @@ const Register = () => {
                   fullWidth
                   id="email"
                   name="email"
-                  label="Email Address"
+                  label={t('register.form.email.label')}
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -128,7 +129,7 @@ const Register = () => {
                   fullWidth
                   id="password"
                   name="password"
-                  label="Password"
+                  label={t('register.form.password.label')}
                   type="password"
                   value={values.password}
                   onChange={handleChange}
@@ -141,7 +142,7 @@ const Register = () => {
                   fullWidth
                   id="confirmPassword"
                   name="confirmPassword"
-                  label="Confirm Password"
+                  label={t('register.form.confirmPassword.label')}
                   type="password"
                   value={values.confirmPassword}
                   onChange={handleChange}
@@ -158,7 +159,7 @@ const Register = () => {
                   disabled={isSubmitting}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  Create Account
+                  {t('register.form.submit')}
                 </Button>
               </Form>
             )}
@@ -166,21 +167,21 @@ const Register = () => {
 
           <Box sx={{ mt: 2 }}>
             <Typography variant="body2" align="center">
-              Already have an account?{' '}
+              {t('register.hasAccount')}{' '}
               <Link component={RouterLink} to="/login">
-                Sign in here
+                {t('register.signIn')}
               </Link>
             </Typography>
           </Box>
 
           <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 3 }}>
-            By signing up, you agree to our{' '}
+            {t('register.terms.text')}{' '}
             <Link component={RouterLink} to="/terms">
-              Terms of Service
+              {t('register.terms.termsLink')}
             </Link>{' '}
-            and{' '}
+            {t('register.terms.and')}{' '}
             <Link component={RouterLink} to="/privacy">
-              Privacy Policy
+              {t('register.terms.privacyLink')}
             </Link>
           </Typography>
         </Box>

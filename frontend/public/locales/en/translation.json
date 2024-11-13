@@ -18,6 +18,29 @@
     "learnMore": "Learn More",
     "appName": "Scientism Poetry"
   },
+  "footer": {
+    "about": {
+      "title": "About Us",
+      "description": "Exploring the intersection of science and poetry, creating a unique space for scientific expression through verse"
+    },
+    "links": {
+      "title": "Quick Links",
+      "about": "About Us",
+      "poems": "Member Poems",
+      "contact": "Contact Us"
+    },
+    "social": {
+      "title": "Connect With Us",
+      "twitter": "Twitter",
+      "facebook": "Facebook",
+      "instagram": "Instagram"
+    },
+    "copyright": "© {{year}} Scientism Poetry. All rights reserved",
+    "legal": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    }
+  },
   "meta": {
     "title": "Scientism Poetry - Where Science Meets Poetry",
     "description": "Explore the beauty of scientific concepts through the art of verse"
@@ -35,6 +58,126 @@
     "dashboard": "Dashboard",
     "profile": "Profile",
     "logout": "Logout"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back, {{name}}",
+    "createPoem": "Create New Poem",
+    "editPoem": "Edit Poem",
+    "tabs": {
+      "all": "All Poems",
+      "published": "Published",
+      "underReview": "Under Review",
+      "drafts": "Drafts"
+    },
+    "poem": {
+      "lastUpdated": "Last updated: {{date}}",
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "dialog": {
+      "create": {
+        "title": "Create New Poem",
+        "button": "Create Poem"
+      },
+      "edit": {
+        "title": "Edit Poem",
+        "button": "Save Changes"
+      },
+      "form": {
+        "title": {
+          "label": "Title"
+        },
+        "content": {
+          "label": "Content"
+        },
+        "tags": {
+          "label": "Tags (comma separated)",
+          "helper": "Enter tags separated by commas (e.g., quantum, physics, space)"
+        }
+      }
+    },
+    "errors": {
+      "loadPoems": "Error loading your poems. Please try again later."
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "saveChanges": "Save Changes",
+    "profileInfo": "Profile Information",
+    "form": {
+      "name": {
+        "label": "Name",
+        "required": "Name is required",
+        "minLength": "Name must be at least 2 characters"
+      },
+      "email": {
+        "label": "Email",
+        "required": "Email is required",
+        "invalid": "Invalid email address"
+      },
+      "bio": {
+        "label": "Bio",
+        "maxLength": "Bio must be 500 characters or less"
+      },
+      "password": {
+        "current": "Current Password",
+        "new": "New Password",
+        "confirm": "Confirm New Password",
+        "minLength": "Password must be at least 6 characters",
+        "mismatch": "Passwords must match",
+        "changeTitle": "Change Password (Optional)"
+      }
+    },
+    "stats": {
+      "title": "Activity Stats",
+      "memberSince": "Member since {{date}}",
+      "publishedPoems": "Published Poems: {{count}}",
+      "totalLikes": "Total Likes: {{count}}",
+      "commentsMade": "Comments Made: {{count}}"
+    },
+    "messages": {
+      "updateSuccess": "Profile updated successfully",
+      "updateError": "Failed to update profile"
+    }
+  },
+  "register": {
+    "title": "Join Scientism Poetry",
+    "subtitle": "Create an account to share your scientific poetry with our community",
+    "form": {
+      "name": {
+        "label": "Full Name",
+        "required": "Name is required",
+        "minLength": "Name must be at least 2 characters"
+      },
+      "email": {
+        "label": "Email Address",
+        "required": "Email is required",
+        "invalid": "Invalid email address"
+      },
+      "password": {
+        "label": "Password",
+        "required": "Password is required",
+        "minLength": "Password must be at least 6 characters"
+      },
+      "confirmPassword": {
+        "label": "Confirm Password",
+        "required": "Please confirm your password",
+        "mismatch": "Passwords must match"
+      },
+      "submit": "Create Account"
+    },
+    "hasAccount": "Already have an account?",
+    "signIn": "Sign in here",
+    "terms": {
+      "text": "By signing up, you agree to our",
+      "termsLink": "Terms of Service",
+      "and": "and",
+      "privacyLink": "Privacy Policy"
+    }
   },
   "about": {
     "title": "About Scientism Poetry",
