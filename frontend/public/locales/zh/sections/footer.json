@@ -1,0 +1,24 @@
+{
+  "about": {
+    "title": "关于我们",
+    "description": "探索科学与诗歌的交汇，为科学表达创造独特的诗歌空间"
+  },
+  "links": {
+    "title": "快速链接",
+    "about": "关于我们",
+    "book": "精选图书",
+    "poems": "会员诗作",
+    "contact": "联系我们"
+  },
+  "social": {
+    "title": "关注我们",
+    "twitter": "推特",
+    "facebook": "脸书",
+    "instagram": "Instagram"
+  },
+  "copyright": "© {{year}} 科学诗歌。保留所有权利",
+  "legal": {
+    "privacy": "隐私政策",
+    "terms": "服务条款"
+  }
+}

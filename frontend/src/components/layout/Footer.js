@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['footer']);
   const currentYear = new Date().getFullYear();
 
   return (
@@ -21,15 +21,15 @@ const Footer = () => {
         <Grid container spacing={4}>
           <Grid item xs={12} sm={4}>
             <Typography variant="h6" gutterBottom>
-              {t('footer.about.title')}
+              {t('footer:about.title')}
             </Typography>
             <Typography variant="body2">
-              {t('footer.about.description')}
+              {t('footer:about.description')}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography variant="h6" gutterBottom>
-              {t('footer.links.title')}
+              {t('footer:links.title')}
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <MuiLink
@@ -38,7 +38,7 @@ const Footer = () => {
                 color="inherit"
                 sx={{ mb: 1 }}
               >
-                {t('footer.links.about')}
+                {t('footer:links.about')}
               </MuiLink>
               <MuiLink
                 component={Link}
@@ -46,7 +46,7 @@ const Footer = () => {
                 color="inherit"
                 sx={{ mb: 1 }}
               >
-                {t('footer.links.book')}
+                {t('footer:links.book')}
               </MuiLink>
               <MuiLink
                 component={Link}
@@ -54,7 +54,7 @@ const Footer = () => {
                 color="inherit"
                 sx={{ mb: 1 }}
               >
-                {t('footer.links.poems')}
+                {t('footer:links.poems')}
               </MuiLink>
               <MuiLink
                 component={Link}
@@ -62,13 +62,13 @@ const Footer = () => {
                 color="inherit"
                 sx={{ mb: 1 }}
               >
-                {t('footer.links.contact')}
+                {t('footer:links.contact')}
               </MuiLink>
             </Box>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography variant="h6" gutterBottom>
-              {t('footer.social.title')}
+              {t('footer:social.title')}
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <MuiLink
@@ -78,7 +78,7 @@ const Footer = () => {
                 color="inherit"
                 sx={{ mb: 1 }}
               >
-                {t('footer.social.twitter')}
+                {t('footer:social.twitter')}
               </MuiLink>
               <MuiLink
                 href="https://facebook.com/scientismpoetry"
@@ -87,7 +87,7 @@ const Footer = () => {
                 color="inherit"
                 sx={{ mb: 1 }}
               >
-                {t('footer.social.facebook')}
+                {t('footer:social.facebook')}
               </MuiLink>
               <MuiLink
                 href="https://instagram.com/scientismpoetry"
@@ -96,14 +96,14 @@ const Footer = () => {
                 color="inherit"
                 sx={{ mb: 1 }}
               >
-                {t('footer.social.instagram')}
+                {t('footer:social.instagram')}
               </MuiLink>
             </Box>
           </Grid>
         </Grid>
         <Box sx={{ mt: 5, borderTop: 1, pt: 2, borderColor: 'rgba(255, 255, 255, 0.2)' }}>
           <Typography variant="body2" align="center">
-            {t('footer.copyright', { year: currentYear })}
+            {t('footer:copyright', { year: currentYear })}
           </Typography>
           <Typography variant="body2" align="center" sx={{ mt: 1 }}>
             <MuiLink
@@ -112,7 +112,7 @@ const Footer = () => {
               color="inherit"
               sx={{ mx: 1 }}
             >
-              {t('footer.legal.privacy')}
+              {t('footer:legal.privacy')}
             </MuiLink>
             |
             <MuiLink
@@ -121,7 +121,7 @@ const Footer = () => {
               color="inherit"
               sx={{ mx: 1 }}
             >
-              {t('footer.legal.terms')}
+              {t('footer:legal.terms')}
             </MuiLink>
           </Typography>
         </Box>

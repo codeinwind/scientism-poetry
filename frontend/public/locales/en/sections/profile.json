@@ -1,0 +1,41 @@
+{
+  "title": "Profile",
+  "editProfile": "Edit Profile",
+  "saveChanges": "Save Changes",
+  "profileInfo": "Profile Information",
+  "form": {
+    "name": {
+      "label": "Name",
+      "required": "Name is required",
+      "minLength": "Name must be at least 2 characters"
+    },
+    "email": {
+      "label": "Email",
+      "required": "Email is required",
+      "invalid": "Invalid email address"
+    },
+    "bio": {
+      "label": "Bio",
+      "maxLength": "Bio must be 500 characters or less"
+    },
+    "password": {
+      "current": "Current Password",
+      "new": "New Password",
+      "confirm": "Confirm New Password",
+      "minLength": "Password must be at least 6 characters",
+      "mismatch": "Passwords must match",
+      "changeTitle": "Change Password (Optional)"
+    }
+  },
+  "stats": {
+    "title": "Activity Stats",
+    "memberSince": "Member since {{date}}",
+    "publishedPoems": "Published Poems: {{count}}",
+    "totalLikes": "Total Likes: {{count}}",
+    "commentsMade": "Comments Made: {{count}}"
+  },
+  "messages": {
+    "updateSuccess": "Profile updated successfully",
+    "updateError": "Failed to update profile"
+  }
+}

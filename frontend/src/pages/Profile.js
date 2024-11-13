@@ -19,30 +19,32 @@ import * as Yup from 'yup';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
-
-const validationSchema = Yup.object({
-  name: Yup.string()
-    .required('Name is required')
-    .min(2, 'Name must be at least 2 characters'),
-  email: Yup.string()
-    .email('Invalid email address')
-    .required('Email is required'),
-  bio: Yup.string()
-    .max(500, 'Bio must be 500 characters or less'),
-  currentPassword: Yup.string()
-    .min(6, 'Password must be at least 6 characters'),
-  newPassword: Yup.string()
-    .min(6, 'Password must be at least 6 characters'),
-  confirmNewPassword: Yup.string()
-    .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
-});
+import { useTranslation } from 'react-i18next';
 
 const Profile = () => {
+  const { t } = useTranslation(['profile', 'common']);
   const { user, updateUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .required(t('profile:form.name.required'))
+      .min(2, t('profile:form.name.minLength')),
+    email: Yup.string()
+      .email(t('profile:form.email.invalid'))
+      .required(t('profile:form.email.required')),
+    bio: Yup.string()
+      .max(500, t('profile:form.bio.maxLength')),
+    currentPassword: Yup.string()
+      .min(6, t('profile:form.password.minLength')),
+    newPassword: Yup.string()
+      .min(6, t('profile:form.password.minLength')),
+    confirmNewPassword: Yup.string()
+      .oneOf([Yup.ref('newPassword'), null], t('profile:form.password.mismatch')),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -60,7 +62,6 @@ const Profile = () => {
         setError('');
         setSuccess('');
 
-        // TODO: Replace with actual API call
         const response = await fetch(`http://localhost:5000/api/auth/profile`, {
           method: 'PUT',
           headers: {
@@ -73,14 +74,13 @@ const Profile = () => {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message || 'Failed to update profile');
+          throw new Error(data.message || t('profile:messages.updateError'));
         }
 
         updateUser(data.user);
-        setSuccess('Profile updated successfully');
+        setSuccess(t('profile:messages.updateSuccess'));
         setIsEditing(false);
         
-        // Clear password fields
         formik.setFieldValue('currentPassword', '');
         formik.setFieldValue('newPassword', '');
         formik.setFieldValue('confirmNewPassword', '');
@@ -101,7 +101,7 @@ const Profile = () => {
   return (
     <Container maxWidth="lg">
       <Typography variant="h3" gutterBottom>
-        Profile
+        {t('profile:title')}
       </Typography>
 
       {error && (
@@ -121,13 +121,13 @@ const Profile = () => {
         <Grid item xs={12} md={8}>
           <Paper sx={{ p: 4 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
-              <Typography variant="h5">Profile Information</Typography>
+              <Typography variant="h5">{t('profile:profileInfo')}</Typography>
               {!isEditing ? (
                 <Button
                   startIcon={<EditIcon />}
                   onClick={() => setIsEditing(true)}
                 >
-                  Edit Profile
+                  {t('profile:editProfile')}
                 </Button>
               ) : (
                 <Box>
@@ -136,7 +136,7 @@ const Profile = () => {
                     onClick={handleCancel}
                     sx={{ mr: 1 }}
                   >
-                    Cancel
+                    {t('common:cancel')}
                   </Button>
                   <Button
                     variant="contained"
@@ -144,7 +144,7 @@ const Profile = () => {
                     onClick={formik.handleSubmit}
                     disabled={loading}
                   >
-                    Save Changes
+                    {t('profile:saveChanges')}
                   </Button>
                 </Box>
               )}
@@ -155,7 +155,7 @@ const Profile = () => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Name"
+                    label={t('profile:form.name.label')}
                     name="name"
                     value={formik.values.name}
                     onChange={formik.handleChange}
@@ -168,7 +168,7 @@ const Profile = () => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Email"
+                    label={t('profile:form.email.label')}
                     name="email"
                     value={formik.values.email}
                     onChange={formik.handleChange}
@@ -181,7 +181,7 @@ const Profile = () => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Bio"
+                    label={t('profile:form.bio.label')}
                     name="bio"
                     multiline
                     rows={4}
@@ -199,7 +199,7 @@ const Profile = () => {
                     <Grid item xs={12}>
                       <Divider sx={{ my: 2 }}>
                         <Typography variant="body2" color="text.secondary">
-                          Change Password (Optional)
+                          {t('profile:form.password.changeTitle')}
                         </Typography>
                       </Divider>
                     </Grid>
@@ -207,7 +207,7 @@ const Profile = () => {
                       <TextField
                         fullWidth
                         type="password"
-                        label="Current Password"
+                        label={t('profile:form.password.current')}
                         name="currentPassword"
                         value={formik.values.currentPassword}
                         onChange={formik.handleChange}
@@ -220,7 +220,7 @@ const Profile = () => {
                       <TextField
                         fullWidth
                         type="password"
-                        label="New Password"
+                        label={t('profile:form.password.new')}
                         name="newPassword"
                         value={formik.values.newPassword}
                         onChange={formik.handleChange}
@@ -233,7 +233,7 @@ const Profile = () => {
                       <TextField
                         fullWidth
                         type="password"
-                        label="Confirm New Password"
+                        label={t('profile:form.password.confirm')}
                         name="confirmNewPassword"
                         value={formik.values.confirmNewPassword}
                         onChange={formik.handleChange}
@@ -267,23 +267,25 @@ const Profile = () => {
                 <Box sx={{ ml: 2 }}>
                   <Typography variant="h6">{user?.name}</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Member since {new Date(user?.createdAt).toLocaleDateString()}
+                    {t('profile:stats.memberSince', {
+                      date: new Date(user?.createdAt).toLocaleDateString()
+                    })}
                   </Typography>
                 </Box>
               </Box>
               <Divider sx={{ my: 2 }} />
               <Typography variant="subtitle2" gutterBottom>
-                Activity Stats
+                {t('profile:stats.title')}
               </Typography>
               <Box sx={{ mt: 2 }}>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Published Poems: 12
+                  {t('profile:stats.publishedPoems', { count: 12 })}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Total Likes: 45
+                  {t('profile:stats.totalLikes', { count: 45 })}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Comments Made: 28
+                  {t('profile:stats.commentsMade', { count: 28 })}
                 </Typography>
               </Box>
             </CardContent>

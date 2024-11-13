@@ -23,8 +23,10 @@ import {
   Search as SearchIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Poems = () => {
+  const { t } = useTranslation(['poems']);
   const { isAuthenticated } = useAuth();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -38,7 +40,7 @@ const Poems = () => {
         `http://localhost:5000/api/poems?page=${page}&search=${search}`
       );
       if (!response.ok) {
-        throw new Error('Failed to fetch poems');
+        throw new Error(t('poems:errors.loadFailed'));
       }
       return response.json();
     }
@@ -74,7 +76,7 @@ const Poems = () => {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
         <Alert severity="error">
-          Error loading poems. Please try again later.
+          {t('poems:errors.loadFailed')}
         </Alert>
       </Container>
     );
@@ -85,10 +87,10 @@ const Poems = () => {
       {/* Header Section */}
       <Box sx={{ mb: 6, textAlign: 'center' }}>
         <Typography variant="h2" component="h1" gutterBottom>
-          Member Poems
+          {t('poems:title')}
         </Typography>
         <Typography variant="h5" color="text.secondary" paragraph>
-          Explore our collection of scientism poetry
+          {t('poems:subtitle')}
         </Typography>
       </Box>
 
@@ -101,7 +103,7 @@ const Poems = () => {
         <TextField
           fullWidth
           variant="outlined"
-          placeholder="Search poems..."
+          placeholder={t('poems:search.placeholder')}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           InputProps={{
@@ -126,7 +128,7 @@ const Poems = () => {
                   {poem.title}
                 </Typography>
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  By {poem.author.name}
+                  {t('poems:poem.by', { author: poem.author.name })}
                 </Typography>
                 <Typography
                   variant="body1"
@@ -158,17 +160,17 @@ const Poems = () => {
                     <FavoriteIcon />
                   </IconButton>
                   <Typography variant="body2" component="span" sx={{ ml: 1 }}>
-                    {poem.likes?.length || 0}
+                    {t('poems:poem.likes', { count: poem.likes?.length || 0 })}
                   </Typography>
                   <IconButton size="small" sx={{ ml: 2 }}>
                     <CommentIcon />
                   </IconButton>
                   <Typography variant="body2" component="span" sx={{ ml: 1 }}>
-                    {poem.comments?.length || 0}
+                    {t('poems:poem.comments', { count: poem.comments?.length || 0 })}
                   </Typography>
                 </Box>
                 <Button size="small" color="primary">
-                  Read More
+                  {t('poems:poem.readMore')}
                 </Button>
               </CardActions>
             </Card>
@@ -201,11 +203,10 @@ const Poems = () => {
           }}
         >
           <Typography variant="h5" gutterBottom>
-            Want to Share Your Own Poems?
+            {t('poems:cta.title')}
           </Typography>
           <Typography variant="body1" paragraph>
-            Join our community to publish your scientism poetry and engage with
-            other poets.
+            {t('poems:cta.description')}
           </Typography>
           <Button
             variant="contained"
@@ -213,7 +214,7 @@ const Poems = () => {
             size="large"
             href="/register"
           >
-            Join Now
+            {t('poems:cta.button')}
           </Button>
         </Box>
       )}

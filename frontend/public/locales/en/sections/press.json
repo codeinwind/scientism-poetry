@@ -1,0 +1,22 @@
+{
+  "intro": "Canadian Beaver Press is a publishing institution dedicated to integrating scientific philosophy, theory, and methodology into poetic creation. In collaboration with the International Scientism Poetry Association (ISPA), we aim to explore the deep connections between nature, the universe, and the human spiritual world through the fusion of rationality and sensibility, presenting their unique aesthetic and philosophical depth in diverse forms.",
+  "services": {
+    "title": "Services",
+    "items": {
+      "1": "Poetry Publishing: Focus on publishing poetry works that integrate scientific elements, encouraging authors to reflect the fusion of science and art in their creations.",
+      "2": "Editorial Services: Provide a professional editorial team to assist authors in perfecting their works, ensuring a balance between scientific accuracy and artistic expression.",
+      "3": "Translation Services: Offer high-quality translation services for authors wishing to promote their works to international markets, expanding their readership.",
+      "4": "Marketing: Utilize multi-channel marketing strategies to enhance the visibility and influence of works, including online and offline events, media promotion, etc.",
+      "5": "Author Support: Regularly organize seminars, workshops, and other activities to promote exchange and collaboration among authors, collectively improving creative standards."
+    }
+  },
+  "benefits": {
+    "title": "Preferential Policies",
+    "items": {
+      "1": "New Author Support Program: Provide special offers for first-time authors, including publishing fee discounts and free editorial consultation services.",
+      "2": "Member Exclusive Discounts: ISPA members enjoy special discounts when publishing works with Beaver Press. Contact the press for detailed information about specific benefits.",
+      "3": "Long-term Collaboration Benefits: Authors establishing long-term partnerships with the press can enjoy ongoing publishing fee discounts and priority publishing rights."
+    }
+  },
+  "contact": "For more information or to apply for membership, please visit our official website: www.scientismpoetry.com"
+}

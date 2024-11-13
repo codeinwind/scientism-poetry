@@ -1,0 +1,21 @@
+{
+  "title": "Member Poems",
+  "subtitle": "Explore our collection of scientism poetry",
+  "search": {
+    "placeholder": "Search poems..."
+  },
+  "poem": {
+    "by": "By {{author}}",
+    "readMore": "Read More",
+    "likes": "{{count}} likes",
+    "comments": "{{count}} comments"
+  },
+  "errors": {
+    "loadFailed": "Error loading poems. Please try again later."
+  },
+  "cta": {
+    "title": "Want to Share Your Own Poems?",
+    "description": "Join our community to publish your scientism poetry and engage with other poets.",
+    "button": "Join Now"
+  }
+}

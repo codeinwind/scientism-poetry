@@ -1,0 +1,49 @@
+{
+  "title": "控制台",
+  "welcome": "欢迎回来，{{name}}",
+  "createPoem": "创作新诗",
+  "editPoem": "编辑诗歌",
+  "emptyState": {
+    "title": "开启您的诗歌之旅",
+    "description": "您还没有创作任何诗歌。与我们的社区分享您的科学见解。",
+    "button": "创作您的第一首诗"
+  },
+  "tabs": {
+    "all": "全部诗歌",
+    "published": "已发布",
+    "underReview": "审核中",
+    "drafts": "草稿"
+  },
+  "poem": {
+    "lastUpdated": "最后更新：{{date}}",
+    "actions": {
+      "edit": "编辑",
+      "delete": "删除"
+    }
+  },
+  "dialog": {
+    "create": {
+      "title": "创作新诗",
+      "button": "创建诗歌"
+    },
+    "edit": {
+      "title": "编辑诗歌",
+      "button": "保存更改"
+    },
+    "form": {
+      "title": {
+        "label": "标题"
+      },
+      "content": {
+        "label": "内容"
+      },
+      "tags": {
+        "label": "标签（用逗号分隔）",
+        "helper": "输入标签，用逗号分隔（例如：量子、物理、宇宙）"
+      }
+    }
+  },
+  "errors": {
+    "loadPoems": "加载诗歌失败，请稍后重试。"
+  }
+}

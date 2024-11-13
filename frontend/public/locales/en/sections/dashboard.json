@@ -1,0 +1,49 @@
+{
+  "title": "Dashboard",
+  "welcome": "Welcome back, {{name}}",
+  "createPoem": "Create New Poem",
+  "editPoem": "Edit Poem",
+  "emptyState": {
+    "title": "Start Your Poetic Journey",
+    "description": "You haven't created any poems yet. Share your scientific insights through poetry with our community.",
+    "button": "Create Your First Poem"
+  },
+  "tabs": {
+    "all": "All Poems",
+    "published": "Published",
+    "underReview": "Under Review",
+    "drafts": "Drafts"
+  },
+  "poem": {
+    "lastUpdated": "Last updated: {{date}}",
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    }
+  },
+  "dialog": {
+    "create": {
+      "title": "Create New Poem",
+      "button": "Create Poem"
+    },
+    "edit": {
+      "title": "Edit Poem",
+      "button": "Save Changes"
+    },
+    "form": {
+      "title": {
+        "label": "Title"
+      },
+      "content": {
+        "label": "Content"
+      },
+      "tags": {
+        "label": "Tags (comma separated)",
+        "helper": "Enter tags separated by commas (e.g., quantum, physics, space)"
+      }
+    }
+  },
+  "errors": {
+    "loadPoems": "Error loading your poems. Please try again later."
+  }
+}

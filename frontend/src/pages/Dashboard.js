@@ -26,8 +26,10 @@ import {
   Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
+  const { t } = useTranslation(['dashboard', 'common']);
   const { user } = useAuth();
   const [tab, setTab] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
@@ -35,11 +37,23 @@ const Dashboard = () => {
 
   // Fetch user's poems
   const { data: poems, isLoading, error } = useQuery(['userPoems', user.id], async () => {
-    const response = await fetch(`http://localhost:5000/api/poems/user/${user.id}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch poems');
+    try {
+      const response = await fetch(`http://localhost:5000/api/poems/user/${user.id}`);
+      if (response.status === 404) {
+        // Return empty data for 404 (no poems found)
+        return { data: [] };
+      }
+      if (!response.ok) {
+        throw new Error(t('dashboard:errors.loadPoems'));
+      }
+      return response.json();
+    } catch (err) {
+      // Only throw error for non-404 responses
+      if (err.message !== t('dashboard:errors.loadPoems')) {
+        throw err;
+      }
+      return { data: [] };
     }
-    return response.json();
   });
 
   const handleTabChange = (event, newValue) => {
@@ -85,132 +99,168 @@ const Dashboard = () => {
     );
   }
 
-  if (error) {
+  // Only show error state for actual errors (not 404)
+  if (error && error.message !== t('dashboard:errors.loadPoems')) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Alert severity="error">Error loading your poems. Please try again later.</Alert>
+        <Alert severity="error">{t('dashboard:errors.loadPoems')}</Alert>
       </Container>
     );
   }
+
+  const hasPoems = poems?.data && poems.data.length > 0;
 
   return (
     <Container maxWidth="lg">
       {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h3" gutterBottom>
-          Dashboard
+          {t('dashboard:title')}
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Welcome back, {user.name}
+          {t('dashboard:welcome', { name: user.name })}
         </Typography>
       </Box>
 
-      {/* Action Button */}
-      <Box sx={{ mb: 4 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={handleCreateNew}
-        >
-          Create New Poem
-        </Button>
-      </Box>
+      {hasPoems ? (
+        <>
+          {/* Action Button */}
+          <Box sx={{ mb: 4 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={handleCreateNew}
+            >
+              {t('dashboard:createPoem')}
+            </Button>
+          </Box>
 
-      {/* Tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 4 }}>
-        <Tabs value={tab} onChange={handleTabChange}>
-          <Tab label="All Poems" />
-          <Tab label="Published" />
-          <Tab label="Under Review" />
-          <Tab label="Drafts" />
-        </Tabs>
-      </Box>
+          {/* Tabs */}
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 4 }}>
+            <Tabs value={tab} onChange={handleTabChange}>
+              <Tab label={t('dashboard:tabs.all')} />
+              <Tab label={t('dashboard:tabs.published')} />
+              <Tab label={t('dashboard:tabs.underReview')} />
+              <Tab label={t('dashboard:tabs.drafts')} />
+            </Tabs>
+          </Box>
 
-      {/* Poems Grid */}
-      <Grid container spacing={4}>
-        {getFilteredPoems().map((poem) => (
-          <Grid item xs={12} md={6} key={poem._id}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                  <Typography variant="h5">{poem.title}</Typography>
-                  <Chip
-                    label={poem.status}
-                    color={
-                      poem.status === 'published'
-                        ? 'success'
-                        : poem.status === 'under_review'
-                        ? 'warning'
-                        : 'default'
-                    }
-                    size="small"
-                  />
-                </Box>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    whiteSpace: 'pre-line',
-                    mb: 2,
-                    display: '-webkit-box',
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {poem.content}
-                </Typography>
-                <Box sx={{ mb: 1 }}>
-                  {poem.tags.map((tag, index) => (
-                    <Chip
-                      key={index}
-                      label={tag}
+          {/* Poems Grid */}
+          <Grid container spacing={4}>
+            {getFilteredPoems().map((poem) => (
+              <Grid item xs={12} md={6} key={poem._id}>
+                <Card>
+                  <CardContent>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                      <Typography variant="h5">{poem.title}</Typography>
+                      <Chip
+                        label={poem.status}
+                        color={
+                          poem.status === 'published'
+                            ? 'success'
+                            : poem.status === 'under_review'
+                            ? 'warning'
+                            : 'default'
+                        }
+                        size="small"
+                      />
+                    </Box>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        whiteSpace: 'pre-line',
+                        mb: 2,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {poem.content}
+                    </Typography>
+                    <Box sx={{ mb: 1 }}>
+                      {poem.tags.map((tag, index) => (
+                        <Chip
+                          key={index}
+                          label={tag}
+                          size="small"
+                          sx={{ mr: 1, mb: 1 }}
+                        />
+                      ))}
+                    </Box>
+                    <Typography variant="caption" color="text.secondary">
+                      {t('dashboard:poem.lastUpdated', {
+                        date: new Date(poem.updatedAt).toLocaleDateString()
+                      })}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button
                       size="small"
-                      sx={{ mr: 1, mb: 1 }}
-                    />
-                  ))}
-                </Box>
-                <Typography variant="caption" color="text.secondary">
-                  Last updated: {new Date(poem.updatedAt).toLocaleDateString()}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  size="small"
-                  startIcon={<EditIcon />}
-                  onClick={() => handleEdit(poem)}
-                >
-                  Edit
-                </Button>
-                <Button
-                  size="small"
-                  color="error"
-                  startIcon={<DeleteIcon />}
-                >
-                  Delete
-                </Button>
-              </CardActions>
-            </Card>
+                      startIcon={<EditIcon />}
+                      onClick={() => handleEdit(poem)}
+                    >
+                      {t('dashboard:poem.actions.edit')}
+                    </Button>
+                    <Button
+                      size="small"
+                      color="error"
+                      startIcon={<DeleteIcon />}
+                    >
+                      {t('dashboard:poem.actions.delete')}
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
+        </>
+      ) : (
+        // Empty State
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            py: 8,
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            {t('dashboard:emptyState.title')}
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 600 }}>
+            {t('dashboard:emptyState.description')}
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            startIcon={<AddIcon />}
+            onClick={handleCreateNew}
+          >
+            {t('dashboard:emptyState.button')}
+          </Button>
+        </Box>
+      )}
 
       {/* Create/Edit Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
         <DialogTitle>
-          {selectedPoem ? 'Edit Poem' : 'Create New Poem'}
+          {selectedPoem ? t('dashboard:dialog.edit.title') : t('dashboard:dialog.create.title')}
         </DialogTitle>
         <DialogContent>
           <Box sx={{ pt: 2 }}>
             <TextField
               fullWidth
-              label="Title"
+              label={t('dashboard:dialog.form.title.label')}
               defaultValue={selectedPoem?.title}
               margin="normal"
             />
             <TextField
               fullWidth
-              label="Content"
+              label={t('dashboard:dialog.form.content.label')}
               multiline
               rows={6}
               defaultValue={selectedPoem?.content}
@@ -218,21 +268,21 @@ const Dashboard = () => {
             />
             <TextField
               fullWidth
-              label="Tags (comma separated)"
+              label={t('dashboard:dialog.form.tags.label')}
               defaultValue={selectedPoem?.tags.join(', ')}
               margin="normal"
-              helperText="Enter tags separated by commas (e.g., quantum, physics, space)"
+              helperText={t('dashboard:dialog.form.tags.helper')}
             />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleCloseDialog}>{t('common:cancel')}</Button>
           <Button
             variant="contained"
             color="primary"
             onClick={handleCloseDialog}
           >
-            {selectedPoem ? 'Save Changes' : 'Create Poem'}
+            {selectedPoem ? t('dashboard:dialog.edit.button') : t('dashboard:dialog.create.button')}
           </Button>
         </DialogActions>
       </Dialog>
