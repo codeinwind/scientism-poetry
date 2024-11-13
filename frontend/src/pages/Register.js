@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { authService } from '../services/api';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -39,28 +40,15 @@ const Register = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       setError('');
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: values.name,
-          email: values.email,
-          password: values.password,
-        }),
+      const data = await authService.register({
+        name: values.name,
+        email: values.email,
+        password: values.password,
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || t('auth:register.errors.failed'));
-      }
-
       login(data.user, data.token);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || t('auth:register.errors.failed'));
     } finally {
       setSubmitting(false);
     }
