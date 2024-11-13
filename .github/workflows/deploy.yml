@@ -18,17 +18,19 @@ jobs:
       with:
         node-version: '18'
 
-    # Test build on GitHub Actions
+    # Test Frontend Build
     - name: Test Frontend Build
       env:
         REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
       run: |
         cd frontend
+        # Create production env file
+        echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > .env.production
         npm ci
         npm run build
         cd ..
 
-    # Test backend
+    # Test Backend
     - name: Test Backend
       run: |
         cd backend
@@ -39,15 +41,10 @@ jobs:
     - name: Setup SSH
       run: |
         mkdir -p ~/.ssh
-        # Write the base64 encoded key to a temporary file
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/encoded_key
-        # Decode the key and save it properly
         base64 -d /tmp/encoded_key > ~/.ssh/id_rsa
-        # Clean up encoded file
         rm /tmp/encoded_key
-        # Set proper permissions
         chmod 600 ~/.ssh/id_rsa
-        # Add host to known_hosts
         ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
         chmod 600 ~/.ssh/known_hosts
 
@@ -63,6 +60,10 @@ jobs:
           git clone https://github.com/codeinwind/scientism-poetry.git $TEMP_DIR &&
           cd $TEMP_DIR &&
 
+          # Create frontend production env file
+          echo "Creating frontend production env file..." &&
+          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > frontend/.env.production &&
+
           # Build frontend
           echo "Building frontend..." &&
           cd frontend &&
@@ -70,15 +71,22 @@ jobs:
           npm run build &&
           cd .. &&
 
+          # Create backend env file
+          echo "Creating backend env file..." &&
+          cat > backend/.env << EOL
+          NODE_ENV=production
+          PORT=${{ secrets.BACKEND_PORT }}
+          MONGODB_URI=${{ secrets.MONGODB_URI }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          LOG_DIR=/var/log/scientism-poetry
+          EOL
+
           # Build backend
           echo "Building backend..." &&
           cd backend &&
           npm ci --production &&
           cd .. &&
 
-          # If builds are successful, stop the current service and update production
-          echo "Updating production..." &&
-          
           # Stop existing PM2 processes
           pm2 stop scientism-poetry-backend || true &&
           pm2 delete scientism-poetry-backend || true &&
@@ -90,9 +98,10 @@ jobs:
           sudo cp -r frontend/build/* /var/www/scientism-poetry/frontend/ &&
           sudo cp -r backend/* /var/www/scientism-poetry/backend/ &&
 
-          # Recreate the symbolic link after deployment
-          sudo ln -s /var/www/scientism-poetry/env/.env /var/www/scientism-poetry/backend/.env
-
+          # Ensure log directory exists with proper permissions
+          sudo mkdir -p /var/log/scientism-poetry &&
+          sudo chown -R $USER:$USER /var/log/scientism-poetry &&
+          sudo chmod 755 /var/log/scientism-poetry &&
 
           # Start backend with PM2
           cd /var/www/scientism-poetry/backend &&
@@ -111,10 +120,15 @@ jobs:
     # Verify deployment
     - name: Verify deployment
       run: |
-        ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} '
-          echo "Checking PM2 status:" &&
+        # Extract base URL from REACT_APP_API_URL for health check
+        API_BASE_URL=$(echo "${{ secrets.REACT_APP_API_URL }}" | sed "s|/api$||")
+        
+        ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} "
+          echo \"Checking PM2 status:\" &&
           pm2 list &&
-          echo "Checking API health:" &&
-          curl -s http://localhost:5000/api/health &&
-          echo "Deployment verification complete"
-        '
+          echo \"Checking API health:\" &&
+          curl -s ${API_BASE_URL}/api/health &&
+          echo \"Checking logs directory:\" &&
+          ls -la /var/log/scientism-poetry &&
+          echo \"Deployment verification complete\"
+        "
