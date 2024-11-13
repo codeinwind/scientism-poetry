@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { authService } from '../services/api';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -32,24 +33,11 @@ const Login = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       setError('');
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || t('auth:login.errors.failed'));
-      }
-
+      const data = await authService.login(values);
       login(data.user, data.token);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || t('auth:login.errors.failed'));
     } finally {
       setSubmitting(false);
     }

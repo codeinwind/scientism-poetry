@@ -1,6 +1,18 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Function to determine the appropriate API URL with protocol check
+const getApiUrl = () => {
+  const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+  
+  // If it's a production environment or the URL is not localhost, enforce HTTPS
+  if (!apiUrl.includes('localhost') && !apiUrl.startsWith('https://')) {
+    return apiUrl.replace('http://', 'https://');
+  }
+  
+  return apiUrl;
+};
+
+const API_URL = getApiUrl();
 
 // Create axios instance with default config
 const api = axios.create({
