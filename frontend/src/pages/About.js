@@ -16,17 +16,17 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import { useTranslation } from 'react-i18next';
 
 const About = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['about']);
 
   return (
     <Container maxWidth="lg">
       {/* Main Introduction */}
       <Box sx={{ mb: 6, textAlign: 'center' }}>
         <Typography variant="h2" component="h1" gutterBottom>
-          {t('about.title')}
+          {t('about:title')}
         </Typography>
         <Typography variant="h5" color="text.secondary" paragraph>
-          {t('about.subtitle')}
+          {t('about:subtitle')}
         </Typography>
       </Box>
 
@@ -34,13 +34,13 @@ const About = () => {
       <Grid container spacing={4} sx={{ mb: 8 }}>
         <Grid item xs={12} md={6}>
           <Typography variant="h4" gutterBottom>
-            {t('about.whatIs.title')}
+            {t('about:whatIs.title')}
           </Typography>
           <Typography variant="body1" paragraph>
-            {t('about.whatIs.description1')}
+            {t('about:whatIs.description1')}
           </Typography>
           <Typography variant="body1" paragraph>
-            {t('about.whatIs.description2')}
+            {t('about:whatIs.description2')}
           </Typography>
           <Button
             component={RouterLink}
@@ -49,7 +49,7 @@ const About = () => {
             color="primary"
             sx={{ mt: 2 }}
           >
-            {t('about.whatIs.readButton')}
+            {t('about:whatIs.readButton')}
           </Button>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -71,7 +71,7 @@ const About = () => {
       {/* Our Mission */}
       <Box sx={{ mb: 8 }}>
         <Typography variant="h4" gutterBottom align="center">
-          {t('about.mission.title')}
+          {t('about:mission.title')}
         </Typography>
         <Grid container spacing={4} sx={{ mt: 2 }}>
           <Grid item xs={12} md={4}>
@@ -79,10 +79,10 @@ const About = () => {
               <CardContent sx={{ textAlign: 'center' }}>
                 <ScienceIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
                 <Typography variant="h6" gutterBottom>
-                  {t('about.mission.promote.title')}
+                  {t('about:mission.promote.title')}
                 </Typography>
                 <Typography variant="body1">
-                  {t('about.mission.promote.description')}
+                  {t('about:mission.promote.description')}
                 </Typography>
               </CardContent>
             </Card>
@@ -92,10 +92,10 @@ const About = () => {
               <CardContent sx={{ textAlign: 'center' }}>
                 <MenuBookIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
                 <Typography variant="h6" gutterBottom>
-                  {t('about.mission.foster.title')}
+                  {t('about:mission.foster.title')}
                 </Typography>
                 <Typography variant="body1">
-                  {t('about.mission.foster.description')}
+                  {t('about:mission.foster.description')}
                 </Typography>
               </CardContent>
             </Card>
@@ -105,10 +105,10 @@ const About = () => {
               <CardContent sx={{ textAlign: 'center' }}>
                 <GroupsIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
                 <Typography variant="h6" gutterBottom>
-                  {t('about.mission.build.title')}
+                  {t('about:mission.build.title')}
                 </Typography>
                 <Typography variant="body1">
-                  {t('about.mission.build.description')}
+                  {t('about:mission.build.description')}
                 </Typography>
               </CardContent>
             </Card>
@@ -127,10 +127,10 @@ const About = () => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('about.join.title')}
+          {t('about:join.title')}
         </Typography>
         <Typography variant="body1" paragraph>
-          {t('about.join.description')}
+          {t('about:join.description')}
         </Typography>
         <Button
           component={RouterLink}
@@ -140,7 +140,7 @@ const About = () => {
           size="large"
           sx={{ mt: 2 }}
         >
-          {t('about.join.button')}
+          {t('about:join.button')}
         </Button>
       </Box>
     </Container>

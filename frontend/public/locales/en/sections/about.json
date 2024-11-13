@@ -1,0 +1,30 @@
+{
+  "title": "About Scientism Poetry",
+  "subtitle": "Where Scientific Understanding Meets Poetic Expression",
+  "whatIs": {
+    "title": "What is Scientism Poetry?",
+    "description1": "Scientism Poetry is a unique form of artistic expression that bridges the gap between scientific understanding and poetic creativity. It seeks to explore and explain scientific concepts, discoveries, and phenomena through the lens of poetry.",
+    "description2": "Our poets combine technical accuracy with creative metaphors, making complex scientific ideas accessible and emotionally resonant for readers of all backgrounds.",
+    "readButton": "Read Our Poems"
+  },
+  "mission": {
+    "title": "Our Mission",
+    "promote": {
+      "title": "Promote Scientific Understanding",
+      "description": "Make scientific concepts more accessible and engaging through creative expression and poetic interpretation."
+    },
+    "foster": {
+      "title": "Foster Creativity",
+      "description": "Encourage poets to explore scientific themes in their work and develop unique ways to communicate complex ideas."
+    },
+    "build": {
+      "title": "Build Community",
+      "description": "Create a space for like-minded individuals to share their work and passion for both science and poetry."
+    }
+  },
+  "join": {
+    "title": "Join Our Community",
+    "description": "Become part of our growing community of poets and science enthusiasts. Share your work, participate in workshops, and connect with others who share your passion.",
+    "button": "Join Now"
+  }
+}

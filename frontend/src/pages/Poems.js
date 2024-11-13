@@ -26,7 +26,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 
 const Poems = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['poems']);
   const { isAuthenticated } = useAuth();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -40,7 +40,7 @@ const Poems = () => {
         `http://localhost:5000/api/poems?page=${page}&search=${search}`
       );
       if (!response.ok) {
-        throw new Error(t('poems.errors.loadFailed'));
+        throw new Error(t('poems:errors.loadFailed'));
       }
       return response.json();
     }
@@ -76,7 +76,7 @@ const Poems = () => {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
         <Alert severity="error">
-          {t('poems.errors.loadFailed')}
+          {t('poems:errors.loadFailed')}
         </Alert>
       </Container>
     );
@@ -87,10 +87,10 @@ const Poems = () => {
       {/* Header Section */}
       <Box sx={{ mb: 6, textAlign: 'center' }}>
         <Typography variant="h2" component="h1" gutterBottom>
-          {t('poems.title')}
+          {t('poems:title')}
         </Typography>
         <Typography variant="h5" color="text.secondary" paragraph>
-          {t('poems.subtitle')}
+          {t('poems:subtitle')}
         </Typography>
       </Box>
 
@@ -103,7 +103,7 @@ const Poems = () => {
         <TextField
           fullWidth
           variant="outlined"
-          placeholder={t('poems.search.placeholder')}
+          placeholder={t('poems:search.placeholder')}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           InputProps={{
@@ -128,7 +128,7 @@ const Poems = () => {
                   {poem.title}
                 </Typography>
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  {t('poems.poem.by', { author: poem.author.name })}
+                  {t('poems:poem.by', { author: poem.author.name })}
                 </Typography>
                 <Typography
                   variant="body1"
@@ -160,17 +160,17 @@ const Poems = () => {
                     <FavoriteIcon />
                   </IconButton>
                   <Typography variant="body2" component="span" sx={{ ml: 1 }}>
-                    {t('poems.poem.likes', { count: poem.likes?.length || 0 })}
+                    {t('poems:poem.likes', { count: poem.likes?.length || 0 })}
                   </Typography>
                   <IconButton size="small" sx={{ ml: 2 }}>
                     <CommentIcon />
                   </IconButton>
                   <Typography variant="body2" component="span" sx={{ ml: 1 }}>
-                    {t('poems.poem.comments', { count: poem.comments?.length || 0 })}
+                    {t('poems:poem.comments', { count: poem.comments?.length || 0 })}
                   </Typography>
                 </Box>
                 <Button size="small" color="primary">
-                  {t('poems.poem.readMore')}
+                  {t('poems:poem.readMore')}
                 </Button>
               </CardActions>
             </Card>
@@ -203,10 +203,10 @@ const Poems = () => {
           }}
         >
           <Typography variant="h5" gutterBottom>
-            {t('poems.cta.title')}
+            {t('poems:cta.title')}
           </Typography>
           <Typography variant="body1" paragraph>
-            {t('poems.cta.description')}
+            {t('poems:cta.description')}
           </Typography>
           <Button
             variant="contained"
@@ -214,7 +214,7 @@ const Poems = () => {
             size="large"
             href="/register"
           >
-            {t('poems.cta.button')}
+            {t('poems:cta.button')}
           </Button>
         </Box>
       )}

@@ -20,19 +20,19 @@ import LanguageSwitcher from '../shared/LanguageSwitcher';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['nav', 'common']);
   const { isAuthenticated, user, logout } = useAuth();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const pages = [
-    { title: t('nav.home'), path: '/' },
-    { title: t('nav.poemsAndComments'), path: '/poems' },
-    { title: t('nav.association'), path: '/association' },
-    { title: t('nav.journal'), path: '/journal' },
-    { title: t('nav.press'), path: '/press' },
-    { title: t('nav.newsAndEvents'), path: '/news' },
-    { title: t('nav.about'), path: '/about' }
+    { title: t('nav:home'), path: '/' },
+    { title: t('nav:poemsAndComments'), path: '/poems' },
+    { title: t('nav:association'), path: '/association' },
+    { title: t('nav:journal'), path: '/journal' },
+    { title: t('nav:press'), path: '/press' },
+    { title: t('nav:newsAndEvents'), path: '/news' },
+    { title: t('nav:about'), path: '/about' }
   ];
 
   const handleOpenNavMenu = (event) => {
@@ -75,7 +75,7 @@ const Navbar = () => {
               textDecoration: 'none',
             }}
           >
-            {t('common.appName')}
+            {t('common:appName')}
           </Typography>
 
           {/* Mobile Menu */}
@@ -135,7 +135,7 @@ const Navbar = () => {
               textDecoration: 'none',
             }}
           >
-            {t('common.appName')}
+            {t('common:appName')}
           </Typography>
 
           {/* Desktop Menu */}
@@ -162,7 +162,7 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 0 }}>
             {isAuthenticated ? (
               <>
-                <Tooltip title={t('nav.profile')}>
+                <Tooltip title={t('nav:profile')}>
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar alt={user?.name} src="/static/images/avatar/2.jpg" />
                   </IconButton>
@@ -184,13 +184,13 @@ const Navbar = () => {
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem component={Link} to="/dashboard" onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{t('nav.dashboard')}</Typography>
+                    <Typography textAlign="center">{t('nav:dashboard')}</Typography>
                   </MenuItem>
                   <MenuItem component={Link} to="/profile" onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{t('nav.profile')}</Typography>
+                    <Typography textAlign="center">{t('nav:profile')}</Typography>
                   </MenuItem>
                   <MenuItem onClick={handleLogout}>
-                    <Typography textAlign="center">{t('nav.logout')}</Typography>
+                    <Typography textAlign="center">{t('nav:logout')}</Typography>
                   </MenuItem>
                 </Menu>
               </>
@@ -202,7 +202,7 @@ const Navbar = () => {
                   variant="outlined"
                   sx={{ color: 'white', borderColor: 'white' }}
                 >
-                  {t('nav.login')}
+                  {t('nav:login')}
                 </Button>
                 <Button
                   component={Link}
@@ -210,7 +210,7 @@ const Navbar = () => {
                   variant="contained"
                   sx={{ bgcolor: 'secondary.main' }}
                 >
-                  {t('common.joinNow')}
+                  {t('common:joinNow')}
                 </Button>
               </Box>
             )}

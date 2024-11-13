@@ -1,0 +1,28 @@
+{
+  "hero": {
+    "title": "Where Science Meets Poetry",
+    "subtitle": "Explore the beauty of scientific concepts through the art of verse. Join our community of poets who blend scientific insight with creative expression.",
+    "joinButton": "Join the Club",
+    "readButton": "Read Poems"
+  },
+  "featuredBook": {
+    "title": "Featured Book",
+    "bookTitle": "The Quantum Verses",
+    "description": "Dive into our latest collection of scientism poetry, where the mysteries of quantum mechanics meet the beauty of artistic expression. Available now on Amazon.",
+    "button": "Get the Book"
+  },
+  "features": {
+    "community": {
+      "title": "Join Our Community",
+      "description": "Connect with fellow poets who share your passion for science and creative expression. Share your work and get inspired."
+    },
+    "workshops": {
+      "title": "Monthly Workshops",
+      "description": "Participate in our monthly workshops where we explore different scientific concepts through poetry writing exercises."
+    },
+    "publish": {
+      "title": "Get Published",
+      "description": "Submit your poems for our monthly featured collection and get a chance to be published in our upcoming anthologies."
+    }
+  }
+}

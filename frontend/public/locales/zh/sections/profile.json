@@ -1,0 +1,41 @@
+{
+  "title": "个人资料",
+  "editProfile": "编辑资料",
+  "saveChanges": "保存更改",
+  "profileInfo": "个人信息",
+  "form": {
+    "name": {
+      "label": "姓名",
+      "required": "请输入姓名",
+      "minLength": "姓名至少需要2个字符"
+    },
+    "email": {
+      "label": "电子邮箱",
+      "required": "请输入电子邮箱",
+      "invalid": "邮箱格式不正确"
+    },
+    "bio": {
+      "label": "个人简介",
+      "maxLength": "个人简介不能超过500个字符"
+    },
+    "password": {
+      "current": "当前密码",
+      "new": "新密码",
+      "confirm": "确认新密码",
+      "minLength": "密码至少需要6个字符",
+      "mismatch": "两次输入的密码不一致",
+      "changeTitle": "修改密码（可选）"
+    }
+  },
+  "stats": {
+    "title": "活动统计",
+    "memberSince": "注册时间：{{date}}",
+    "publishedPoems": "已发布诗歌：{{count}}",
+    "totalLikes": "获赞总数：{{count}}",
+    "commentsMade": "评论数：{{count}}"
+  },
+  "messages": {
+    "updateSuccess": "个人资料更新成功",
+    "updateError": "更新个人资料失败"
+  }
+}

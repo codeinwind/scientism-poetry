@@ -35,7 +35,7 @@ const FeatureCard = styled(Card)(({ theme }) => ({
 }));
 
 const Home = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['home', 'common']);
 
   return (
     <Box>
@@ -49,10 +49,10 @@ const Home = () => {
                 gutterBottom
                 sx={{ fontWeight: 'bold' }}
               >
-                {t('home.hero.title')}
+                {t('home:hero.title')}
               </Typography>
               <Typography variant="h5" paragraph>
-                {t('home.hero.subtitle')}
+                {t('home:hero.subtitle')}
               </Typography>
               <Box sx={{ mt: 4 }}>
                 <Button
@@ -63,7 +63,7 @@ const Home = () => {
                   color="secondary"
                   sx={{ mr: 2 }}
                 >
-                  {t('home.hero.joinButton')}
+                  {t('home:hero.joinButton')}
                 </Button>
                 <Button
                   component={RouterLink}
@@ -72,7 +72,7 @@ const Home = () => {
                   size="large"
                   sx={{ color: 'white', borderColor: 'white' }}
                 >
-                  {t('home.hero.readButton')}
+                  {t('home:hero.readButton')}
                 </Button>
               </Box>
             </Grid>
@@ -84,7 +84,7 @@ const Home = () => {
         {/* Featured Book Section */}
         <Box sx={{ mb: 8 }}>
           <Typography variant="h3" gutterBottom align="center">
-            {t('home.featuredBook.title')}
+            {t('home:featuredBook.title')}
           </Typography>
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={6}>
@@ -98,10 +98,10 @@ const Home = () => {
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h4" gutterBottom>
-                {t('home.featuredBook.bookTitle')}
+                {t('home:featuredBook.bookTitle')}
               </Typography>
               <Typography variant="body1" paragraph>
-                {t('home.featuredBook.description')}
+                {t('home:featuredBook.description')}
               </Typography>
               <Button
                 variant="contained"
@@ -112,7 +112,7 @@ const Home = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {t('home.featuredBook.button')}
+                {t('home:featuredBook.button')}
               </Button>
             </Grid>
           </Grid>
@@ -130,10 +130,10 @@ const Home = () => {
               />
               <CardContent>
                 <Typography variant="h5" gutterBottom>
-                  {t('home.features.community.title')}
+                  {t('home:features.community.title')}
                 </Typography>
                 <Typography variant="body1">
-                  {t('home.features.community.description')}
+                  {t('home:features.community.description')}
                 </Typography>
               </CardContent>
             </FeatureCard>
@@ -148,10 +148,10 @@ const Home = () => {
               />
               <CardContent>
                 <Typography variant="h5" gutterBottom>
-                  {t('home.features.workshops.title')}
+                  {t('home:features.workshops.title')}
                 </Typography>
                 <Typography variant="body1">
-                  {t('home.features.workshops.description')}
+                  {t('home:features.workshops.description')}
                 </Typography>
               </CardContent>
             </FeatureCard>
@@ -166,10 +166,10 @@ const Home = () => {
               />
               <CardContent>
                 <Typography variant="h5" gutterBottom>
-                  {t('home.features.publish.title')}
+                  {t('home:features.publish.title')}
                 </Typography>
                 <Typography variant="body1">
-                  {t('home.features.publish.description')}
+                  {t('home:features.publish.description')}
                 </Typography>
               </CardContent>
             </FeatureCard>

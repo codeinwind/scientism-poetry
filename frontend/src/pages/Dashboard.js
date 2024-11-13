@@ -29,7 +29,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['dashboard', 'common']);
   const { user } = useAuth();
   const [tab, setTab] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
@@ -44,12 +44,12 @@ const Dashboard = () => {
         return { data: [] };
       }
       if (!response.ok) {
-        throw new Error(t('dashboard.errors.loadPoems'));
+        throw new Error(t('dashboard:errors.loadPoems'));
       }
       return response.json();
     } catch (err) {
       // Only throw error for non-404 responses
-      if (err.message !== t('dashboard.errors.loadPoems')) {
+      if (err.message !== t('dashboard:errors.loadPoems')) {
         throw err;
       }
       return { data: [] };
@@ -100,10 +100,10 @@ const Dashboard = () => {
   }
 
   // Only show error state for actual errors (not 404)
-  if (error && error.message !== t('dashboard.errors.loadPoems')) {
+  if (error && error.message !== t('dashboard:errors.loadPoems')) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Alert severity="error">{t('dashboard.errors.loadPoems')}</Alert>
+        <Alert severity="error">{t('dashboard:errors.loadPoems')}</Alert>
       </Container>
     );
   }
@@ -115,10 +115,10 @@ const Dashboard = () => {
       {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h3" gutterBottom>
-          {t('dashboard.title')}
+          {t('dashboard:title')}
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          {t('dashboard.welcome', { name: user.name })}
+          {t('dashboard:welcome', { name: user.name })}
         </Typography>
       </Box>
 
@@ -132,17 +132,17 @@ const Dashboard = () => {
               startIcon={<AddIcon />}
               onClick={handleCreateNew}
             >
-              {t('dashboard.createPoem')}
+              {t('dashboard:createPoem')}
             </Button>
           </Box>
 
           {/* Tabs */}
           <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 4 }}>
             <Tabs value={tab} onChange={handleTabChange}>
-              <Tab label={t('dashboard.tabs.all')} />
-              <Tab label={t('dashboard.tabs.published')} />
-              <Tab label={t('dashboard.tabs.underReview')} />
-              <Tab label={t('dashboard.tabs.drafts')} />
+              <Tab label={t('dashboard:tabs.all')} />
+              <Tab label={t('dashboard:tabs.published')} />
+              <Tab label={t('dashboard:tabs.underReview')} />
+              <Tab label={t('dashboard:tabs.drafts')} />
             </Tabs>
           </Box>
 
@@ -190,7 +190,7 @@ const Dashboard = () => {
                       ))}
                     </Box>
                     <Typography variant="caption" color="text.secondary">
-                      {t('dashboard.poem.lastUpdated', {
+                      {t('dashboard:poem.lastUpdated', {
                         date: new Date(poem.updatedAt).toLocaleDateString()
                       })}
                     </Typography>
@@ -201,14 +201,14 @@ const Dashboard = () => {
                       startIcon={<EditIcon />}
                       onClick={() => handleEdit(poem)}
                     >
-                      {t('dashboard.poem.actions.edit')}
+                      {t('dashboard:poem.actions.edit')}
                     </Button>
                     <Button
                       size="small"
                       color="error"
                       startIcon={<DeleteIcon />}
                     >
-                      {t('dashboard.poem.actions.delete')}
+                      {t('dashboard:poem.actions.delete')}
                     </Button>
                   </CardActions>
                 </Card>
@@ -228,10 +228,10 @@ const Dashboard = () => {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            {t('dashboard.emptyState.title')}
+            {t('dashboard:emptyState.title')}
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 600 }}>
-            {t('dashboard.emptyState.description')}
+            {t('dashboard:emptyState.description')}
           </Typography>
           <Button
             variant="contained"
@@ -240,7 +240,7 @@ const Dashboard = () => {
             startIcon={<AddIcon />}
             onClick={handleCreateNew}
           >
-            {t('dashboard.emptyState.button')}
+            {t('dashboard:emptyState.button')}
           </Button>
         </Box>
       )}
@@ -248,19 +248,19 @@ const Dashboard = () => {
       {/* Create/Edit Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
         <DialogTitle>
-          {selectedPoem ? t('dashboard.dialog.edit.title') : t('dashboard.dialog.create.title')}
+          {selectedPoem ? t('dashboard:dialog.edit.title') : t('dashboard:dialog.create.title')}
         </DialogTitle>
         <DialogContent>
           <Box sx={{ pt: 2 }}>
             <TextField
               fullWidth
-              label={t('dashboard.dialog.form.title.label')}
+              label={t('dashboard:dialog.form.title.label')}
               defaultValue={selectedPoem?.title}
               margin="normal"
             />
             <TextField
               fullWidth
-              label={t('dashboard.dialog.form.content.label')}
+              label={t('dashboard:dialog.form.content.label')}
               multiline
               rows={6}
               defaultValue={selectedPoem?.content}
@@ -268,21 +268,21 @@ const Dashboard = () => {
             />
             <TextField
               fullWidth
-              label={t('dashboard.dialog.form.tags.label')}
+              label={t('dashboard:dialog.form.tags.label')}
               defaultValue={selectedPoem?.tags.join(', ')}
               margin="normal"
-              helperText={t('dashboard.dialog.form.tags.helper')}
+              helperText={t('dashboard:dialog.form.tags.helper')}
             />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>{t('common.cancel')}</Button>
+          <Button onClick={handleCloseDialog}>{t('common:cancel')}</Button>
           <Button
             variant="contained"
             color="primary"
             onClick={handleCloseDialog}
           >
-            {selectedPoem ? t('dashboard.dialog.edit.button') : t('dashboard.dialog.create.button')}
+            {selectedPoem ? t('dashboard:dialog.edit.button') : t('dashboard:dialog.create.button')}
           </Button>
         </DialogActions>
       </Dialog>

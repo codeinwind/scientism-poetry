@@ -1,0 +1,21 @@
+{
+  "title": "会员诗作",
+  "subtitle": "探索我们的科学诗歌集",
+  "search": {
+    "placeholder": "搜索诗歌..."
+  },
+  "poem": {
+    "by": "作者：{{author}}",
+    "readMore": "阅读更多",
+    "likes": "{{count}}个赞",
+    "comments": "{{count}}条评论"
+  },
+  "errors": {
+    "loadFailed": "加载诗歌失败，请稍后重试。"
+  },
+  "cta": {
+    "title": "想要分享您的诗作？",
+    "description": "加入我们的社区，发布您的科学诗歌，与其他诗人交流。",
+    "button": "立即加入"
+  }
+}

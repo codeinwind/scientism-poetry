@@ -19,21 +19,21 @@ const Register = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [error, setError] = React.useState('');
-  const { t } = useTranslation();
+  const { t } = useTranslation(['auth']);
 
   const validationSchema = Yup.object({
     name: Yup.string()
-      .required(t('register.form.name.required'))
-      .min(2, t('register.form.name.minLength')),
+      .required(t('auth:register.form.name.required'))
+      .min(2, t('auth:register.form.name.minLength')),
     email: Yup.string()
-      .email(t('register.form.email.invalid'))
-      .required(t('register.form.email.required')),
+      .email(t('auth:register.form.email.invalid'))
+      .required(t('auth:register.form.email.required')),
     password: Yup.string()
-      .required(t('register.form.password.required'))
-      .min(6, t('register.form.password.minLength')),
+      .required(t('auth:register.form.password.required'))
+      .min(6, t('auth:register.form.password.minLength')),
     confirmPassword: Yup.string()
-      .required(t('register.form.confirmPassword.required'))
-      .oneOf([Yup.ref('password'), null], t('register.form.confirmPassword.mismatch')),
+      .required(t('auth:register.form.confirmPassword.required'))
+      .oneOf([Yup.ref('password'), null], t('auth:register.form.confirmPassword.mismatch')),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -54,7 +54,7 @@ const Register = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to register');
+        throw new Error(data.message || t('auth:register.errors.failed'));
       }
 
       login(data.user, data.token);
@@ -77,10 +77,10 @@ const Register = () => {
           }}
         >
           <Typography component="h1" variant="h4" gutterBottom>
-            {t('register.title')}
+            {t('auth:register.title')}
           </Typography>
           <Typography variant="body1" color="text.secondary" align="center" sx={{ mb: 3 }}>
-            {t('register.subtitle')}
+            {t('auth:register.subtitle')}
           </Typography>
 
           {error && (
@@ -105,7 +105,7 @@ const Register = () => {
                   fullWidth
                   id="name"
                   name="name"
-                  label={t('register.form.name.label')}
+                  label={t('auth:register.form.name.label')}
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -117,7 +117,7 @@ const Register = () => {
                   fullWidth
                   id="email"
                   name="email"
-                  label={t('register.form.email.label')}
+                  label={t('auth:register.form.email.label')}
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -129,7 +129,7 @@ const Register = () => {
                   fullWidth
                   id="password"
                   name="password"
-                  label={t('register.form.password.label')}
+                  label={t('auth:register.form.password.label')}
                   type="password"
                   value={values.password}
                   onChange={handleChange}
@@ -142,7 +142,7 @@ const Register = () => {
                   fullWidth
                   id="confirmPassword"
                   name="confirmPassword"
-                  label={t('register.form.confirmPassword.label')}
+                  label={t('auth:register.form.confirmPassword.label')}
                   type="password"
                   value={values.confirmPassword}
                   onChange={handleChange}
@@ -159,7 +159,7 @@ const Register = () => {
                   disabled={isSubmitting}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {t('register.form.submit')}
+                  {t('auth:register.form.submit')}
                 </Button>
               </Form>
             )}
@@ -167,21 +167,21 @@ const Register = () => {
 
           <Box sx={{ mt: 2 }}>
             <Typography variant="body2" align="center">
-              {t('register.hasAccount')}{' '}
+              {t('auth:register.hasAccount')}{' '}
               <Link component={RouterLink} to="/login">
-                {t('register.signIn')}
+                {t('auth:register.signIn')}
               </Link>
             </Typography>
           </Box>
 
           <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 3 }}>
-            {t('register.terms.text')}{' '}
+            {t('auth:register.terms.text')}{' '}
             <Link component={RouterLink} to="/terms">
-              {t('register.terms.termsLink')}
+              {t('auth:register.terms.termsLink')}
             </Link>{' '}
-            {t('register.terms.and')}{' '}
+            {t('auth:register.terms.and')}{' '}
             <Link component={RouterLink} to="/privacy">
-              {t('register.terms.privacyLink')}
+              {t('auth:register.terms.privacyLink')}
             </Link>
           </Typography>
         </Box>

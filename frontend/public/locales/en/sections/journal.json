@@ -1,0 +1,21 @@
+{
+  "title": "Cosmic Poetry Journal",
+  "subtitle": "A Platform for Scientific Expression Through Poetry",
+  "description": "The Cosmic Poetry Journal is a unique publication that bridges the gap between scientific understanding and poetic expression. Each issue features carefully curated poems that explore scientific concepts through creative verse.",
+  "currentIssue": {
+    "title": "Current Issue",
+    "number": "Issue {{number}}",
+    "theme": "Theme: {{theme}}",
+    "description": "Explore our latest collection of scientism poetry, featuring works from renowned poets and scientists around the world."
+  },
+  "submissions": {
+    "title": "Submit Your Work",
+    "description": "We welcome submissions from poets who blend scientific insight with creative expression. See our submission guidelines for more information.",
+    "button": "Submit Now"
+  },
+  "archive": {
+    "title": "Archive",
+    "description": "Browse our past issues and discover the evolution of scientism poetry through the years.",
+    "button": "View Archive"
+  }
+}

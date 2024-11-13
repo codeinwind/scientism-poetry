@@ -1,0 +1,37 @@
+{
+  "title": "News & Events",
+  "subtitle": "Stay Updated with Our Latest Activities",
+  "categories": {
+    "upcoming": "Upcoming Events",
+    "past": "Past Events",
+    "announcements": "Announcements"
+  },
+  "filter": {
+    "label": "Filter by",
+    "all": "All",
+    "events": "Events",
+    "news": "News",
+    "announcements": "Announcements"
+  },
+  "readMore": "Read More",
+  "registerNow": "Register Now",
+  "noEvents": "No upcoming events at this time",
+  "featured": {
+    "title": "Featured Event",
+    "date": "Date: {{date}}",
+    "location": "Location: {{location}}",
+    "register": "Register Now"
+  },
+  "calendar": {
+    "title": "Event Calendar",
+    "viewAll": "View All Events"
+  },
+  "newsletter": {
+    "title": "Stay Connected",
+    "description": "Subscribe to our newsletter to receive updates about events and news",
+    "placeholder": "Enter your email",
+    "button": "Subscribe",
+    "success": "Thank you for subscribing!",
+    "error": "Subscription failed. Please try again."
+  }
+}

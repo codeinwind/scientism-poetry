@@ -18,15 +18,15 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [error, setError] = React.useState('');
-  const { t } = useTranslation();
+  const { t } = useTranslation(['auth']);
 
   const validationSchema = Yup.object({
     email: Yup.string()
-      .email(t('login.form.email.invalid'))
-      .required(t('login.form.email.required')),
+      .email(t('auth:login.form.email.invalid'))
+      .required(t('auth:login.form.email.required')),
     password: Yup.string()
-      .required(t('login.form.password.required'))
-      .min(6, t('login.form.password.minLength')),
+      .required(t('auth:login.form.password.required'))
+      .min(6, t('auth:login.form.password.minLength')),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -43,7 +43,7 @@ const Login = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || t('login.errors.failed'));
+        throw new Error(data.message || t('auth:login.errors.failed'));
       }
 
       login(data.user, data.token);
@@ -66,10 +66,10 @@ const Login = () => {
         }}
       >
         <Typography component="h1" variant="h4" gutterBottom>
-          {t('login.title')}
+          {t('auth:login.title')}
         </Typography>
         <Typography variant="body1" color="text.secondary" align="center" sx={{ mb: 3 }}>
-          {t('login.subtitle')}
+          {t('auth:login.subtitle')}
         </Typography>
 
         {error && (
@@ -92,7 +92,7 @@ const Login = () => {
                 fullWidth
                 id="email"
                 name="email"
-                label={t('login.form.email.label')}
+                label={t('auth:login.form.email.label')}
                 value={values.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -104,7 +104,7 @@ const Login = () => {
                 fullWidth
                 id="password"
                 name="password"
-                label={t('login.form.password.label')}
+                label={t('auth:login.form.password.label')}
                 type="password"
                 value={values.password}
                 onChange={handleChange}
@@ -121,7 +121,7 @@ const Login = () => {
                 disabled={isSubmitting}
                 sx={{ mt: 3, mb: 2 }}
               >
-                {t('login.form.submit')}
+                {t('auth:login.form.submit')}
               </Button>
             </Form>
           )}
@@ -129,14 +129,14 @@ const Login = () => {
 
         <Box sx={{ mt: 2 }}>
           <Typography variant="body2" align="center">
-            {t('login.noAccount')}{' '}
+            {t('auth:login.noAccount')}{' '}
             <Link component={RouterLink} to="/register">
-              {t('login.signUp')}
+              {t('auth:login.signUp')}
             </Link>
           </Typography>
           <Typography variant="body2" align="center" sx={{ mt: 1 }}>
             <Link component={RouterLink} to="/forgot-password">
-              {t('login.forgotPassword')}
+              {t('auth:login.forgotPassword')}
             </Link>
           </Typography>
         </Box>
