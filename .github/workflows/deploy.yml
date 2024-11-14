@@ -16,7 +16,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '18'
+        node-version: '18.20.4'
 
     # Setup SSH
     - name: Setup SSH
@@ -44,12 +44,40 @@ jobs:
           # Make scripts executable
           chmod +x deploy/scripts/*.sh
 
+          # Setup Node.js version
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm install 18.20.4
+          nvm use 18.20.4
+          nvm alias default 18.20.4
+          
+          # Verify Node.js version
+          echo "Node.js version:"
+          node -v
+          
+          # Configure PM2 to use Node.js 18.20.4
+          pm2 kill || true
+          PM2_EXEC_PATH=$(which node)
+          echo "PM2 will use Node.js from: $PM2_EXEC_PATH"
+          
           # Run deployment scripts
           echo "Running frontend setup..."
           ./deploy/scripts/setup-frontend.sh "${{ secrets.REACT_APP_API_URL }}" || exit 1
 
           echo "Running backend setup..."
           ./deploy/scripts/setup-backend.sh "${{ secrets.BACKEND_PORT }}" "${{ secrets.MONGODB_URI }}" "${{ secrets.JWT_SECRET }}" || exit 1
+
+          # Start backend with specific Node.js version
+          cd /var/www/scientism-poetry/backend
+          echo "Starting backend with Node.js $(node -v)..."
+          pm2 start server.js --name scientism-poetry-backend --interpreter $PM2_EXEC_PATH
+
+          # Save PM2 configuration
+          pm2 save
+
+          # Verify PM2 process
+          echo "PM2 process status:"
+          pm2 list
 
           # Cleanup
           cd /
@@ -59,8 +87,12 @@ jobs:
 
     # Verify deployment
     - name: Verify deployment
-      run: |        
+      run: |
         ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} "
+          echo \"Checking Node.js version:\" &&
+          node -v | grep \"v18.20.4\" &&
+          echo \"Checking PM2 Node.js version:\" &&
+          pm2 list | grep \"node\" | grep \"18.20.4\" &&
           echo \"Checking PM2 status:\" &&
           pm2 list &&
           echo \"Checking API health:\" &&
