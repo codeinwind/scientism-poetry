@@ -5,16 +5,64 @@ const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const logger = require('./config/logger');
 const requestLogger = require('./middleware/logger');
+const cookieParser = require('cookie-parser');
 
 // Load env vars
 dotenv.config();
 
+// Verify required environment variables
+const requiredEnvVars = ['MONGODB_URI', 'JWT_SECRET'];
+const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+
+if (missingEnvVars.length > 0) {
+  logger.error('Missing required environment variables:', {
+    missing: missingEnvVars
+  });
+  process.exit(1);
+}
+
 const app = express();
 
+// Get allowed origins based on environment
+const getAllowedOrigins = () => {
+  const origins = [];
+  
+  // Always allow local development
+  origins.push('http://localhost:3000');
+  
+  // Add production frontend URL if configured
+  if (process.env.FRONTEND_URL) {
+    origins.push(process.env.FRONTEND_URL);
+  }
+  
+  return origins;
+};
+
+// CORS configuration
+app.use(cors({
+  origin: function(origin, callback) {
+    const allowedOrigins = getAllowedOrigins();
+    
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Set-Cookie'],
+}));
+
 // Middleware
-app.use(cors());
 app.use(express.json());
-app.use(requestLogger); // Add request logging
+app.use(cookieParser());
+app.use(requestLogger);
 
 // Health check route - place it before other routes
 app.get('/api/health', async (req, res) => {
@@ -32,13 +80,15 @@ app.get('/api/health', async (req, res) => {
       dbStatus: dbStatusText,
       nodeVersion: process.version,
       memoryUsage: process.memoryUsage(),
-      uptime: process.uptime()
+      uptime: process.uptime(),
+      mongoUri: process.env.MONGODB_URI ? 'defined' : 'undefined'
     });
 
     // If database is not connected, return error
     if (dbStatus !== 1) {
       logger.error('Health check failed - Database not connected', {
-        dbStatus: dbStatusText
+        dbStatus: dbStatusText,
+        mongoUri: process.env.MONGODB_URI ? 'defined' : 'undefined'
       });
       return res.status(503).json({
         status: 'error',
@@ -58,7 +108,8 @@ app.get('/api/health', async (req, res) => {
   } catch (error) {
     logger.error('Health check failed', {
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
+      mongoUri: process.env.MONGODB_URI ? 'defined' : 'undefined'
     });
     res.status(500).json({
       status: 'error',
@@ -84,7 +135,8 @@ app.use((err, req, res, next) => {
     params: req.params,
     query: req.query,
     user: req.user ? req.user.id : 'unauthenticated',
-    headers: req.headers
+    headers: req.headers,
+    dbStatus: mongoose.connection.readyState
   });
 
   res.status(500).json({
@@ -117,20 +169,36 @@ const PORT = process.env.PORT || 5000;
 // Initialize server
 const startServer = async () => {
   try {
+    logger.info('Starting server initialization...', {
+      env: process.env.NODE_ENV,
+      mongoUri: process.env.MONGODB_URI ? 'defined' : 'undefined'
+    });
+
     // Connect to database
     await connectDB();
-    logger.info('Database connected successfully');
+    logger.info('Database connected successfully', {
+      host: mongoose.connection.host,
+      name: mongoose.connection.name
+    });
+
+    // Log CORS configuration
+    logger.info('CORS configuration:', {
+      allowedOrigins: getAllowedOrigins()
+    });
 
     // Start server
     const server = app.listen(PORT, () => {
-      logger.info(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+      logger.info(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`, {
+        dbStatus: mongoose.connection.readyState
+      });
     });
 
     // Handle server errors
     server.on('error', (error) => {
       logger.error('Server error:', {
         error: error.message,
-        stack: error.stack
+        stack: error.stack,
+        dbStatus: mongoose.connection.readyState
       });
       process.exit(1);
     });
@@ -138,7 +206,9 @@ const startServer = async () => {
   } catch (error) {
     logger.error('Server initialization failed:', {
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
+      mongoUri: process.env.MONGODB_URI ? 'defined' : 'undefined',
+      dbStatus: mongoose.connection ? mongoose.connection.readyState : 'undefined'
     });
     process.exit(1);
   }
@@ -148,7 +218,9 @@ const startServer = async () => {
 startServer().catch((error) => {
   logger.error('Failed to start server:', {
     error: error.message,
-    stack: error.stack
+    stack: error.stack,
+    mongoUri: process.env.MONGODB_URI ? 'defined' : 'undefined',
+    dbStatus: mongoose.connection ? mongoose.connection.readyState : 'undefined'
   });
   process.exit(1);
 });
@@ -157,7 +229,8 @@ startServer().catch((error) => {
 process.on('unhandledRejection', (err, promise) => {
   logger.error('Unhandled Promise Rejection:', {
     error: err.message,
-    stack: err.stack
+    stack: err.stack,
+    dbStatus: mongoose.connection ? mongoose.connection.readyState : 'undefined'
   });
   // Close server & exit process
   process.exit(1);
@@ -167,7 +240,8 @@ process.on('unhandledRejection', (err, promise) => {
 process.on('uncaughtException', (err) => {
   logger.error('Uncaught Exception:', {
     error: err.message,
-    stack: err.stack
+    stack: err.stack,
+    dbStatus: mongoose.connection ? mongoose.connection.readyState : 'undefined'
   });
   // Close server & exit process
   process.exit(1);
@@ -175,15 +249,20 @@ process.on('uncaughtException', (err) => {
 
 // Graceful shutdown
 const gracefulShutdown = () => {
-  logger.info('Received shutdown signal. Starting graceful shutdown...');
+  logger.info('Received shutdown signal. Starting graceful shutdown...', {
+    dbStatus: mongoose.connection ? mongoose.connection.readyState : 'undefined'
+  });
   
   // Close database connection
-  if (mongoose.connection.readyState === 1) {
+  if (mongoose.connection && mongoose.connection.readyState === 1) {
     mongoose.connection.close(false, () => {
       logger.info('MongoDB connection closed.');
       process.exit(0);
     });
   } else {
+    logger.warn('No active MongoDB connection to close', {
+      dbStatus: mongoose.connection ? mongoose.connection.readyState : 'undefined'
+    });
     process.exit(0);
   }
 };

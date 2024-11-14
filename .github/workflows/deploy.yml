@@ -59,15 +59,12 @@ jobs:
 
     # Verify deployment
     - name: Verify deployment
-      run: |
-        # Extract base URL from REACT_APP_API_URL for health check
-        API_BASE_URL=$(echo "${{ secrets.REACT_APP_API_URL }}" | sed "s|/api$||")
-        
+      run: |        
         ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} "
           echo \"Checking PM2 status:\" &&
           pm2 list &&
           echo \"Checking API health:\" &&
-          curl -s ${API_BASE_URL}/api/health &&
+          curl -s http://localhost:5000/api/health &&
           echo \"Checking logs directory:\" &&
           ls -la /var/log/scientism-poetry &&
           echo \"Checking frontend env files:\" &&
