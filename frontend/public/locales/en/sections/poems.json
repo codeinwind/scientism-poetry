@@ -10,12 +10,33 @@
     "likes": "{{count}} likes",
     "comments": "{{count}} comments"
   },
+  "emptyState": {
+    "title": "No Poems Available",
+    "description": "There are currently no published poems in our collection. Check back later for new submissions.",
+    "searchTitle": "No Results Found",
+    "searchDescription": "No poems found matching '{{search}}'. Try different keywords or browse all poems.",
+    "clearSearch": "Clear Search"
+  },
   "errors": {
-    "loadFailed": "Error loading poems. Please try again later."
+    "loadFailed": "Error loading poems. Please try again later.",
+    "searchFailed": "Error performing search. Please try again.",
+    "actionFailed": "Action failed. Please try again later."
   },
   "cta": {
     "title": "Want to Share Your Own Poems?",
     "description": "Join our community to publish your scientism poetry and engage with other poets.",
     "button": "Join Now"
+  },
+  "actions": {
+    "like": {
+      "login": "Please log in to like poems",
+      "success": "Poem liked successfully",
+      "error": "Failed to like poem"
+    },
+    "comment": {
+      "login": "Please log in to comment",
+      "success": "Comment added successfully",
+      "error": "Failed to add comment"
+    }
   }
 }

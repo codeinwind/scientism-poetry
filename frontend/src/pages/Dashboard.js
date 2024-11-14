@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import {
   Box,
   Container,
@@ -19,6 +19,8 @@ import {
   TextField,
   CircularProgress,
   Alert,
+  Snackbar,
+  FormHelperText,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -28,6 +30,8 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { poemService } from '../services/api';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const Dashboard = () => {
   const { t } = useTranslation(['dashboard', 'common']);
@@ -35,20 +39,122 @@ const Dashboard = () => {
   const [tab, setTab] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedPoem, setSelectedPoem] = useState(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [poemToDelete, setPoemToDelete] = useState(null);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const queryClient = useQueryClient();
+
+  // Form validation schema
+  const validationSchema = Yup.object({
+    title: Yup.string()
+      .required(t('dashboard:validation.titleRequired'))
+      .min(3, t('dashboard:validation.titleMin'))
+      .max(100, t('dashboard:validation.titleMax')),
+    content: Yup.string()
+      .required(t('dashboard:validation.contentRequired'))
+      .min(10, t('dashboard:validation.contentMin'))
+      .max(5000, t('dashboard:validation.contentMax')),
+    tags: Yup.string()
+      .matches(/^[a-zA-Z0-9, ]*$/, t('dashboard:validation.tagsFormat')),
+  });
+
+  // Form handling with Formik
+  const formik = useFormik({
+    initialValues: {
+      title: selectedPoem?.title || '',
+      content: selectedPoem?.content || '',
+      tags: selectedPoem?.tags.join(', ') || '',
+      status: selectedPoem?.status || 'under_review',
+    },
+    validationSchema,
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      const poemData = {
+        ...values,
+        tags: values.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+      };
+
+      if (selectedPoem) {
+        editPoemMutation.mutate({ id: selectedPoem._id, ...poemData });
+      } else {
+        createPoemMutation.mutate(poemData);
+      }
+    },
+  });
 
   // Fetch user's poems using poemService
-  const { data: poems, isLoading, error } = useQuery(['userPoems', user.id], async () => {
+  const { data: poemsData, isLoading, error } = useQuery(['userPoems', user.id], async () => {
     try {
       const response = await poemService.getUserPoems(user.id);
-      return { data: response.poems || [] };
+      return { 
+        poems: response.poems || [], // Updated to match new API response structure
+        count: response.count || 0
+      };
     } catch (err) {
-      // If it's a 404, return empty array
       if (err.response?.status === 404) {
-        return { data: [] };
+        return { poems: [], count: 0 };
       }
       throw new Error(t('dashboard:errors.loadPoems'));
     }
   });
+
+  // Mutations
+  const createPoemMutation = useMutation(
+    (poemData) => poemService.createPoem(poemData),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['userPoems', user.id]);
+        handleCloseDialog();
+        showSnackbar(t('dashboard:success.created'), 'success');
+      },
+      onError: (error) => {
+        const message = error.response?.data?.message || t('dashboard:errors.create');
+        showSnackbar(message, 'error');
+      },
+    }
+  );
+
+  const editPoemMutation = useMutation(
+    ({ id, ...poemData }) => poemService.updatePoem(id, poemData),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['userPoems', user.id]);
+        handleCloseDialog();
+        showSnackbar(t('dashboard:success.updated'), 'success');
+      },
+      onError: (error) => {
+        const message = error.response?.data?.message || t('dashboard:errors.update');
+        showSnackbar(message, 'error');
+      },
+    }
+  );
+
+  const deletePoemMutation = useMutation(
+    (id) => poemService.deletePoem(id),
+    {
+      onMutate: async (deletedId) => {
+        await queryClient.cancelQueries(['userPoems', user.id]);
+        const previousData = queryClient.getQueryData(['userPoems', user.id]);
+        queryClient.setQueryData(['userPoems', user.id], old => ({
+          poems: old.poems.filter(poem => poem._id !== deletedId),
+          count: (old.count || 0) - 1
+        }));
+        return { previousData };
+      },
+      onSuccess: () => {
+        handleCloseDeleteConfirm();
+        showSnackbar(t('dashboard:success.deleted'), 'success');
+      },
+      onError: (error, variables, context) => {
+        queryClient.setQueryData(['userPoems', user.id], context.previousData);
+        const message = error.response?.data?.message || t('dashboard:errors.delete');
+        showSnackbar(message, 'error');
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries(['userPoems', user.id]);
+      },
+    }
+  );
 
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
@@ -56,32 +162,64 @@ const Dashboard = () => {
 
   const handleCreateNew = () => {
     setSelectedPoem(null);
+    formik.resetForm();
     setOpenDialog(true);
   };
 
   const handleEdit = (poem) => {
     setSelectedPoem(poem);
+    formik.setValues({
+      title: poem.title,
+      content: poem.content,
+      tags: poem.tags.join(', '),
+      status: poem.status,
+    });
     setOpenDialog(true);
+  };
+
+  const handleDelete = (poem) => {
+    setPoemToDelete(poem);
+    setDeleteConfirmOpen(true);
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedPoem(null);
+    formik.resetForm();
+  };
+
+  const handleCloseDeleteConfirm = () => {
+    setDeleteConfirmOpen(false);
+    setPoemToDelete(null);
+  };
+
+  const confirmDelete = () => {
+    if (poemToDelete) {
+      deletePoemMutation.mutate(poemToDelete._id);
+    }
+  };
+
+  const showSnackbar = (message, severity) => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   const getFilteredPoems = () => {
-    if (!poems?.data) return [];
+    if (!poemsData?.poems) return [];
     switch (tab) {
       case 0: // All
-        return poems.data;
+        return poemsData.poems;
       case 1: // Published
-        return poems.data.filter(poem => poem.status === 'published');
+        return poemsData.poems.filter(poem => poem.status === 'published');
       case 2: // Under Review
-        return poems.data.filter(poem => poem.status === 'under_review');
+        return poemsData.poems.filter(poem => poem.status === 'under_review');
       case 3: // Drafts
-        return poems.data.filter(poem => poem.status === 'draft');
+        return poemsData.poems.filter(poem => poem.status === 'draft');
       default:
-        return poems.data;
+        return poemsData.poems;
     }
   };
 
@@ -96,12 +234,12 @@ const Dashboard = () => {
   if (error) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Alert severity="error">{t('dashboard:errors.loadPoems')}</Alert>
+        <Alert severity="error">{error.message || t('dashboard:errors.loadPoems')}</Alert>
       </Container>
     );
   }
 
-  const hasPoems = poems?.data && poems.data.length > 0;
+  const hasPoems = poemsData?.poems && poemsData.poems.length > 0;
 
   return (
     <Container maxWidth="lg">
@@ -148,7 +286,7 @@ const Dashboard = () => {
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                       <Typography variant="h5">{poem.title}</Typography>
                       <Chip
-                        label={poem.status}
+                        label={t(`dashboard:status.${poem.status}`)}
                         color={
                           poem.status === 'published'
                             ? 'success'
@@ -200,6 +338,7 @@ const Dashboard = () => {
                       size="small"
                       color="error"
                       startIcon={<DeleteIcon />}
+                      onClick={() => handleDelete(poem)}
                     >
                       {t('dashboard:poem.actions.delete')}
                     </Button>
@@ -240,45 +379,108 @@ const Dashboard = () => {
 
       {/* Create/Edit Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>
-          {selectedPoem ? t('dashboard:dialog.edit.title') : t('dashboard:dialog.create.title')}
-        </DialogTitle>
+        <form onSubmit={formik.handleSubmit}>
+          <DialogTitle>
+            {selectedPoem ? t('dashboard:dialog.edit.title') : t('dashboard:dialog.create.title')}
+          </DialogTitle>
+          <DialogContent>
+            <Box sx={{ pt: 2 }}>
+              <TextField
+                fullWidth
+                id="title"
+                name="title"
+                label={t('dashboard:dialog.form.title.label')}
+                value={formik.values.title}
+                onChange={formik.handleChange}
+                error={formik.touched.title && Boolean(formik.errors.title)}
+                helperText={formik.touched.title && formik.errors.title}
+                margin="normal"
+              />
+              <TextField
+                fullWidth
+                id="content"
+                name="content"
+                label={t('dashboard:dialog.form.content.label')}
+                multiline
+                rows={6}
+                value={formik.values.content}
+                onChange={formik.handleChange}
+                error={formik.touched.content && Boolean(formik.errors.content)}
+                helperText={
+                  (formik.touched.content && formik.errors.content) ||
+                  t('dashboard:dialog.form.content.counter', {
+                    current: formik.values.content.length,
+                    max: 5000
+                  })
+                }
+                margin="normal"
+              />
+              <TextField
+                fullWidth
+                id="tags"
+                name="tags"
+                label={t('dashboard:dialog.form.tags.label')}
+                value={formik.values.tags}
+                onChange={formik.handleChange}
+                error={formik.touched.tags && Boolean(formik.errors.tags)}
+                helperText={
+                  (formik.touched.tags && formik.errors.tags) ||
+                  t('dashboard:dialog.form.tags.helper')
+                }
+                margin="normal"
+              />
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog}>{t('common:cancel')}</Button>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              disabled={!formik.isValid || formik.isSubmitting}
+            >
+              {selectedPoem ? t('dashboard:dialog.edit.button') : t('dashboard:dialog.create.button')}
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteConfirmOpen} onClose={handleCloseDeleteConfirm}>
+        <DialogTitle>{t('dashboard:deleteDialog.title')}</DialogTitle>
         <DialogContent>
-          <Box sx={{ pt: 2 }}>
-            <TextField
-              fullWidth
-              label={t('dashboard:dialog.form.title.label')}
-              defaultValue={selectedPoem?.title}
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              label={t('dashboard:dialog.form.content.label')}
-              multiline
-              rows={6}
-              defaultValue={selectedPoem?.content}
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              label={t('dashboard:dialog.form.tags.label')}
-              defaultValue={selectedPoem?.tags.join(', ')}
-              margin="normal"
-              helperText={t('dashboard:dialog.form.tags.helper')}
-            />
-          </Box>
+          <Typography>
+            {t('dashboard:deleteDialog.message', { title: poemToDelete?.title })}
+          </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>{t('common:cancel')}</Button>
+          <Button onClick={handleCloseDeleteConfirm}>{t('common:cancel')}</Button>
           <Button
+            color="error"
             variant="contained"
-            color="primary"
-            onClick={handleCloseDialog}
+            onClick={confirmDelete}
+            disabled={deletePoemMutation.isLoading}
           >
-            {selectedPoem ? t('dashboard:dialog.edit.button') : t('dashboard:dialog.create.button')}
+            {t('dashboard:deleteDialog.confirm')}
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

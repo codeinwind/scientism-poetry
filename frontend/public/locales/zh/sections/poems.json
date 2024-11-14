@@ -1,6 +1,6 @@
 {
-  "title": "会员诗作",
-  "subtitle": "探索我们的科学诗歌集",
+  "title": "会员诗歌",
+  "subtitle": "探索我们的科学主义诗歌集",
   "search": {
     "placeholder": "搜索诗歌..."
   },
@@ -10,12 +10,33 @@
     "likes": "{{count}}个赞",
     "comments": "{{count}}条评论"
   },
+  "emptyState": {
+    "title": "暂无诗歌",
+    "description": "目前还没有已发布的诗歌。请稍后再来查看新的投稿。",
+    "searchTitle": "未找到结果",
+    "searchDescription": "未找到与\"{{search}}\"相关的诗歌。请尝试使用其他关键词或浏览所有诗歌。",
+    "clearSearch": "清除搜索"
+  },
   "errors": {
-    "loadFailed": "加载诗歌失败，请稍后重试。"
+    "loadFailed": "加载诗歌失败，请稍后重试。",
+    "searchFailed": "搜索失败，请重试。",
+    "actionFailed": "操作失败，请稍后重试。"
   },
   "cta": {
-    "title": "想要分享您的诗作？",
-    "description": "加入我们的社区，发布您的科学诗歌，与其他诗人交流。",
+    "title": "想分享您的诗歌吗？",
+    "description": "加入我们的社区，发布您的科学主义诗歌并与其他诗人交流。",
     "button": "立即加入"
+  },
+  "actions": {
+    "like": {
+      "login": "请登录后点赞",
+      "success": "点赞成功",
+      "error": "点赞失败"
+    },
+    "comment": {
+      "login": "请登录后评论",
+      "success": "评论添加成功",
+      "error": "评论添加失败"
+    }
   }
 }
