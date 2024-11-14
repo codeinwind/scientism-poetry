@@ -1,0 +1,48 @@
+{
+  "title": "Admin Dashboard",
+  "subtitle": "Manage poems and user content",
+  "poem": {
+    "by": "Author: {{author}}",
+    "status": {
+      "change": "Change Status",
+      "current": "Current Status",
+      "next": "Change to",
+      "invalidTransition": "Invalid status transition"
+    }
+  },
+  "actions": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "publish": "Publish",
+    "unpublish": "Unpublish",
+    "review": "Send for Review"
+  },
+  "filters": {
+    "all": "All Poems",
+    "pending": "Pending Review",
+    "published": "Published",
+    "rejected": "Rejected"
+  },
+  "status": {
+    "changed": "Status changed successfully",
+    "error": "Failed to change status"
+  },
+  "workflow": {
+    "draft": "Send poem for review",
+    "publish": "Publish this poem",
+    "reject": "Reject and return to draft",
+    "unpublish": "Unpublish and return for review"
+  },
+  "confirmations": {
+    "publish": "Are you sure you want to publish \"{{title}}\"?",
+    "unpublish": "Are you sure you want to unpublish \"{{title}}\"?",
+    "reject": "Are you sure you want to reject \"{{title}}\"?",
+    "review": "Are you sure you want to send \"{{title}}\" for review?",
+    "generic": "Are you sure you want to change the status of this poem?"
+  },
+  "errors": {
+    "unauthorized": "You are not authorized to access this page",
+    "loadFailed": "Failed to load poems",
+    "actionFailed": "Action failed. Please try again."
+  }
+}

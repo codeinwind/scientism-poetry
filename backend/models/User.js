@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'moderator', 'admin'],
+    enum: ['user', 'moderator', 'admin', 'superadmin'],
     default: 'user',
   },
   bio: {
@@ -48,6 +48,16 @@ userSchema.pre('save', async function (next) {
 // Match user entered password to hashed password in database
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Check if user is superadmin
+userSchema.methods.isSuperAdmin = function() {
+  return this.role === 'superadmin';
+};
+
+// Check if user can manage admins (superadmin only)
+userSchema.methods.canManageAdmins = function() {
+  return this.isSuperAdmin();
 };
 
 module.exports = mongoose.model('User', userSchema);

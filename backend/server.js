@@ -123,6 +123,7 @@ app.get('/api/health', async (req, res) => {
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/poems', require('./routes/poems'));
+app.use('/api/admin', require('./routes/admin')); // Add admin routes
 
 // Error handling middleware  
 app.use((err, req, res, next) => {

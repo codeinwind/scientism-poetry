@@ -1,179 +1,139 @@
-import React from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import {
-  Box,
-  Button,
   Container,
-  TextField,
+  Box,
   Typography,
-  Link,
+  TextField,
+  Button,
   Alert,
   Paper,
 } from '@mui/material';
-import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
-import { authService } from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
+import { authService } from '../services';
 
 const Register = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(['auth', 'common']);
   const { login } = useAuth();
-  const [error, setError] = React.useState('');
-  const { t } = useTranslation(['auth']);
-
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .required(t('auth:register.form.name.required'))
-      .min(2, t('auth:register.form.name.minLength')),
-    email: Yup.string()
-      .email(t('auth:register.form.email.invalid'))
-      .required(t('auth:register.form.email.required')),
-    password: Yup.string()
-      .required(t('auth:register.form.password.required'))
-      .min(6, t('auth:register.form.password.minLength')),
-    confirmPassword: Yup.string()
-      .required(t('auth:register.form.confirmPassword.required'))
-      .oneOf([Yup.ref('password'), null], t('auth:register.form.confirmPassword.mismatch')),
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
 
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError(t('auth:errors.passwordMismatch'));
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
-      setError('');
-      const data = await authService.register({
-        name: values.name,
-        email: values.email,
-        password: values.password,
-      });
-      login(data.user, data.token);
+      const { confirmPassword, ...registerData } = formData;
+      const response = await authService.register(registerData);
+      await login(response.user, response.token);
       navigate('/dashboard');
-    } catch (err) {
-      setError(err.response?.data?.message || t('auth:register.errors.failed'));
+    } catch (error) {
+      setError(error.message || t('auth:errors.registrationFailed'));
     } finally {
-      setSubmitting(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <Container maxWidth="sm">
-      <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Typography component="h1" variant="h4" gutterBottom>
+      <Box sx={{ mt: 8, mb: 4 }}>
+        <Paper elevation={3} sx={{ p: 4 }}>
+          <Typography variant="h4" component="h1" gutterBottom align="center">
             {t('auth:register.title')}
-          </Typography>
-          <Typography variant="body1" color="text.secondary" align="center" sx={{ mb: 3 }}>
-            {t('auth:register.subtitle')}
           </Typography>
 
           {error && (
-            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+            <Alert severity="error" sx={{ mb: 2 }}>
               {error}
             </Alert>
           )}
 
-          <Formik
-            initialValues={{
-              name: '',
-              email: '',
-              password: '',
-              confirmPassword: '',
-            }}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ values, errors, touched, handleChange, handleBlur, isSubmitting }) => (
-              <Form style={{ width: '100%' }}>
-                <TextField
-                  fullWidth
-                  id="name"
-                  name="name"
-                  label={t('auth:register.form.name.label')}
-                  value={values.name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.name && Boolean(errors.name)}
-                  helperText={touched.name && errors.name}
-                  margin="normal"
-                />
-                <TextField
-                  fullWidth
-                  id="email"
-                  name="email"
-                  label={t('auth:register.form.email.label')}
-                  value={values.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.email && Boolean(errors.email)}
-                  helperText={touched.email && errors.email}
-                  margin="normal"
-                />
-                <TextField
-                  fullWidth
-                  id="password"
-                  name="password"
-                  label={t('auth:register.form.password.label')}
-                  type="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.password && Boolean(errors.password)}
-                  helperText={touched.password && errors.password}
-                  margin="normal"
-                />
-                <TextField
-                  fullWidth
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  label={t('auth:register.form.confirmPassword.label')}
-                  type="password"
-                  value={values.confirmPassword}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.confirmPassword && Boolean(errors.confirmPassword)}
-                  helperText={touched.confirmPassword && errors.confirmPassword}
-                  margin="normal"
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  disabled={isSubmitting}
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  {t('auth:register.form.submit')}
-                </Button>
-              </Form>
-            )}
-          </Formik>
+          <Box component="form" onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              label={t('auth:fields.name')}
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              margin="normal"
+              required
+              autoFocus
+            />
+            <TextField
+              fullWidth
+              label={t('auth:fields.email')}
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              margin="normal"
+              required
+            />
+            <TextField
+              fullWidth
+              label={t('auth:fields.password')}
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              margin="normal"
+              required
+            />
+            <TextField
+              fullWidth
+              label={t('auth:fields.confirmPassword')}
+              name="confirmPassword"
+              type="password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              margin="normal"
+              required
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              disabled={isLoading}
+              sx={{ mt: 3, mb: 2 }}
+            >
+              {isLoading ? t('common:loading') : t('auth:register.submit')}
+            </Button>
+          </Box>
 
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="body2" align="center">
-              {t('auth:register.hasAccount')}{' '}
-              <Link component={RouterLink} to="/login">
-                {t('auth:register.signIn')}
+          <Box sx={{ mt: 2, textAlign: 'center' }}>
+            <Typography variant="body2">
+              {t('auth:register.haveAccount')}{' '}
+              <Link to="/login" style={{ textDecoration: 'none' }}>
+                {t('auth:register.login')}
               </Link>
             </Typography>
           </Box>
-
-          <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 3 }}>
-            {t('auth:register.terms.text')}{' '}
-            <Link component={RouterLink} to="/terms">
-              {t('auth:register.terms.termsLink')}
-            </Link>{' '}
-            {t('auth:register.terms.and')}{' '}
-            <Link component={RouterLink} to="/privacy">
-              {t('auth:register.terms.privacyLink')}
-            </Link>
-          </Typography>
-        </Box>
-      </Paper>
+        </Paper>
+      </Box>
     </Container>
   );
 };

@@ -3,6 +3,7 @@
   "welcome": "欢迎回来，{{name}}",
   "createPoem": "创作新诗",
   "editPoem": "编辑诗歌",
+  "noPoems": "当前筛选条件下没有诗歌",
   "emptyState": {
     "title": "开启您的诗歌之旅",
     "description": "您还没有创作任何诗歌。与我们的社区分享您的科学见解。",
@@ -18,8 +19,15 @@
     "lastUpdated": "最后更新：{{date}}",
     "actions": {
       "edit": "编辑",
-      "delete": "删除"
+      "delete": "删除",
+      "saveAsDraft": "保存为草稿",
+      "submitForReview": "提交审核"
     }
+  },
+  "status": {
+    "published": "已发布",
+    "under_review": "审核中",
+    "draft": "草稿"
   },
   "dialog": {
     "create": {
@@ -32,7 +40,8 @@
     },
     "form": {
       "title": {
-        "label": "标题"
+        "label": "标题",
+        "counter": "{{current}}/{{max}} 字符"
       },
       "content": {
         "label": "内容",
@@ -42,12 +51,11 @@
         "label": "标签（用逗号分隔）",
         "helper": "输入标签，用逗号分隔（例如：量子、物理、宇宙）"
       }
+    },
+    "actions": {
+      "saveAsDraft": "保存为草稿",
+      "submitForReview": "提交审核"
     }
-  },
-  "status": {
-    "published": "已发布",
-    "under_review": "审核中",
-    "draft": "草稿"
   },
   "validation": {
     "titleRequired": "请输入标题",
@@ -56,17 +64,20 @@
     "contentRequired": "请输入内容",
     "contentMin": "内容至少需要10个字符",
     "contentMax": "内容不能超过5000个字符",
-    "tagsFormat": "标签只能包含字母、数字、逗号和空格"
+    "tagsFormat": "标签只能包含字母、数字、空格和中文字符",
+    "formErrors": "请修正错误后再提交"
   },
   "deleteDialog": {
     "title": "删除诗歌",
-    "message": "您确定要删除\"{{title}}\"吗？此操作无法撤销。",
+    "message": "您确定要删除"{{title}}"吗？此操作无法撤销。",
     "confirm": "删除"
   },
   "success": {
     "created": "诗歌创建成功",
     "updated": "诗歌更新成功",
-    "deleted": "诗歌删除成功"
+    "deleted": "诗歌删除成功",
+    "savedAsDraft": "诗歌已保存为草稿",
+    "submittedForReview": "诗歌已提交审核"
   },
   "errors": {
     "loadPoems": "加载诗歌失败，请稍后重试。",

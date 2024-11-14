@@ -1,0 +1,48 @@
+{
+  "title": "管理控制台",
+  "subtitle": "管理诗歌和用户内容",
+  "poem": {
+    "by": "作者：{{author}}",
+    "status": {
+      "change": "更改状态",
+      "current": "当前状态",
+      "next": "更改为",
+      "invalidTransition": "无效的状态转换"
+    }
+  },
+  "actions": {
+    "approve": "通过",
+    "reject": "拒绝",
+    "publish": "发布",
+    "unpublish": "取消发布",
+    "review": "送审"
+  },
+  "filters": {
+    "all": "全部诗歌",
+    "pending": "待审核",
+    "published": "已发布",
+    "rejected": "已拒绝"
+  },
+  "status": {
+    "changed": "状态更改成功",
+    "error": "状态更改失败"
+  },
+  "workflow": {
+    "draft": "送审诗歌",
+    "publish": "发布此诗歌",
+    "reject": "拒绝并返回草稿",
+    "unpublish": "取消发布并返回审核"
+  },
+  "confirmations": {
+    "publish": "您确定要发布\"{{title}}\"吗？",
+    "unpublish": "您确定要取消发布\"{{title}}\"吗？",
+    "reject": "您确定要拒绝\"{{title}}\"吗？",
+    "review": "您确定要送审\"{{title}}\"吗？",
+    "generic": "您确定要更改此诗歌的状态吗？"
+  },
+  "errors": {
+    "unauthorized": "您无权访问此页面",
+    "loadFailed": "加载诗歌失败",
+    "actionFailed": "操作失败，请重试。"
+  }
+}

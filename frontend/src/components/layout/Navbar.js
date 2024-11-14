@@ -11,6 +11,7 @@ import {
   Button,
   Tooltip,
   MenuItem,
+  Divider,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link, useNavigate } from 'react-router-dom';
@@ -183,6 +184,17 @@ const Navbar = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
+                  {/* Admin Menu Items */}
+                  {user?.role === 'admin' && (
+                    <>
+                      <MenuItem component={Link} to="/admin" onClick={handleCloseUserMenu}>
+                        <Typography textAlign="center">{t('nav:adminDashboard')}</Typography>
+                      </MenuItem>
+                      <Divider />
+                    </>
+                  )}
+                  
+                  {/* Regular User Menu Items */}
                   <MenuItem component={Link} to="/dashboard" onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">{t('nav:dashboard')}</Typography>
                   </MenuItem>

@@ -4,6 +4,47 @@ const { check, validationResult } = require('express-validator');
 const Poem = require('../models/Poem');
 const { protect, authorize, checkOwnership } = require('../middleware/auth');
 
+// Status transition validation
+const VALID_STATUS_TRANSITIONS = {
+  draft: ['under_review'],
+  under_review: ['published', 'draft'],
+  published: ['under_review']
+};
+
+// Validate status transition
+const validateStatusTransition = (currentStatus, newStatus) => {
+  const validTransitions = VALID_STATUS_TRANSITIONS[currentStatus];
+  return validTransitions && validTransitions.includes(newStatus);
+};
+
+// @route   GET /api/poems/user/:id
+// @desc    Get all poems by user (including all statuses)
+// @access  Private
+router.get('/user/:id', protect, async (req, res) => {
+  try {
+    // Check if user is requesting their own poems or is an admin
+    if (req.params.id !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to view these poems'
+      });
+    }
+
+    const poems = await Poem.find({ author: req.params.id })
+      .populate('author', 'name')
+      .sort('-createdAt');
+
+    res.json({
+      success: true,
+      poems: poems || [],
+      count: poems ? poems.length : 0
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 // @route   POST /api/poems
 // @desc    Create a new poem
 // @access  Private
@@ -13,6 +54,8 @@ router.post(
   [
     check('title', 'Title is required').not().isEmpty(),
     check('content', 'Content is required').not().isEmpty(),
+    check('status', 'Status must be either draft or under_review')
+      .isIn(['draft', 'under_review'])
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -21,45 +64,29 @@ router.post(
     }
 
     try {
-      const { title, content, tags } = req.body;
+      const { title, content, tags, status } = req.body;
+      console.log('Creating poem with data:', { title, content, tags, status }); // Debug log
 
       const poem = await Poem.create({
         title,
         content,
         tags,
+        status, // Use status from request body
         author: req.user.id,
       });
+
+      console.log('Created poem:', poem); // Debug log
 
       res.status(201).json({
         success: true,
         data: poem,
       });
     } catch (error) {
-      console.error(error);
+      console.error('Error creating poem:', error);
       res.status(500).json({ message: 'Server Error' });
     }
   }
 );
-
-// @route   GET /api/poems/user/:id
-// @desc    Get all poems by user
-// @access  Private
-router.get('/user/:id', protect, async (req, res) => {
-  try {
-    const poems = await Poem.find({ author: req.params.id })
-      .populate('author', 'name')
-      .sort('-createdAt');
-
-    res.json({
-      success: true,
-      poems: poems || [], // Changed to 'poems' to match frontend expectation
-      count: poems ? poems.length : 0
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
-});
 
 // @route   GET /api/poems
 // @desc    Get all published poems
@@ -109,38 +136,58 @@ router.get('/', async (req, res) => {
   }
 });
 
-// @route   GET /api/poems/:id
-// @desc    Get single poem
-// @access  Public
-router.get('/:id', async (req, res) => {
-  try {
-    const poem = await Poem.findById(req.params.id)
-      .populate('author', 'name')
-      .populate('comments.user', 'name');
-
-    if (!poem) {
-      return res.status(404).json({ 
-        success: false,
-        message: 'Poem not found' 
-      });
+// @route   PUT /api/poems/:id/status
+// @desc    Update poem status
+// @access  Private (Admin only)
+router.put(
+  '/:id/status',
+  protect,
+  authorize('admin'),
+  [
+    check('status', 'Status is required')
+      .not()
+      .isEmpty()
+      .isIn(['draft', 'under_review', 'published'])
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    res.json({
-      success: true,
-      data: poem,
-    });
-  } catch (error) {
-    // Check if error is due to invalid ObjectId
-    if (error.kind === 'ObjectId') {
-      return res.status(404).json({
-        success: false,
-        message: 'Poem not found'
+    try {
+      const poem = await Poem.findById(req.params.id);
+
+      if (!poem) {
+        return res.status(404).json({
+          success: false,
+          message: 'Poem not found'
+        });
+      }
+
+      const newStatus = req.body.status;
+
+      // Validate status transition
+      if (!validateStatusTransition(poem.status, newStatus)) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid status transition from ${poem.status} to ${newStatus}`
+        });
+      }
+
+      poem.status = newStatus;
+      await poem.save();
+
+      res.json({
+        success: true,
+        data: poem,
       });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
     }
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
   }
-});
+);
 
 // @route   PUT /api/poems/:id
 // @desc    Update poem
@@ -152,6 +199,9 @@ router.put(
   [
     check('title', 'Title is required').optional().not().isEmpty(),
     check('content', 'Content is required').optional().not().isEmpty(),
+    check('status', 'Status must be either draft or under_review')
+      .optional()
+      .isIn(['draft', 'under_review'])
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -161,6 +211,7 @@ router.put(
 
     try {
       const { title, content, tags, status } = req.body;
+      console.log('Updating poem with data:', { title, content, tags, status }); // Debug log
 
       const poem = await Poem.findById(req.params.id);
 
@@ -174,22 +225,17 @@ router.put(
       if (title) poem.title = title;
       if (content) poem.content = content;
       if (tags) poem.tags = tags;
-      if (status && req.user.role === 'admin') poem.status = status;
+      if (status) poem.status = status;
 
       await poem.save();
+      console.log('Updated poem:', poem); // Debug log
 
       res.json({
         success: true,
         data: poem,
       });
     } catch (error) {
-      if (error.kind === 'ObjectId') {
-        return res.status(404).json({
-          success: false,
-          message: 'Poem not found'
-        });
-      }
-      console.error(error);
+      console.error('Error updating poem:', error);
       res.status(500).json({ message: 'Server Error' });
     }
   }
@@ -216,101 +262,6 @@ router.delete('/:id', protect, checkOwnership(Poem), async (req, res) => {
       message: 'Poem deleted successfully'
     });
   } catch (error) {
-    if (error.kind === 'ObjectId') {
-      return res.status(404).json({
-        success: false,
-        message: 'Poem not found'
-      });
-    }
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
-});
-
-// @route   POST /api/poems/:id/comments
-// @desc    Add comment to poem
-// @access  Private
-router.post(
-  '/:id/comments',
-  protect,
-  [check('content', 'Comment content is required').not().isEmpty()],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    try {
-      const poem = await Poem.findById(req.params.id);
-
-      if (!poem) {
-        return res.status(404).json({
-          success: false,
-          message: 'Poem not found'
-        });
-      }
-
-      const comment = {
-        user: req.user.id,
-        content: req.body.content,
-      };
-
-      poem.comments.unshift(comment);
-      await poem.save();
-
-      res.json({
-        success: true,
-        data: poem,
-      });
-    } catch (error) {
-      if (error.kind === 'ObjectId') {
-        return res.status(404).json({
-          success: false,
-          message: 'Poem not found'
-        });
-      }
-      console.error(error);
-      res.status(500).json({ message: 'Server Error' });
-    }
-  }
-);
-
-// @route   POST /api/poems/:id/like
-// @desc    Like/Unlike a poem
-// @access  Private
-router.post('/:id/like', protect, async (req, res) => {
-  try {
-    const poem = await Poem.findById(req.params.id);
-
-    if (!poem) {
-      return res.status(404).json({
-        success: false,
-        message: 'Poem not found'
-      });
-    }
-
-    // Check if poem has already been liked by user
-    const likeIndex = poem.likes.indexOf(req.user.id);
-
-    if (likeIndex === -1) {
-      poem.likes.push(req.user.id);
-    } else {
-      poem.likes.splice(likeIndex, 1);
-    }
-
-    await poem.save();
-
-    res.json({
-      success: true,
-      data: poem,
-    });
-  } catch (error) {
-    if (error.kind === 'ObjectId') {
-      return res.status(404).json({
-        success: false,
-        message: 'Poem not found'
-      });
-    }
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
   }

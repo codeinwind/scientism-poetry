@@ -3,6 +3,7 @@
   "welcome": "Welcome back, {{name}}",
   "createPoem": "Create New Poem",
   "editPoem": "Edit Poem",
+  "noPoems": "No poems match the current filter",
   "emptyState": {
     "title": "Start Your Poetic Journey",
     "description": "You haven't created any poems yet. Share your scientific insights through poetry with our community.",
@@ -18,8 +19,15 @@
     "lastUpdated": "Last updated: {{date}}",
     "actions": {
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "saveAsDraft": "Save as Draft",
+      "submitForReview": "Submit for Review"
     }
+  },
+  "status": {
+    "published": "Published",
+    "under_review": "Under Review",
+    "draft": "Draft"
   },
   "dialog": {
     "create": {
@@ -32,7 +40,8 @@
     },
     "form": {
       "title": {
-        "label": "Title"
+        "label": "Title",
+        "counter": "{{current}}/{{max}} characters"
       },
       "content": {
         "label": "Content",
@@ -42,12 +51,11 @@
         "label": "Tags (comma separated)",
         "helper": "Enter tags separated by commas (e.g., quantum, physics, space)"
       }
+    },
+    "actions": {
+      "saveAsDraft": "Save as Draft",
+      "submitForReview": "Submit for Review"
     }
-  },
-  "status": {
-    "published": "Published",
-    "under_review": "Under Review",
-    "draft": "Draft"
   },
   "validation": {
     "titleRequired": "Title is required",
@@ -56,7 +64,8 @@
     "contentRequired": "Content is required",
     "contentMin": "Content must be at least 10 characters",
     "contentMax": "Content cannot exceed 5000 characters",
-    "tagsFormat": "Tags can only contain letters, numbers, commas and spaces"
+    "tagsFormat": "Tags can only contain letters, numbers, spaces, and Chinese characters",
+    "formErrors": "Please fix the errors before submitting"
   },
   "deleteDialog": {
     "title": "Delete Poem",
@@ -66,7 +75,9 @@
   "success": {
     "created": "Poem created successfully",
     "updated": "Poem updated successfully",
-    "deleted": "Poem deleted successfully"
+    "deleted": "Poem deleted successfully",
+    "savedAsDraft": "Poem saved as draft",
+    "submittedForReview": "Poem submitted for review"
   },
   "errors": {
     "loadPoems": "Error loading your poems. Please try again later.",
