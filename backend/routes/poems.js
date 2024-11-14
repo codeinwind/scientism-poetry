@@ -50,10 +50,10 @@ router.get('/user/:id', protect, async (req, res) => {
       .populate('author', 'name')
       .sort('-createdAt');
 
-    // Return empty array if no poems found
     res.json({
       success: true,
-      data: poems || [],
+      poems: poems || [], // Changed to 'poems' to match frontend expectation
+      count: poems ? poems.length : 0
     });
   } catch (error) {
     console.error(error);
@@ -70,13 +70,28 @@ router.get('/', async (req, res) => {
     const limit = parseInt(req.query.limit, 10) || 10;
     const startIndex = (page - 1) * limit;
 
+    // First check if there are any published poems
+    const total = await Poem.countDocuments({ status: 'published' });
+
+    // If no poems exist, return early with empty data
+    if (total === 0) {
+      return res.json({
+        success: true,
+        data: [],
+        pagination: {
+          page: 1,
+          limit,
+          total: 0,
+          pages: 0,
+        },
+      });
+    }
+
     const poems = await Poem.find({ status: 'published' })
       .populate('author', 'name')
       .sort('-createdAt')
       .skip(startIndex)
       .limit(limit);
-
-    const total = await Poem.countDocuments({ status: 'published' });
 
     res.json({
       success: true,
@@ -104,7 +119,10 @@ router.get('/:id', async (req, res) => {
       .populate('comments.user', 'name');
 
     if (!poem) {
-      return res.status(404).json({ message: 'Poem not found' });
+      return res.status(404).json({ 
+        success: false,
+        message: 'Poem not found' 
+      });
     }
 
     res.json({
@@ -112,6 +130,13 @@ router.get('/:id', async (req, res) => {
       data: poem,
     });
   } catch (error) {
+    // Check if error is due to invalid ObjectId
+    if (error.kind === 'ObjectId') {
+      return res.status(404).json({
+        success: false,
+        message: 'Poem not found'
+      });
+    }
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
   }
@@ -139,6 +164,13 @@ router.put(
 
       const poem = await Poem.findById(req.params.id);
 
+      if (!poem) {
+        return res.status(404).json({
+          success: false,
+          message: 'Poem not found'
+        });
+      }
+
       if (title) poem.title = title;
       if (content) poem.content = content;
       if (tags) poem.tags = tags;
@@ -151,6 +183,12 @@ router.put(
         data: poem,
       });
     } catch (error) {
+      if (error.kind === 'ObjectId') {
+        return res.status(404).json({
+          success: false,
+          message: 'Poem not found'
+        });
+      }
       console.error(error);
       res.status(500).json({ message: 'Server Error' });
     }
@@ -162,13 +200,28 @@ router.put(
 // @access  Private
 router.delete('/:id', protect, checkOwnership(Poem), async (req, res) => {
   try {
-    await Poem.findByIdAndDelete(req.params.id);
+    const poem = await Poem.findById(req.params.id);
+
+    if (!poem) {
+      return res.status(404).json({
+        success: false,
+        message: 'Poem not found'
+      });
+    }
+
+    await poem.deleteOne();
 
     res.json({
       success: true,
-      data: {},
+      message: 'Poem deleted successfully'
     });
   } catch (error) {
+    if (error.kind === 'ObjectId') {
+      return res.status(404).json({
+        success: false,
+        message: 'Poem not found'
+      });
+    }
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
   }
@@ -191,7 +244,10 @@ router.post(
       const poem = await Poem.findById(req.params.id);
 
       if (!poem) {
-        return res.status(404).json({ message: 'Poem not found' });
+        return res.status(404).json({
+          success: false,
+          message: 'Poem not found'
+        });
       }
 
       const comment = {
@@ -207,6 +263,12 @@ router.post(
         data: poem,
       });
     } catch (error) {
+      if (error.kind === 'ObjectId') {
+        return res.status(404).json({
+          success: false,
+          message: 'Poem not found'
+        });
+      }
       console.error(error);
       res.status(500).json({ message: 'Server Error' });
     }
@@ -221,7 +283,10 @@ router.post('/:id/like', protect, async (req, res) => {
     const poem = await Poem.findById(req.params.id);
 
     if (!poem) {
-      return res.status(404).json({ message: 'Poem not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'Poem not found'
+      });
     }
 
     // Check if poem has already been liked by user
@@ -240,6 +305,12 @@ router.post('/:id/like', protect, async (req, res) => {
       data: poem,
     });
   } catch (error) {
+    if (error.kind === 'ObjectId') {
+      return res.status(404).json({
+        success: false,
+        message: 'Poem not found'
+      });
+    }
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
   }

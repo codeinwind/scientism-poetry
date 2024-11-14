@@ -62,6 +62,18 @@ api.interceptors.response.use(
       }
     }
 
+    // Transform error response to be more consistent
+    if (error.response?.data) {
+      // If the error has a message field, use it
+      if (error.response.data.message) {
+        error.message = error.response.data.message;
+      }
+      // Add success flag if not present
+      if (typeof error.response.data.success === 'undefined') {
+        error.response.data.success = false;
+      }
+    }
+
     return Promise.reject(error);
   }
 );
@@ -102,45 +114,193 @@ export const authService = {
 // Poems Services
 export const poemService = {
   getAllPoems: async (page = 1, limit = 10, search = '') => {
-    const response = await api.get('/poems', {
-      params: { page, limit, search },
-    });
-    return response.data;
+    try {
+      const response = await api.get('/poems', {
+        params: { page, limit, search },
+      });
+      
+      // Ensure we have the expected data structure
+      return {
+        success: true,
+        data: response.data.data || [],
+        pagination: response.data.pagination || {
+          page: 1,
+          limit,
+          total: 0,
+          pages: 0,
+        },
+      };
+    } catch (error) {
+      // Return consistent error structure
+      throw {
+        success: false,
+        message: error.message || 'Failed to fetch poems',
+        error,
+      };
+    }
   },
 
   getUserPoems: async (userId) => {
-    const response = await api.get(`/poems/user/${userId}`);
-    return response.data;
+    try {
+      const response = await api.get(`/poems/user/${userId}`);
+      
+      // Handle the updated response structure from backend
+      return {
+        success: true,
+        poems: response.data.poems || [],
+        count: response.data.count || 0,
+      };
+    } catch (error) {
+      // If it's a 404, return empty data instead of throwing
+      if (error.response?.status === 404) {
+        return {
+          success: true,
+          poems: [],
+          count: 0,
+        };
+      }
+      throw {
+        success: false,
+        message: error.message || 'Failed to fetch user poems',
+        error,
+      };
+    }
   },
 
   getPoemById: async (id) => {
-    const response = await api.get(`/poems/${id}`);
-    return response.data;
+    try {
+      const response = await api.get(`/poems/${id}`);
+      return {
+        success: true,
+        data: response.data.data,
+      };
+    } catch (error) {
+      // If it's a 404, we want to handle it specially
+      if (error.response?.status === 404) {
+        throw {
+          success: false,
+          message: 'Poem not found',
+          error,
+        };
+      }
+      throw {
+        success: false,
+        message: error.message || 'Failed to fetch poem',
+        error,
+      };
+    }
   },
 
   createPoem: async (poemData) => {
-    const response = await api.post('/poems', poemData);
-    return response.data;
+    try {
+      const response = await api.post('/poems', poemData);
+      return {
+        success: true,
+        data: response.data.data,
+      };
+    } catch (error) {
+      throw {
+        success: false,
+        message: error.message || 'Failed to create poem',
+        error,
+      };
+    }
   },
 
   updatePoem: async (id, poemData) => {
-    const response = await api.put(`/poems/${id}`, poemData);
-    return response.data;
+    try {
+      const response = await api.put(`/poems/${id}`, poemData);
+      return {
+        success: true,
+        data: response.data.data,
+      };
+    } catch (error) {
+      // Handle 404 specially
+      if (error.response?.status === 404) {
+        throw {
+          success: false,
+          message: 'Poem not found',
+          error,
+        };
+      }
+      throw {
+        success: false,
+        message: error.message || 'Failed to update poem',
+        error,
+      };
+    }
   },
 
   deletePoem: async (id) => {
-    const response = await api.delete(`/poems/${id}`);
-    return response.data;
+    try {
+      const response = await api.delete(`/poems/${id}`);
+      return {
+        success: true,
+        message: response.data.message || 'Poem deleted successfully',
+      };
+    } catch (error) {
+      // Handle 404 specially
+      if (error.response?.status === 404) {
+        throw {
+          success: false,
+          message: 'Poem not found',
+          error,
+        };
+      }
+      throw {
+        success: false,
+        message: error.message || 'Failed to delete poem',
+        error,
+      };
+    }
   },
 
   likePoem: async (id) => {
-    const response = await api.post(`/poems/${id}/like`);
-    return response.data;
+    try {
+      const response = await api.post(`/poems/${id}/like`);
+      return {
+        success: true,
+        data: response.data.data,
+      };
+    } catch (error) {
+      // Handle 404 specially
+      if (error.response?.status === 404) {
+        throw {
+          success: false,
+          message: 'Poem not found',
+          error,
+        };
+      }
+      throw {
+        success: false,
+        message: error.message || 'Failed to like poem',
+        error,
+      };
+    }
   },
 
   addComment: async (id, comment) => {
-    const response = await api.post(`/poems/${id}/comments`, { content: comment });
-    return response.data;
+    try {
+      const response = await api.post(`/poems/${id}/comments`, { content: comment });
+      return {
+        success: true,
+        data: response.data.data,
+      };
+    } catch (error) {
+      // Handle 404 specially
+      if (error.response?.status === 404) {
+        throw {
+          success: false,
+          message: 'Poem not found',
+          error,
+        };
+      }
+      throw {
+        success: false,
+        message: error.message || 'Failed to add comment',
+        error,
+      };
+    }
   },
 };
 

@@ -21,28 +21,26 @@ import {
   Favorite as FavoriteIcon,
   Comment as CommentIcon,
   Search as SearchIcon,
+  SentimentDissatisfied as EmptyIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { poemService } from '../services/api';
 
 const Poems = () => {
-  const { t } = useTranslation(['poems']);
+  const { t } = useTranslation(['poems', 'common']);
   const { isAuthenticated } = useAuth();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
 
-  // Fetch poems from the API
-  const { data, isLoading, error } = useQuery(
+  // Fetch poems from the API using our service
+  const { data: poemsData, isLoading, error } = useQuery(
     ['poems', page, search],
-    async () => {
-      const response = await fetch(
-        `http://localhost:5000/api/poems?page=${page}&search=${search}`
-      );
-      if (!response.ok) {
-        throw new Error(t('poems:errors.loadFailed'));
-      }
-      return response.json();
+    () => poemService.getAllPoems(page, 10, search),
+    {
+      keepPreviousData: true, // Keep previous data while fetching new data
+      retry: 2, // Retry failed requests twice
     }
   );
 
@@ -76,11 +74,13 @@ const Poems = () => {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
         <Alert severity="error">
-          {t('poems:errors.loadFailed')}
+          {error.message || t('poems:errors.loadFailed')}
         </Alert>
       </Container>
     );
   }
+
+  const hasPoems = poemsData?.data && poemsData.data.length > 0;
 
   return (
     <Container maxWidth="lg">
@@ -118,75 +118,121 @@ const Poems = () => {
         />
       </Box>
 
-      {/* Poems Grid */}
-      <Grid container spacing={4} sx={{ mb: 4 }}>
-        {data?.data.map((poem) => (
-          <Grid item xs={12} md={6} key={poem._id}>
-            <Card>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  {poem.title}
-                </Typography>
-                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  {t('poems:poem.by', { author: poem.author.name })}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    whiteSpace: 'pre-line',
-                    mb: 2,
-                    display: '-webkit-box',
-                    WebkitLineClamp: 4,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {poem.content}
-                </Typography>
-                <Box sx={{ mb: 2 }}>
-                  {poem.tags.map((tag, index) => (
-                    <Chip
-                      key={index}
-                      label={tag}
-                      size="small"
-                      sx={{ mr: 1, mb: 1 }}
-                    />
-                  ))}
-                </Box>
-              </CardContent>
-              <CardActions sx={{ justifyContent: 'space-between' }}>
-                <Box>
-                  <IconButton size="small" color="primary">
-                    <FavoriteIcon />
-                  </IconButton>
-                  <Typography variant="body2" component="span" sx={{ ml: 1 }}>
-                    {t('poems:poem.likes', { count: poem.likes?.length || 0 })}
-                  </Typography>
-                  <IconButton size="small" sx={{ ml: 2 }}>
-                    <CommentIcon />
-                  </IconButton>
-                  <Typography variant="body2" component="span" sx={{ ml: 1 }}>
-                    {t('poems:poem.comments', { count: poem.comments?.length || 0 })}
-                  </Typography>
-                </Box>
-                <Button size="small" color="primary">
-                  {t('poems:poem.readMore')}
-                </Button>
-              </CardActions>
-            </Card>
+      {hasPoems ? (
+        <>
+          {/* Poems Grid */}
+          <Grid container spacing={4} sx={{ mb: 4 }}>
+            {poemsData.data.map((poem) => (
+              <Grid item xs={12} md={6} key={poem._id}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h5" gutterBottom>
+                      {poem.title}
+                    </Typography>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                      {t('poems:poem.by', { author: poem.author.name })}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        whiteSpace: 'pre-line',
+                        mb: 2,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 4,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {poem.content}
+                    </Typography>
+                    <Box sx={{ mb: 2 }}>
+                      {poem.tags.map((tag, index) => (
+                        <Chip
+                          key={index}
+                          label={tag}
+                          size="small"
+                          sx={{ mr: 1, mb: 1 }}
+                        />
+                      ))}
+                    </Box>
+                  </CardContent>
+                  <CardActions sx={{ justifyContent: 'space-between' }}>
+                    <Box>
+                      <IconButton 
+                        size="small" 
+                        color={poem.likes?.includes(isAuthenticated) ? "primary" : "default"}
+                        disabled={!isAuthenticated}
+                      >
+                        <FavoriteIcon />
+                      </IconButton>
+                      <Typography variant="body2" component="span" sx={{ ml: 1 }}>
+                        {t('poems:poem.likes', { count: poem.likes?.length || 0 })}
+                      </Typography>
+                      <IconButton size="small" sx={{ ml: 2 }} disabled={!isAuthenticated}>
+                        <CommentIcon />
+                      </IconButton>
+                      <Typography variant="body2" component="span" sx={{ ml: 1 }}>
+                        {t('poems:poem.comments', { count: poem.comments?.length || 0 })}
+                      </Typography>
+                    </Box>
+                    <Button size="small" color="primary" href={`/poems/${poem._id}`}>
+                      {t('poems:poem.readMore')}
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
 
-      {/* Pagination */}
-      {data?.pagination && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-          <Pagination
-            count={data.pagination.pages}
-            page={page}
-            onChange={handlePageChange}
-            color="primary"
-          />
+          {/* Pagination */}
+          {poemsData.pagination && poemsData.pagination.pages > 1 && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+              <Pagination
+                count={poemsData.pagination.pages}
+                page={page}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </Box>
+          )}
+        </>
+      ) : (
+        // Empty State
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '200px',
+            textAlign: 'center',
+            py: 8,
+          }}
+        >
+          <EmptyIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+          <Typography variant="h6" gutterBottom>
+            {search
+              ? t('poems:emptyState.searchTitle')
+              : t('poems:emptyState.title')}
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            {search
+              ? t('poems:emptyState.searchDescription', { search })
+              : t('poems:emptyState.description')}
+          </Typography>
+          {search && (
+            <Button
+              variant="text"
+              color="primary"
+              onClick={() => {
+                setSearch('');
+                setSearchInput('');
+              }}
+              sx={{ mt: 2 }}
+            >
+              {t('poems:emptyState.clearSearch')}
+            </Button>
+          )}
         </Box>
       )}
 

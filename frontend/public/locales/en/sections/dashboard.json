@@ -35,7 +35,8 @@
         "label": "Title"
       },
       "content": {
-        "label": "Content"
+        "label": "Content",
+        "counter": "{{current}}/{{max}} characters"
       },
       "tags": {
         "label": "Tags (comma separated)",
@@ -43,7 +44,34 @@
       }
     }
   },
+  "status": {
+    "published": "Published",
+    "under_review": "Under Review",
+    "draft": "Draft"
+  },
+  "validation": {
+    "titleRequired": "Title is required",
+    "titleMin": "Title must be at least 3 characters",
+    "titleMax": "Title cannot exceed 100 characters",
+    "contentRequired": "Content is required",
+    "contentMin": "Content must be at least 10 characters",
+    "contentMax": "Content cannot exceed 5000 characters",
+    "tagsFormat": "Tags can only contain letters, numbers, commas and spaces"
+  },
+  "deleteDialog": {
+    "title": "Delete Poem",
+    "message": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone.",
+    "confirm": "Delete"
+  },
+  "success": {
+    "created": "Poem created successfully",
+    "updated": "Poem updated successfully",
+    "deleted": "Poem deleted successfully"
+  },
   "errors": {
-    "loadPoems": "Error loading your poems. Please try again later."
+    "loadPoems": "Error loading your poems. Please try again later.",
+    "create": "Failed to create poem. Please try again.",
+    "update": "Failed to update poem. Please try again.",
+    "delete": "Failed to delete poem. Please try again."
   }
 }

@@ -35,7 +35,8 @@
         "label": "标题"
       },
       "content": {
-        "label": "内容"
+        "label": "内容",
+        "counter": "{{current}}/{{max}} 字符"
       },
       "tags": {
         "label": "标签（用逗号分隔）",
@@ -43,7 +44,34 @@
       }
     }
   },
+  "status": {
+    "published": "已发布",
+    "under_review": "审核中",
+    "draft": "草稿"
+  },
+  "validation": {
+    "titleRequired": "请输入标题",
+    "titleMin": "标题至少需要3个字符",
+    "titleMax": "标题不能超过100个字符",
+    "contentRequired": "请输入内容",
+    "contentMin": "内容至少需要10个字符",
+    "contentMax": "内容不能超过5000个字符",
+    "tagsFormat": "标签只能包含字母、数字、逗号和空格"
+  },
+  "deleteDialog": {
+    "title": "删除诗歌",
+    "message": "您确定要删除\"{{title}}\"吗？此操作无法撤销。",
+    "confirm": "删除"
+  },
+  "success": {
+    "created": "诗歌创建成功",
+    "updated": "诗歌更新成功",
+    "deleted": "诗歌删除成功"
+  },
   "errors": {
-    "loadPoems": "加载诗歌失败，请稍后重试。"
+    "loadPoems": "加载诗歌失败，请稍后重试。",
+    "create": "创建诗歌失败，请重试。",
+    "update": "更新诗歌失败，请重试。",
+    "delete": "删除诗歌失败，请重试。"
   }
 }
