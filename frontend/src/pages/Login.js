@@ -41,7 +41,7 @@ const Login = () => {
       await login(response.user, response.token);
       navigate('/dashboard');
     } catch (error) {
-      setError(error.message || t('auth:errors.loginFailed'));
+      setError(error.message || t('auth:login.errors.failed'));
     } finally {
       setIsLoading(false);
     }
@@ -64,7 +64,7 @@ const Login = () => {
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               fullWidth
-              label={t('auth:fields.email')}
+              label={t('auth:login.form.email.label')}
               name="email"
               type="email"
               value={formData.email}
@@ -75,7 +75,7 @@ const Login = () => {
             />
             <TextField
               fullWidth
-              label={t('auth:fields.password')}
+              label={t('auth:login.form.password.label')}
               name="password"
               type="password"
               value={formData.password}
@@ -91,7 +91,7 @@ const Login = () => {
               disabled={isLoading}
               sx={{ mt: 3, mb: 2 }}
             >
-              {isLoading ? t('common:loading') : t('auth:login.submit')}
+              {isLoading ? t('common:loading') : t('auth:login.form.submit')}
             </Button>
           </Box>
 
@@ -99,7 +99,7 @@ const Login = () => {
             <Typography variant="body2">
               {t('auth:login.noAccount')}{' '}
               <Link to="/register" style={{ textDecoration: 'none' }}>
-                {t('auth:login.register')}
+                {t('auth:login.signUp')}
               </Link>
             </Typography>
           </Box>

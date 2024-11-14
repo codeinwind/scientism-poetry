@@ -15,7 +15,8 @@ const sections = [
   'association',
   'press',
   'about',
-  'home'
+  'home',
+  'admin'
 ];
 
 i18n
@@ -36,6 +37,7 @@ i18n
       caches: ['localStorage'],
     },
 
+    // Configure backend to load translations from sections folder
     backend: {
       loadPath: '/locales/{{lng}}/sections/{{ns}}.json',
     },
@@ -44,26 +46,24 @@ i18n
       useSuspense: true,
     },
 
-    // Add all sections as namespaces
+    // Configure namespaces
     ns: sections,
     defaultNS: 'common',
 
     // Load all sections for each language
     partialBundledLanguages: true,
     preload: ['en', 'zh'],
-
-    // Ensure all namespaces are loaded when changing languages
     load: 'all',
     
-    // Load all namespaces on init
+    // Ensure translations are loaded immediately
     initImmediate: false,
 
-    // Enable namespace separator
+    // Configure separators for translation keys
     nsSeparator: ':',
     keySeparator: '.',
   });
 
-// Load all namespaces for the current language
+// Ensure all namespaces are loaded
 sections.forEach(ns => {
   i18n.loadNamespaces(ns);
 });

@@ -69,6 +69,20 @@ const Dashboard = () => {
   const filteredPoems = poemsData?.poems ? getFilteredPoems(poemsData.poems, currentStatus) : [];
   const tabCounts = poemsData?.poems ? getTabCounts(poemsData.poems) : { all: 0, published: 0, underReview: 0, drafts: 0 };
 
+  // Debug logs for current status
+  useEffect(() => {
+    console.log('Current status based on tab:', currentStatus); // Debug log
+  }, [tab]);
+
+  // Debug logs for translations
+  useEffect(() => {
+    console.log('Translations for empty state:', {
+      title: t('dashboard:emptyState.title'),
+      description: t('dashboard:emptyState.description'),
+      button: t('dashboard:emptyState.button'),
+    });
+  }, [t]);
+
   // Debug logs
   useEffect(() => {
     console.log('Current state:', {
@@ -124,6 +138,7 @@ const Dashboard = () => {
     <Container maxWidth="lg">
       <DashboardHeader
         userName={user.name}
+        title={t('dashboard:title')} // Add title translation
         onCreateNew={handleCreateNew}
       />
 
