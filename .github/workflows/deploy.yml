@@ -55,11 +55,6 @@ jobs:
           echo "Node.js version:"
           node -v
           
-          # Configure PM2 to use Node.js 18.20.4
-          pm2 kill || true
-          PM2_EXEC_PATH=$(which node)
-          echo "PM2 will use Node.js from: $PM2_EXEC_PATH"
-          
           # Run deployment scripts
           echo "Running frontend setup..."
           ./deploy/scripts/setup-frontend.sh "${{ secrets.REACT_APP_API_URL }}" || exit 1
@@ -67,12 +62,17 @@ jobs:
           echo "Running backend setup..."
           ./deploy/scripts/setup-backend.sh "${{ secrets.BACKEND_PORT }}" "${{ secrets.MONGODB_URI }}" "${{ secrets.JWT_SECRET }}" || exit 1
 
+          # Configure PM2 to use Node.js 18.20.4
+          echo "Configuring PM2..."
+          pm2 kill || true
+          PM2_EXEC_PATH=$(which node)
+          echo "PM2 will use Node.js from: $PM2_EXEC_PATH"
+
           # Start backend with specific Node.js version
           cd /var/www/scientism-poetry/backend
           echo "Starting backend with Node.js $(node -v)..."
+          pm2 delete scientism-poetry-backend || true
           pm2 start server.js --name scientism-poetry-backend --interpreter $PM2_EXEC_PATH
-
-          # Save PM2 configuration
           pm2 save
 
           # Verify PM2 process
@@ -89,17 +89,23 @@ jobs:
     - name: Verify deployment
       run: |
         ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} "
-          echo \"Checking Node.js version:\" &&
-          node -v | grep \"v18.20.4\" &&
-          echo \"Checking PM2 Node.js version:\" &&
-          pm2 list | grep \"node\" | grep \"18.20.4\" &&
-          echo \"Checking PM2 status:\" &&
-          pm2 list &&
-          echo \"Checking API health:\" &&
-          curl -s http://localhost:5000/api/health &&
-          echo \"Checking logs directory:\" &&
-          ls -la /var/log/scientism-poetry &&
-          echo \"Checking frontend env files:\" &&
-          ls -la /var/www/scientism-poetry/frontend/.env* &&
-          echo \"Deployment verification complete\"
+          echo \"=== Node.js Version ===\"
+          export NVM_DIR=\"\$HOME/.nvm\"
+          [ -s \"\$NVM_DIR/nvm.sh\" ] && \. \"\$NVM_DIR/nvm.sh\"
+          nvm use 18.20.4 > /dev/null 2>&1
+          node -v
+
+          echo \"\n=== PM2 Process Status ===\"
+          pm2 list
+
+          echo \"\n=== API Health Check ===\"
+          curl -s http://localhost:5000/api/health || echo \"API health check failed\"
+
+          echo \"\n=== Log Directory Contents ===\"
+          ls -la /var/log/scientism-poetry || echo \"Log directory check failed\"
+
+          echo \"\n=== Frontend Env Files ===\"
+          ls -la /var/www/scientism-poetry/frontend/.env* || echo \"Frontend env files check failed\"
+
+          echo \"\n=== Verification Complete ===\"
         "
