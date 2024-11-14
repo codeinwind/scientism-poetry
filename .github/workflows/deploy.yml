@@ -64,15 +64,28 @@ jobs:
 
           # Configure PM2 to use Node.js 18.20.4
           echo "Configuring PM2..."
-          pm2 kill || true
           PM2_EXEC_PATH=$(which node)
           echo "PM2 will use Node.js from: $PM2_EXEC_PATH"
 
           # Start backend with specific Node.js version
           cd /var/www/scientism-poetry/backend
           echo "Starting backend with Node.js $(node -v)..."
-          pm2 delete scientism-poetry-backend || true
+
+          # Check if PM2 is running and stop it if needed
+          if pm2 pid scientism-poetry-backend > /dev/null 2>&1; then
+            echo "Stopping existing PM2 process..."
+            pm2 stop scientism-poetry-backend
+            pm2 delete scientism-poetry-backend
+          else
+            echo "No existing PM2 process found"
+          fi
+
+          # Start new PM2 process
+          echo "Starting new PM2 process..."
           pm2 start server.js --name scientism-poetry-backend --interpreter $PM2_EXEC_PATH
+
+          # Save PM2 configuration
+          echo "Saving PM2 configuration..."
           pm2 save
 
           # Verify PM2 process
