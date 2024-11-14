@@ -30,11 +30,4 @@ echo "Copying backend files..."
 sudo rm -rf /var/www/scientism-poetry/backend/*
 sudo cp -r backend/* /var/www/scientism-poetry/backend/
 
-# Restart PM2
-echo "Restarting backend service..."
-pm2 stop scientism-poetry-backend || true
-pm2 delete scientism-poetry-backend || true
-cd /var/www/scientism-poetry/backend
-pm2 start server.js --name scientism-poetry-backend || { echo "PM2 start failed"; exit 1; }
-
 echo "Backend setup completed successfully"
