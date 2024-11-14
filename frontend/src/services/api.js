@@ -20,16 +20,51 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Enable sending cookies with requests
 });
 
 // Add token to requests if it exists
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
+
+// Handle response errors and token refresh
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // If error is 401 and we haven't tried to refresh token yet
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        // Attempt to refresh token
+        const response = await api.post('/auth/refresh-token');
+        const { token } = response.data;
+
+        // Update token in storage and auth header
+        sessionStorage.setItem('token', token);
+        originalRequest.headers.Authorization = `Bearer ${token}`;
+
+        // Retry the original request
+        return api(originalRequest);
+      } catch (refreshError) {
+        // If refresh fails, clear auth state and redirect to login
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 // Auth Services
 export const authService = {
@@ -40,6 +75,16 @@ export const authService = {
 
   register: async (userData) => {
     const response = await api.post('/auth/register', userData);
+    return response.data;
+  },
+
+  logout: async () => {
+    const response = await api.post('/auth/logout');
+    return response.data;
+  },
+
+  refreshToken: async () => {
+    const response = await api.post('/auth/refresh-token');
     return response.data;
   },
 
@@ -98,19 +143,5 @@ export const poemService = {
     return response.data;
   },
 };
-
-// Error Handler
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // Handle token expiration
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
 
 export default api;
