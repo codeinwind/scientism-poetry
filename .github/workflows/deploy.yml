@@ -18,25 +18,6 @@ jobs:
       with:
         node-version: '18'
 
-    # Test Frontend Build
-    - name: Test Frontend Build
-      env:
-        REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-      run: |
-        cd frontend
-        # Create production env file
-        echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > .env.production
-        npm ci
-        npm run build
-        cd ..
-
-    # Test Backend
-    - name: Test Backend
-      run: |
-        cd backend
-        npm ci
-        cd ..
-
     # Setup SSH
     - name: Setup SSH
       run: |
@@ -53,77 +34,26 @@ jobs:
       run: |
         ssh -i ~/.ssh/id_rsa -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} '
           # Create temporary directory
-          TEMP_DIR=$(mktemp -d) &&
-          echo "Created temporary directory: $TEMP_DIR" &&
+          TEMP_DIR=$(mktemp -d)
+          echo "Created temporary directory: $TEMP_DIR"
 
-          # Clone repository to temporary directory
-          git clone https://github.com/codeinwind/scientism-poetry.git $TEMP_DIR &&
-          cd $TEMP_DIR &&
+          # Clone repository
+          git clone https://github.com/codeinwind/scientism-poetry.git $TEMP_DIR
+          cd $TEMP_DIR
 
-          # Create frontend production env file
-          echo "Creating frontend production env file..." &&
-          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > frontend/.env.production &&
-          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > frontend/.env &&
+          # Make scripts executable
+          chmod +x deploy/scripts/*.sh
 
-          # Build frontend
-          echo "Building frontend..." &&
-          cd frontend &&
-          npm ci &&
-          npm run build &&
-          cd .. &&
+          # Run deployment scripts
+          echo "Running frontend setup..."
+          ./deploy/scripts/setup-frontend.sh "${{ secrets.REACT_APP_API_URL }}" || exit 1
 
-          # Create backend env file
-          echo "Creating backend env file..." &&
-          cat > backend/.env << EOL
-          NODE_ENV=production
-          PORT=${{ secrets.BACKEND_PORT }}
-          MONGODB_URI=${{ secrets.MONGODB_URI }}
-          JWT_SECRET=${{ secrets.JWT_SECRET }}
-          LOG_DIR=/var/log/scientism-poetry
-          EOL
-
-          # Build backend
-          echo "Building backend..." &&
-          cd backend &&
-          npm ci --production &&
-          cd .. &&
-
-          # Stop existing PM2 processes
-          pm2 stop scientism-poetry-backend || true &&
-          pm2 delete scientism-poetry-backend || true &&
-
-          # Update production directories
-          sudo rm -rf /var/www/scientism-poetry/frontend/* &&
-          sudo rm -rf /var/www/scientism-poetry/backend/* &&
-          
-          # Copy frontend files including .env
-          sudo cp -r frontend/build/* /var/www/scientism-poetry/frontend/ &&
-          sudo cp frontend/.env /var/www/scientism-poetry/frontend/ &&
-          sudo cp frontend/.env.production /var/www/scientism-poetry/frontend/ &&
-          
-          # Copy backend files
-          sudo cp -r backend/* /var/www/scientism-poetry/backend/ &&
-
-          # Ensure log directory exists with proper permissions
-          sudo mkdir -p /var/log/scientism-poetry &&
-          sudo chown -R $USER:$USER /var/log/scientism-poetry &&
-          sudo chmod 755 /var/log/scientism-poetry &&
-
-          # Start backend with PM2
-          cd /var/www/scientism-poetry/backend &&
-          pm2 start server.js --name scientism-poetry-backend &&
-
-          # Reload Nginx
-          sudo systemctl reload nginx &&
-
-          # Verify frontend env files
-          echo "Verifying frontend env files:" &&
-          ls -la /var/www/scientism-poetry/frontend/.env* &&
+          echo "Running backend setup..."
+          ./deploy/scripts/setup-backend.sh "${{ secrets.BACKEND_PORT }}" "${{ secrets.MONGODB_URI }}" "${{ secrets.JWT_SECRET }}" || exit 1
 
           # Cleanup
-          cd / &&
-          rm -rf $TEMP_DIR &&
-
+          cd /
+          rm -rf $TEMP_DIR
           echo "Deployment completed successfully!"
         '
 
