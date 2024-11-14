@@ -20,7 +20,7 @@ const poemSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['draft', 'published', 'under_review'],
-    default: 'under_review'
+    default: 'draft'  // Changed default to draft
   },
   tags: [{
     type: String,

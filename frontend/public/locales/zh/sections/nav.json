@@ -1,6 +1,6 @@
 {
   "home": "首页",
-  "poemsAndComments": "诗与评",
+  "poemsAndComments": "诗歌",
   "association": "协会",
   "journal": "期刊",
   "press": "出版社",
@@ -9,6 +9,7 @@
   "login": "登录",
   "register": "注册",
   "dashboard": "控制台",
+  "adminDashboard": "管理控制台",
   "profile": "个人资料",
-  "logout": "退出登录"
+  "logout": "退出"
 }

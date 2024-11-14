@@ -18,6 +18,7 @@ import Layout from './components/layout/Layout';
 import ErrorBoundary from './components/shared/ErrorBoundary';
 import ScrollToTop from './components/shared/ScrollToTop';
 import PrivateRoute from './components/auth/PrivateRoute';
+import AdminRoute from './components/auth/AdminRoute';
 import LoadingSpinner from './components/shared/LoadingSpinner';
 import TitleUpdater from './components/shared/TitleUpdater';
 
@@ -28,6 +29,7 @@ import Poems from './pages/Poems';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import Association from './pages/Association';
@@ -153,6 +155,28 @@ function App() {
                               <Profile />
                             </Layout>
                           </PrivateRoute>
+                        }
+                      />
+
+                      {/* Admin Routes */}
+                      <Route
+                        path="/admin"
+                        element={
+                          <AdminRoute>
+                            <Layout>
+                              <AdminDashboard />
+                            </Layout>
+                          </AdminRoute>
+                        }
+                      />
+                      <Route
+                        path="/admin/poems"
+                        element={
+                          <AdminRoute>
+                            <Layout>
+                              <AdminDashboard />
+                            </Layout>
+                          </AdminRoute>
                         }
                       />
 

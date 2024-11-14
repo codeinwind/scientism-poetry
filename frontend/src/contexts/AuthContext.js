@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { authService } from '../services/api';
+import { authService } from '../services';
 
 const AuthContext = createContext(null);
 
@@ -12,17 +12,23 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const token = sessionStorage.getItem('token'); // Use sessionStorage instead of localStorage
+        console.log('Initializing auth state...'); // Debug log
+        const token = sessionStorage.getItem('token');
         const userData = sessionStorage.getItem('user');
+        
+        console.log('Stored token:', !!token); // Debug log
+        console.log('Stored user data:', !!userData); // Debug log
         
         if (token && userData) {
           setAccessToken(token);
           setUser(JSON.parse(userData));
           
           // Verify token is still valid
-          await authService.getProfile();
+          const profile = await authService.getProfile();
+          console.log('Profile verification successful:', profile); // Debug log
         }
       } catch (error) {
+        console.error('Auth initialization error:', error); // Debug log
         // If token is invalid, clear auth state
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('user');
@@ -43,10 +49,13 @@ export const AuthProvider = ({ children }) => {
     const REFRESH_INTERVAL = 14 * 60 * 1000; // 14 minutes
     const refreshInterval = setInterval(async () => {
       try {
+        console.log('Attempting token refresh...'); // Debug log
         const response = await authService.refreshToken();
         setAccessToken(response.token);
         sessionStorage.setItem('token', response.token);
+        console.log('Token refresh successful'); // Debug log
       } catch (error) {
+        console.error('Token refresh error:', error); // Debug log
         // If refresh fails, log user out
         logout();
       }
@@ -56,6 +65,7 @@ export const AuthProvider = ({ children }) => {
   }, [accessToken]);
 
   const login = async (userData, token) => {
+    console.log('Logging in user:', userData.name); // Debug log
     setUser(userData);
     setAccessToken(token);
     sessionStorage.setItem('token', token);
@@ -64,6 +74,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
+      console.log('Logging out user...'); // Debug log
       await authService.logout();
     } catch (error) {
       console.error('Logout error:', error);
@@ -72,13 +83,24 @@ export const AuthProvider = ({ children }) => {
       setAccessToken(null);
       sessionStorage.removeItem('token');
       sessionStorage.removeItem('user');
+      console.log('User logged out successfully'); // Debug log
     }
   };
 
   const updateUser = (userData) => {
+    console.log('Updating user data:', userData); // Debug log
     setUser(userData);
     sessionStorage.setItem('user', JSON.stringify(userData));
   };
+
+  // Debug log current auth state
+  useEffect(() => {
+    console.log('Auth state updated:', {
+      isAuthenticated: !!user,
+      user: user?.name,
+      hasToken: !!accessToken
+    });
+  }, [user, accessToken]);
 
   return (
     <AuthContext.Provider
