@@ -27,6 +27,7 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { poemService } from '../services/api';
 
 const Dashboard = () => {
   const { t } = useTranslation(['dashboard', 'common']);
@@ -35,24 +36,17 @@ const Dashboard = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedPoem, setSelectedPoem] = useState(null);
 
-  // Fetch user's poems
+  // Fetch user's poems using poemService
   const { data: poems, isLoading, error } = useQuery(['userPoems', user.id], async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/poems/user/${user.id}`);
-      if (response.status === 404) {
-        // Return empty data for 404 (no poems found)
+      const response = await poemService.getUserPoems(user.id);
+      return { data: response.poems || [] };
+    } catch (err) {
+      // If it's a 404, return empty array
+      if (err.response?.status === 404) {
         return { data: [] };
       }
-      if (!response.ok) {
-        throw new Error(t('dashboard:errors.loadPoems'));
-      }
-      return response.json();
-    } catch (err) {
-      // Only throw error for non-404 responses
-      if (err.message !== t('dashboard:errors.loadPoems')) {
-        throw err;
-      }
-      return { data: [] };
+      throw new Error(t('dashboard:errors.loadPoems'));
     }
   });
 
@@ -99,8 +93,7 @@ const Dashboard = () => {
     );
   }
 
-  // Only show error state for actual errors (not 404)
-  if (error && error.message !== t('dashboard:errors.loadPoems')) {
+  if (error) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
         <Alert severity="error">{t('dashboard:errors.loadPoems')}</Alert>
