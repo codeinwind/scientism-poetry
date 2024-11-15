@@ -12,6 +12,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { authService } from '../services';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -19,43 +21,49 @@ const Register = () => {
   const { login } = useAuth();
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+  
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .required(t('auth:register.form.name.required'))
+      .min(2, t('auth:register.form.name.minLength')),
+    penName: Yup.string()
+      .required(t('auth:register.form.penName.required')), // New validation for pen name
+    email: Yup.string()
+      .email(t('auth:register.form.email.invalid'))
+      .required(t('auth:register.form.email.required')),
+    password: Yup.string()
+      .min(6, t('auth:register.form.password.minLength'))
+      .required(t('auth:register.form.password.required')),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], t('auth:register.form.confirmPassword.mismatch'))
+      .required(t('auth:register.form.confirmPassword.required')),
   });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      penName: '', // Initialize pen name
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      setError('');
+      setIsLoading(true);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-
-    // Validate passwords match
-    if (formData.password !== formData.confirmPassword) {
-      setError(t('auth:errors.passwordMismatch'));
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const { confirmPassword, ...registerData } = formData;
-      const response = await authService.register(registerData);
-      await login(response.user, response.token);
-      navigate('/dashboard');
-    } catch (error) {
-      setError(error.message || t('auth:errors.registrationFailed'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      try {
+        const { confirmPassword, ...registerData } = values;
+        const response = await authService.register(registerData);
+        await login(response.user, response.token);
+        navigate('/dashboard');
+      } catch (error) {
+        setError(error.message || t('auth:register.errors.failed'));
+      } finally {
+        setIsLoading(false);
+      }
+    },
+  });
 
   return (
     <Container maxWidth="sm">
@@ -71,46 +79,64 @@ const Register = () => {
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit}>
+          <Box component="form" onSubmit={formik.handleSubmit}>
             <TextField
               fullWidth
-              label={t('auth:fields.name')}
+              label={t('auth:register.form.name.label')}
               name="name"
-              value={formData.name}
-              onChange={handleChange}
+              value={formik.values.name}
+              onChange={formik.handleChange}
               margin="normal"
               required
-              autoFocus
+              helperText={formik.touched.name && formik.errors.name}
+              error={formik.touched.name && Boolean(formik.errors.name)}
             />
             <TextField
               fullWidth
-              label={t('auth:fields.email')}
+              label={t('auth:register.form.penName.label')} // New field for pen name
+              name="penName"
+              value={formik.values.penName}
+              onChange={formik.handleChange}
+              margin="normal"
+              required
+              helperText={formik.touched.penName && formik.errors.penName}
+              error={formik.touched.penName && Boolean(formik.errors.penName)}
+            />
+            <TextField
+              fullWidth
+              label={t('auth:register.form.email.label')}
               name="email"
               type="email"
-              value={formData.email}
-              onChange={handleChange}
+              value={formik.values.email}
+              onChange={formik.handleChange}
               margin="normal"
               required
+              helperText={formik.touched.email && formik.errors.email}
+              error={formik.touched.email && Boolean(formik.errors.email)}
             />
             <TextField
               fullWidth
-              label={t('auth:fields.password')}
+              label={t('auth:register.form.password.label')}
               name="password"
               type="password"
-              value={formData.password}
-              onChange={handleChange}
+              value={formik.values.password}
+              onChange={formik.handleChange}
               margin="normal"
               required
+              helperText={formik.touched.password && formik.errors.password}
+              error={formik.touched.password && Boolean(formik.errors.password)}
             />
             <TextField
               fullWidth
-              label={t('auth:fields.confirmPassword')}
+              label={t('auth:register.form.confirmPassword.label')}
               name="confirmPassword"
               type="password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
+              value={formik.values.confirmPassword}
+              onChange={formik.handleChange}
               margin="normal"
               required
+              helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+              error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
             />
             <Button
               type="submit"
@@ -120,15 +146,15 @@ const Register = () => {
               disabled={isLoading}
               sx={{ mt: 3, mb: 2 }}
             >
-              {isLoading ? t('common:loading') : t('auth:register.submit')}
+              {isLoading ? t('common:loading') : t('auth:register.form.submit')}
             </Button>
           </Box>
 
           <Box sx={{ mt: 2, textAlign: 'center' }}>
             <Typography variant="body2">
-              {t('auth:register.haveAccount')}{' '}
+              {t('auth:register.hasAccount')}{' '}
               <Link to="/login" style={{ textDecoration: 'none' }}>
-                {t('auth:register.login')}
+                {t('auth:register.signIn')}
               </Link>
             </Typography>
           </Box>

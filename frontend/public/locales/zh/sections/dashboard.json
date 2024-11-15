@@ -69,7 +69,7 @@
   },
   "deleteDialog": {
     "title": "删除诗歌",
-    "message": "您确定要删除"{{title}}"吗？此操作无法撤销。",
+    "message": "您确定要删除{{title}}吗？此操作无法撤销。",
     "confirm": "删除"
   },
   "success": {

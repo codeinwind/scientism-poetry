@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import {
   Container,
   Box,
@@ -8,6 +8,7 @@ import {
   Button,
   Alert,
   Paper,
+  Snackbar,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
@@ -15,6 +16,7 @@ import { authService } from '../services';
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation(['auth', 'common']);
   const { login } = useAuth();
   const [error, setError] = useState('');
@@ -23,6 +25,16 @@ const Login = () => {
     email: '',
     password: '',
   });
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [showResend, setShowResend] = useState(false); // New state for showing resend button
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    if (queryParams.get('verified') === 'true') {
+      setError(t('auth:login.verificationEmailSent'));
+      setSnackbarOpen(true);
+    }
+  }, [location, t]);
 
   const handleChange = (e) => {
     setFormData({
@@ -41,10 +53,40 @@ const Login = () => {
       await login(response.user, response.token);
       navigate('/dashboard');
     } catch (error) {
-      setError(error.message || t('auth:errors.loginFailed'));
+      if (error.message === 'Email not registered') {
+        setError(t('auth:login.errors.emailNotRegistered'));
+      } else if (error.message === 'Incorrect password') {
+        setError(t('auth:login.errors.incorrectPassword'));
+      } else if (error.message === 'Email not verified') {
+        setError(t('auth:login.errors.emailNotVerified'));
+        setShowResend(true); // Show resend button on email not verified
+      } else {
+        setError(t('auth:login.errors.failed'));
+      }
+      setSnackbarOpen(true); // Open snackbar on error
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleResendVerification = async () => {
+    setError('');
+    setIsLoading(true);
+
+    try {
+      await authService.resendVerification({ email: formData.email });
+      setError(t('auth:login.errors.verificationEmailSent')); // Set message for snackbar
+      setSnackbarOpen(true); // Open snackbar on success
+    } catch (error) {
+      setError(error.message || t('auth:login.errors.failed'));
+      setSnackbarOpen(true); // Open snackbar on error
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -64,7 +106,7 @@ const Login = () => {
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               fullWidth
-              label={t('auth:fields.email')}
+              label={t('auth:login.form.email.label')}
               name="email"
               type="email"
               value={formData.email}
@@ -75,7 +117,7 @@ const Login = () => {
             />
             <TextField
               fullWidth
-              label={t('auth:fields.password')}
+              label={t('auth:login.form.password.label')}
               name="password"
               type="password"
               value={formData.password}
@@ -91,20 +133,40 @@ const Login = () => {
               disabled={isLoading}
               sx={{ mt: 3, mb: 2 }}
             >
-              {isLoading ? t('common:loading') : t('auth:login.submit')}
+              {isLoading ? t('common:loading') : t('auth:login.form.submit')}
             </Button>
+            {showResend && ( // Conditionally render the resend button
+              <Button
+                type="button"
+                fullWidth
+                variant="outlined"
+                color="secondary"
+                onClick={handleResendVerification}
+                disabled={isLoading}
+                sx={{ mt: 2 }}
+              >
+                {t('auth:login.resendVerification')}
+              </Button>
+            )}
           </Box>
 
           <Box sx={{ mt: 2, textAlign: 'center' }}>
             <Typography variant="body2">
               {t('auth:login.noAccount')}{' '}
               <Link to="/register" style={{ textDecoration: 'none' }}>
-                {t('auth:login.register')}
+                {t('auth:login.signUp')}
               </Link>
             </Typography>
           </Box>
         </Paper>
       </Box>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={error}
+      />
     </Container>
   );
 };

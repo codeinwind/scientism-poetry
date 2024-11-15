@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please add a name'],
   },
+  penName: {
+    type: String,
+    required: false, // Changed to optional
+  },
   email: {
     type: String,
     required: [true, 'Please add an email'],
@@ -29,6 +33,10 @@ const userSchema = new mongoose.Schema({
   bio: {
     type: String,
     maxlength: [500, 'Bio cannot be more than 500 characters'],
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false,
   },
   createdAt: {
     type: Date,
