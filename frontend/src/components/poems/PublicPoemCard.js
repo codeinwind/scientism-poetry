@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   CardContent,
@@ -8,6 +9,7 @@ import {
   Button,
   Chip,
   IconButton,
+  Tooltip,
 } from '@mui/material';
 import {
   Favorite as FavoriteIcon,
@@ -23,10 +25,32 @@ const PublicPoemCard = ({
   isLiked 
 }) => {
   const { t } = useTranslation(['poems']);
+  const navigate = useNavigate();
+
+  const handleNavigateToDetail = () => {
+    navigate(`/poems/${poem._id}`);
+  };
+
+  const handleLikeClick = (e) => {
+    e.stopPropagation();
+    onLike(poem._id);
+  };
+
+  const handleTagClick = (e, tag) => {
+    e.stopPropagation();
+    onTagClick(tag);
+  };
 
   return (
-    <Card>
-      <CardContent>
+    <Card sx={{ 
+      cursor: 'pointer',
+      transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+      '&:hover': {
+        transform: 'translateY(-4px)',
+        boxShadow: 4,
+      }
+    }}>
+      <CardContent onClick={handleNavigateToDetail}>
         <Typography variant="h5" gutterBottom>
           {poem.title}
         </Typography>
@@ -47,34 +71,38 @@ const PublicPoemCard = ({
           {poem.content}
         </Typography>
         <Box sx={{ mb: 2 }}>
-          {poem.tags.map((tag, index) => (
+          {poem.tags?.map((tag, index) => (
             <Chip
               key={index}
               label={tag}
               size="small"
               sx={{ mr: 1, mb: 1 }}
-              onClick={() => onTagClick(tag)}
+              onClick={(e) => handleTagClick(e, tag)}
             />
           ))}
         </Box>
       </CardContent>
       <CardActions sx={{ justifyContent: 'space-between' }}>
         <Box>
-          <IconButton
-            size="small"
-            color={isLiked ? "primary" : "default"}
-            onClick={() => onLike(poem._id)}
-            disabled={!isAuthenticated}
-          >
-            <FavoriteIcon />
-          </IconButton>
+          <Tooltip title={isAuthenticated ? '' : t('poems:loginToLike')}>
+            <span>
+              <IconButton
+                size="small"
+                color={isLiked ? "primary" : "default"}
+                onClick={handleLikeClick}
+                disabled={!isAuthenticated}
+              >
+                <FavoriteIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
           <Typography variant="body2" component="span" sx={{ ml: 1 }}>
             {t('poems:poem.likes', { count: poem.likes?.length || 0 })}
           </Typography>
           <IconButton
             size="small"
             sx={{ ml: 2 }}
-            onClick={() => window.location.href = `/poems/${poem._id}`}
+            onClick={handleNavigateToDetail}
           >
             <CommentIcon />
           </IconButton>
@@ -85,7 +113,7 @@ const PublicPoemCard = ({
         <Button
           size="small"
           color="primary"
-          href={`/poems/${poem._id}`}
+          onClick={handleNavigateToDetail}
         >
           {t('poems:poem.readMore')}
         </Button>

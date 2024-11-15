@@ -17,6 +17,95 @@ const validateStatusTransition = (currentStatus, newStatus) => {
   return validTransitions && validTransitions.includes(newStatus);
 };
 
+// @route   POST /api/poems/:id/comments
+// @desc    Add a comment to a poem
+// @access  Private
+router.post(
+  '/:id/comments',
+  protect,
+  [
+    check('content', 'Comment content is required')
+      .not()
+      .isEmpty()
+      .isLength({ max: 500 })
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const poem = await Poem.findById(req.params.id);
+
+      if (!poem) {
+        return res.status(404).json({
+          success: false,
+          message: 'Poem not found'
+        });
+      }
+
+      const newComment = {
+        user: req.user.id,
+        content: req.body.content
+      };
+
+      poem.comments.unshift(newComment);
+      await poem.save();
+
+      // Populate the user information for the new comment
+      const populatedPoem = await Poem.findById(req.params.id)
+        .populate('comments.user', 'name')
+        .populate('author', 'name');
+
+      res.json({
+        success: true,
+        data: populatedPoem
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  }
+);
+
+// @route   POST /api/poems/:id/like
+// @desc    Like/Unlike a poem
+// @access  Private
+router.post('/:id/like', protect, async (req, res) => {
+  try {
+    const poem = await Poem.findById(req.params.id);
+
+    if (!poem) {
+      return res.status(404).json({
+        success: false,
+        message: 'Poem not found'
+      });
+    }
+
+    // Check if the poem has already been liked by this user
+    const likeIndex = poem.likes.indexOf(req.user.id);
+
+    if (likeIndex > -1) {
+      // User has already liked the poem, so unlike it
+      poem.likes.splice(likeIndex, 1);
+    } else {
+      // Add the user's like
+      poem.likes.push(req.user.id);
+    }
+
+    await poem.save();
+
+    res.json({
+      success: true,
+      data: poem
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 // @route   GET /api/poems/user/:id
 // @desc    Get all poems by user (including all statuses)
 // @access  Private
@@ -38,6 +127,51 @@ router.get('/user/:id', protect, async (req, res) => {
       success: true,
       poems: poems || [],
       count: poems ? poems.length : 0
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+// @route   GET /api/poems/:id
+// @desc    Get a single poem by ID
+// @access  Public (for published poems)
+router.get('/:id', async (req, res) => {
+  try {
+    const poem = await Poem.findById(req.params.id)
+      .populate('author', 'name')
+      .populate('comments.user', 'name');
+
+    if (!poem) {
+      return res.status(404).json({
+        success: false,
+        message: 'Poem not found'
+      });
+    }
+
+    // If poem is not published, check if user is authorized to view it
+    if (poem.status !== 'published') {
+      // Check if user is authenticated
+      if (!req.user) {
+        return res.status(403).json({
+          success: false,
+          message: 'Not authorized to view this poem'
+        });
+      }
+
+      // Check if user is the author or an admin
+      if (req.user.id !== poem.author.id && req.user.role !== 'admin') {
+        return res.status(403).json({
+          success: false,
+          message: 'Not authorized to view this poem'
+        });
+      }
+    }
+
+    res.json({
+      success: true,
+      data: poem
     });
   } catch (error) {
     console.error(error);

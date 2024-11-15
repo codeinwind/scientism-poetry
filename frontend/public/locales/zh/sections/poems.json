@@ -20,7 +20,8 @@
   "errors": {
     "loadFailed": "加载诗歌失败，请稍后重试。",
     "searchFailed": "搜索失败，请重试。",
-    "actionFailed": "操作失败，请稍后重试。"
+    "actionFailed": "操作失败，请稍后重试。",
+    "poemNotFound": "未找到诗歌"
   },
   "cta": {
     "title": "想分享您的诗歌吗？",
@@ -31,6 +32,7 @@
     "like": {
       "login": "请登录后点赞",
       "success": "点赞成功",
+      "removed": "已取消点赞",
       "error": "点赞失败"
     },
     "comment": {
@@ -38,5 +40,17 @@
       "success": "评论添加成功",
       "error": "评论添加失败"
     }
+  },
+  "detail": {
+    "backToPoems": "返回诗歌列表",
+    "comments": "评论",
+    "addComment": "添加评论",
+    "submit": "提交",
+    "loginToComment": "请登录后添加评论",
+    "loginToLike": "请登录后点赞",
+    "commentRequired": "评论内容不能为空",
+    "commentAdded": "评论添加成功",
+    "loading": "正在加载诗歌...",
+    "error": "加载诗歌失败"
   }
 }

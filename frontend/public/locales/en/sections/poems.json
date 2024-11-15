@@ -20,7 +20,8 @@
   "errors": {
     "loadFailed": "Error loading poems. Please try again later.",
     "searchFailed": "Error performing search. Please try again.",
-    "actionFailed": "Action failed. Please try again later."
+    "actionFailed": "Action failed. Please try again later.",
+    "poemNotFound": "Poem not found"
   },
   "cta": {
     "title": "Want to Share Your Own Poems?",
@@ -31,6 +32,7 @@
     "like": {
       "login": "Please log in to like poems",
       "success": "Poem liked successfully",
+      "removed": "Like removed successfully",
       "error": "Failed to like poem"
     },
     "comment": {
@@ -38,5 +40,17 @@
       "success": "Comment added successfully",
       "error": "Failed to add comment"
     }
+  },
+  "detail": {
+    "backToPoems": "Back to Poems",
+    "comments": "Comments",
+    "addComment": "Add a comment",
+    "submit": "Submit",
+    "loginToComment": "Please log in to add comments",
+    "loginToLike": "Please log in to like poems",
+    "commentRequired": "Comment cannot be empty",
+    "commentAdded": "Comment added successfully",
+    "loading": "Loading poem...",
+    "error": "Error loading poem"
   }
 }
