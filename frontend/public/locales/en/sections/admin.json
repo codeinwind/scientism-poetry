@@ -1,48 +1,104 @@
 {
   "title": "Admin Dashboard",
   "subtitle": "Manage poems and user content",
-  "poem": {
-    "by": "Author: {{author}}",
-    "status": {
-      "change": "Change Status",
-      "current": "Current Status",
-      "next": "Change to",
-      "invalidTransition": "Invalid status transition"
+  "dashboard": {
+    "title": "Admin Dashboard",
+    "userManagement": "User Management",
+    "userManagementDesc": "Manage user roles and permissions",
+    "manageUsers": "Manage Users",
+    "stats": {
+      "title": "System Statistics",
+      "totalUsers": "Total Users",
+      "admins": "Administrators",
+      "moderators": "Moderators",
+      "regularUsers": "Regular Users",
+      "memberSince": "Member since {{date}}"
     }
   },
-  "actions": {
-    "approve": "Approve",
-    "reject": "Reject",
-    "publish": "Publish",
-    "unpublish": "Unpublish",
-    "review": "Send for Review"
+  "moderation": {
+    "title": "Content Moderation",
+    "description": "Review and moderate submitted poems",
+    "table": {
+      "title": "Title",
+      "author": "Author",
+      "status": "Status",
+      "actions": "Actions",
+      "lastUpdated": "Last Updated"
+    },
+    "status": {
+      "draft": "Draft",
+      "under_review": "Under Review",
+      "published": "Published",
+      "rejected": "Rejected"
+    },
+    "actions": {
+      "addComment": "Add Comment",
+      "approve": "Approve",
+      "reject": "Reject",
+      "viewDetails": "View Details"
+    },
+    "dialog": {
+      "title": "Add Review Comment",
+      "commentLabel": "Your Comment",
+      "submit": "Submit Comment"
+    },
+    "noPoems": "No poems currently under review"
   },
-  "filters": {
-    "all": "All Poems",
-    "pending": "Pending Review",
-    "published": "Published",
-    "rejected": "Rejected"
+  "users": {
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "actionsHeader": "Actions",
+    "actionButtons": {
+      "makeAdmin": "Make Admin",
+      "makeModerator": "Make Moderator",
+      "removePrivileges": "Remove Privileges"
+    }
   },
-  "status": {
-    "changed": "Status changed successfully",
-    "error": "Failed to change status"
-  },
-  "workflow": {
-    "draft": "Send poem for review",
-    "publish": "Publish this poem",
-    "reject": "Reject and return to draft",
-    "unpublish": "Unpublish and return for review"
-  },
-  "confirmations": {
-    "publish": "Are you sure you want to publish \"{{title}}\"?",
-    "unpublish": "Are you sure you want to unpublish \"{{title}}\"?",
-    "reject": "Are you sure you want to reject \"{{title}}\"?",
-    "review": "Are you sure you want to send \"{{title}}\" for review?",
-    "generic": "Are you sure you want to change the status of this poem?"
+  "roles": {
+    "superadmin": {
+      "title": "Super Administrator",
+      "description": "Full system access: Can manage users, roles, content, and view all statistics",
+      "permissions": {
+        "title": "Permissions",
+        "manageUsers": "Manage users",
+        "manageRoles": "Manage roles",
+        "manageContent": "Manage content",
+        "viewStats": "View statistics",
+        "moderateContent": "Moderate content"
+      }
+    },
+    "admin": {
+      "title": "Administrator",
+      "description": "Content management access: Can manage content and view statistics",
+      "permissions": {
+        "title": "Permissions",
+        "manageContent": "Manage content",
+        "viewStats": "View statistics",
+        "moderateContent": "Moderate content"
+      }
+    },
+    "moderator": {
+      "title": "Moderator",
+      "description": "Content moderation access: Can review and moderate content",
+      "permissions": {
+        "title": "Permissions",
+        "moderateContent": "Moderate content"
+      }
+    },
+    "user": {
+      "title": "Regular User",
+      "description": "Regular user access: Can create and manage own content",
+      "permissions": {
+        "title": "Permissions",
+        "createContent": "Create own content",
+        "manageOwnContent": "Manage own content"
+      }
+    }
   },
   "errors": {
     "unauthorized": "You are not authorized to access this page",
-    "loadFailed": "Failed to load poems",
+    "loadFailed": "Failed to load data",
     "actionFailed": "Action failed. Please try again."
   }
 }

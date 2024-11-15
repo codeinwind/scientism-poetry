@@ -26,7 +26,7 @@ const Login = () => {
     password: '',
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [showResend, setShowResend] = useState(false); // New state for showing resend button
+  const [showResend, setShowResend] = useState(false);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -51,7 +51,13 @@ const Login = () => {
     try {
       const response = await authService.login(formData);
       await login(response.user, response.token);
-      navigate('/dashboard');
+      
+      // Redirect based on user role
+      if (response.user.role === 'superadmin' || response.user.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       if (error.message === 'Email not registered') {
         setError(t('auth:login.errors.emailNotRegistered'));
@@ -59,11 +65,11 @@ const Login = () => {
         setError(t('auth:login.errors.incorrectPassword'));
       } else if (error.message === 'Email not verified') {
         setError(t('auth:login.errors.emailNotVerified'));
-        setShowResend(true); // Show resend button on email not verified
+        setShowResend(true);
       } else {
         setError(t('auth:login.errors.failed'));
       }
-      setSnackbarOpen(true); // Open snackbar on error
+      setSnackbarOpen(true);
     } finally {
       setIsLoading(false);
     }
@@ -75,11 +81,11 @@ const Login = () => {
 
     try {
       await authService.resendVerification({ email: formData.email });
-      setError(t('auth:login.errors.verificationEmailSent')); // Set message for snackbar
-      setSnackbarOpen(true); // Open snackbar on success
+      setError(t('auth:login.errors.verificationEmailSent'));
+      setSnackbarOpen(true);
     } catch (error) {
       setError(error.message || t('auth:login.errors.failed'));
-      setSnackbarOpen(true); // Open snackbar on error
+      setSnackbarOpen(true);
     } finally {
       setIsLoading(false);
     }
@@ -135,7 +141,7 @@ const Login = () => {
             >
               {isLoading ? t('common:loading') : t('auth:login.form.submit')}
             </Button>
-            {showResend && ( // Conditionally render the resend button
+            {showResend && (
               <Button
                 type="button"
                 fullWidth
