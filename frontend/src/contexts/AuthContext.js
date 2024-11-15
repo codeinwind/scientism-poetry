@@ -17,15 +17,18 @@ export const AuthProvider = ({ children }) => {
         const userData = sessionStorage.getItem('user');
         
         console.log('Stored token:', !!token); // Debug log
-        console.log('Stored user data:', !!userData); // Debug log
+        console.log('Stored user data:', userData ? JSON.parse(userData) : null); // Debug log
         
         if (token && userData) {
           setAccessToken(token);
           setUser(JSON.parse(userData));
           
-          // Verify token is still valid
+          // Verify token is still valid and get fresh user data
           const profile = await authService.getProfile();
-          console.log('Profile verification successful:', profile); // Debug log
+          if (profile.success) {
+            updateUser(profile.user);
+            console.log('Profile verification successful:', profile.user); // Debug log
+          }
         }
       } catch (error) {
         console.error('Auth initialization error:', error); // Debug log
@@ -65,7 +68,12 @@ export const AuthProvider = ({ children }) => {
   }, [accessToken]);
 
   const login = async (userData, token) => {
-    console.log('Logging in user:', userData.name); // Debug log
+    console.log('Logging in user:', {
+      name: userData.name,
+      email: userData.email,
+      role: userData.role, // Add role to debug log
+      createdAt: userData.createdAt
+    }); // Enhanced debug log
     setUser(userData);
     setAccessToken(token);
     sessionStorage.setItem('token', token);
@@ -88,7 +96,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = (userData) => {
-    console.log('Updating user data:', userData); // Debug log
+    console.log('Updating user data:', {
+      name: userData.name,
+      email: userData.email,
+      role: userData.role, // Add role to debug log
+      createdAt: userData.createdAt
+    }); // Enhanced debug log
     setUser(userData);
     sessionStorage.setItem('user', JSON.stringify(userData));
   };
@@ -97,7 +110,12 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     console.log('Auth state updated:', {
       isAuthenticated: !!user,
-      user: user?.name,
+      user: user ? {
+        name: user.name,
+        email: user.email,
+        role: user.role, // Add role to debug log
+        createdAt: user.createdAt
+      } : null,
       hasToken: !!accessToken
     });
   }, [user, accessToken]);

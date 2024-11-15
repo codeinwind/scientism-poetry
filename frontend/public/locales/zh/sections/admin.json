@@ -1,48 +1,104 @@
 {
-  "title": "管理控制台",
+  "title": "管理员面板",
   "subtitle": "管理诗歌和用户内容",
-  "poem": {
-    "by": "作者：{{author}}",
-    "status": {
-      "change": "更改状态",
-      "current": "当前状态",
-      "next": "更改为",
-      "invalidTransition": "无效的状态转换"
+  "dashboard": {
+    "title": "管理员面板",
+    "userManagement": "用户管理",
+    "userManagementDesc": "管理用户角色和权限",
+    "manageUsers": "管理用户",
+    "stats": {
+      "title": "系统统计",
+      "totalUsers": "总用户数",
+      "admins": "管理员",
+      "moderators": "版主",
+      "regularUsers": "普通用户",
+      "memberSince": "注册时间：{{date}}"
     }
   },
-  "actions": {
-    "approve": "通过",
-    "reject": "拒绝",
-    "publish": "发布",
-    "unpublish": "取消发布",
-    "review": "送审"
+  "moderation": {
+    "title": "内容审核",
+    "description": "审核和管理提交的诗歌",
+    "table": {
+      "title": "标题",
+      "author": "作者",
+      "status": "状态",
+      "actions": "操作",
+      "lastUpdated": "最后更新"
+    },
+    "status": {
+      "draft": "草稿",
+      "under_review": "审核中",
+      "published": "已发布",
+      "rejected": "已拒绝"
+    },
+    "actions": {
+      "addComment": "添加评论",
+      "approve": "通过",
+      "reject": "拒绝",
+      "viewDetails": "查看详情"
+    },
+    "dialog": {
+      "title": "添加审核评论",
+      "commentLabel": "您的评论",
+      "submit": "提交评论"
+    },
+    "noPoems": "当前没有需要审核的诗歌"
   },
-  "filters": {
-    "all": "全部诗歌",
-    "pending": "待审核",
-    "published": "已发布",
-    "rejected": "已拒绝"
+  "users": {
+    "name": "姓名",
+    "email": "邮箱",
+    "role": "角色",
+    "actionsHeader": "操作",
+    "actionButtons": {
+      "makeAdmin": "设为管理员",
+      "makeModerator": "设为版主",
+      "removePrivileges": "移除权限"
+    }
   },
-  "status": {
-    "changed": "状态更改成功",
-    "error": "状态更改失败"
-  },
-  "workflow": {
-    "draft": "送审诗歌",
-    "publish": "发布此诗歌",
-    "reject": "拒绝并返回草稿",
-    "unpublish": "取消发布并返回审核"
-  },
-  "confirmations": {
-    "publish": "您确定要发布\"{{title}}\"吗？",
-    "unpublish": "您确定要取消发布\"{{title}}\"吗？",
-    "reject": "您确定要拒绝\"{{title}}\"吗？",
-    "review": "您确定要送审\"{{title}}\"吗？",
-    "generic": "您确定要更改此诗歌的状态吗？"
+  "roles": {
+    "superadmin": {
+      "title": "超级管理员",
+      "description": "完全系统访问权限：可以管理用户、角色、内容，并查看所有统计数据",
+      "permissions": {
+        "title": "权限",
+        "manageUsers": "管理用户",
+        "manageRoles": "管理角色",
+        "manageContent": "管理内容",
+        "viewStats": "查看统计",
+        "moderateContent": "审核内容"
+      }
+    },
+    "admin": {
+      "title": "管理员",
+      "description": "内容管理权限：可以管理内容并查看统计数据",
+      "permissions": {
+        "title": "权限",
+        "manageContent": "管理内容",
+        "viewStats": "查看统计",
+        "moderateContent": "审核内容"
+      }
+    },
+    "moderator": {
+      "title": "版主",
+      "description": "内容审核权限：可以审核和管理内容",
+      "permissions": {
+        "title": "权限",
+        "moderateContent": "审核内容"
+      }
+    },
+    "user": {
+      "title": "普通用户",
+      "description": "普通用户权限：可以创建和管理自己的内容",
+      "permissions": {
+        "title": "权限",
+        "createContent": "创建内容",
+        "manageOwnContent": "管理自己的内容"
+      }
+    }
   },
   "errors": {
     "unauthorized": "您无权访问此页面",
-    "loadFailed": "加载诗歌失败",
-    "actionFailed": "操作失败，请重试。"
+    "loadFailed": "加载失败，请稍后重试",
+    "actionFailed": "操作失败，请重试"
   }
 }

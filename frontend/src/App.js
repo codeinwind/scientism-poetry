@@ -30,6 +30,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import PoemModerationDashboard from './pages/PoemModerationDashboard';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import Association from './pages/Association';
@@ -160,7 +161,7 @@ function App() {
 
                       {/* Admin Routes */}
                       <Route
-                        path="/admin"
+                        path="/admin/dashboard"
                         element={
                           <AdminRoute>
                             <Layout>
@@ -170,11 +171,11 @@ function App() {
                         }
                       />
                       <Route
-                        path="/admin/poems"
+                        path="/admin/moderation"
                         element={
                           <AdminRoute>
                             <Layout>
-                              <AdminDashboard />
+                              <PoemModerationDashboard />
                             </Layout>
                           </AdminRoute>
                         }

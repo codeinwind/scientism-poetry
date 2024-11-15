@@ -155,7 +155,8 @@ app.use((req, res) => {
     body: req.body,
     params: req.params,
     query: req.query,
-    user: req.user ? req.user.id : 'unauthenticated'
+    user: req.user ? req.user.id : 'unauthenticated',
+    timestamp: new Date().toISOString()
   });
 
   res.status(404).json({

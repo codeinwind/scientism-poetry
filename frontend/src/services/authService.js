@@ -24,7 +24,7 @@ const authService = {
 
   resendVerification: async (data) => {
     try {
-      const response = await apiClient.post('/auth/resend-verification', data);
+      const response = await apiClient.post('/auth/verification/resend', data);
       return response.data;
     } catch (error) {
       throw new ApiError(
@@ -50,7 +50,7 @@ const authService = {
 
   logout: async () => {
     try {
-      const response = await apiClient.post('/auth/logout');
+      const response = await apiClient.post('/auth/login/logout');
       return response.data;
     } catch (error) {
       throw new ApiError(
@@ -94,6 +94,19 @@ const authService = {
     } catch (error) {
       throw new ApiError(
         error.message || 'Failed to fetch profile',
+        error,
+        false
+      );
+    }
+  },
+
+  getActivityStats: async () => {
+    try {
+      const response = await apiClient.get('/auth/stats/activity');
+      return response.data;
+    } catch (error) {
+      throw new ApiError(
+        error.message || 'Failed to fetch activity stats',
         error,
         false
       );
