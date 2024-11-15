@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -20,6 +20,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useTranslation } from 'react-i18next';
+import { authService } from '../services';
 
 const Profile = () => {
   const { t } = useTranslation(['profile', 'common']);
@@ -28,12 +29,13 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [activityStats, setActivityStats] = useState({ publishedPoems: 0, totalLikes: 0, commentsMade: 0 });
 
   const validationSchema = Yup.object({
     name: Yup.string()
       .required(t('profile:form.name.required'))
       .min(2, t('profile:form.name.minLength')),
-    penName: Yup.string() // New validation for pen name
+    penName: Yup.string()
       .required(t('profile:form.penName.required')),
     email: Yup.string()
       .email(t('profile:form.email.invalid'))
@@ -51,7 +53,7 @@ const Profile = () => {
   const formik = useFormik({
     initialValues: {
       name: user?.name || '',
-      penName: user?.penName || '', // Initialize pen name
+      penName: user?.penName || '',
       email: user?.email || '',
       bio: user?.bio || '',
       currentPassword: '',
@@ -65,22 +67,8 @@ const Profile = () => {
         setError('');
         setSuccess('');
 
-        const response = await fetch(`http://localhost:5000/api/auth/profile`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-          body: JSON.stringify(values),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || t('profile:messages.updateError'));
-        }
-
-        updateUser(data.user);
+        const response = await authService.updateProfile(values);
+        updateUser(response.user);
         setSuccess(t('profile:messages.updateSuccess'));
         setIsEditing(false);
         
@@ -99,6 +87,32 @@ const Profile = () => {
     formik.resetForm();
     setIsEditing(false);
     setError('');
+  };
+
+  useEffect(() => {
+    const fetchActivityStats = async () => {
+      try {
+        const response = await authService.getActivityStats();
+        if (response.success) {
+          setActivityStats(response);
+        }
+      } catch (error) {
+        console.error('Failed to fetch activity stats:', error);
+      }
+    };
+
+    fetchActivityStats();
+  }, []);
+
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
+    return date.toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   };
 
   return (
@@ -171,7 +185,7 @@ const Profile = () => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label={t('profile:form.penName.label')} // New field for pen name
+                    label={t('profile:form.penName.label')}
                     name="penName"
                     value={formik.values.penName}
                     onChange={formik.handleChange}
@@ -284,7 +298,7 @@ const Profile = () => {
                   <Typography variant="h6">{user?.name}</Typography>
                   <Typography variant="body2" color="text.secondary">
                     {t('profile:stats.memberSince', {
-                      date: new Date(user?.createdAt).toLocaleDateString()
+                      date: formatDate(user?.createdAt)
                     })}
                   </Typography>
                 </Box>
@@ -295,13 +309,13 @@ const Profile = () => {
               </Typography>
               <Box sx={{ mt: 2 }}>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
-                  {t('profile:stats.publishedPoems', { count: 12 })}
+                  {t('profile:stats.publishedPoems', { count: activityStats.publishedPoems })}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
-                  {t('profile:stats.totalLikes', { count: 45 })}
+                  {t('profile:stats.totalLikes', { count: activityStats.totalLikes })}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
-                  {t('profile:stats.commentsMade', { count: 28 })}
+                  {t('profile:stats.commentsMade', { count: activityStats.commentsMade })}
                 </Typography>
               </Box>
             </CardContent>

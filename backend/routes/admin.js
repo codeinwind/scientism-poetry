@@ -106,7 +106,7 @@ router.get('/users/:id', protect, superadminOnly, async (req, res) => {
 // @route   GET /api/admin/stats
 // @desc    Get admin dashboard statistics
 // @access  Private (Superadmin & Admin)
-router.get('/stats', protect, authorize(['admin', 'superadmin']), async (req, res) => {
+router.get('/stats', [protect, authorize(['admin', 'superadmin'])], async (req, res) => {
   try {
     const stats = {
       users: await User.countDocuments(),
