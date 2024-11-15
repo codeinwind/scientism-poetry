@@ -26,6 +26,7 @@ import TitleUpdater from './components/shared/TitleUpdater';
 import Home from './pages/Home';
 import About from './pages/About';
 import Poems from './pages/Poems';
+import PoemDetail from './pages/PoemDetail'; // Importing the new component
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -85,6 +86,14 @@ function App() {
                         element={
                           <Layout>
                             <Poems />
+                          </Layout>
+                        }
+                      />
+                      <Route
+                        path="/poems/:id" // New route for poem details
+                        element={
+                          <Layout>
+                            <PoemDetail />
                           </Layout>
                         }
                       />

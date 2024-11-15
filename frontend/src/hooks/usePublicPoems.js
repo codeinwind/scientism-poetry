@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { useTranslation } from 'react-i18next';
 import { poemService } from '../services';
 import { useDebounce } from './useDebounce';
 
 export const usePublicPoems = () => {
   const { t } = useTranslation(['poems']);
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
@@ -37,10 +38,23 @@ export const usePublicPoems = () => {
 
   const handleLike = async (poemId) => {
     try {
-      await poemService.likePoem(poemId);
-      showSnackbar(t('poems:success.liked'), 'success');
+      const response = await poemService.likePoem(poemId);
+      
+      // Update the poems cache with the new like status
+      queryClient.setQueryData(['poems', page, debouncedSearch], (oldData) => {
+        if (!oldData) return oldData;
+        
+        return {
+          ...oldData,
+          data: oldData.data.map((poem) =>
+            poem._id === poemId ? { ...poem, likes: response.data.likes } : poem
+          ),
+        };
+      });
+
+      showSnackbar(t('poems:actions.like.success'), 'success');
     } catch (error) {
-      showSnackbar(error.message || t('poems:errors.likeFailed'), 'error');
+      showSnackbar(error.message || t('poems:actions.like.error'), 'error');
     }
   };
 
