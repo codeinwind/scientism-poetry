@@ -41,6 +41,26 @@ const Login = () => {
       await login(response.user, response.token);
       navigate('/dashboard');
     } catch (error) {
+      if (error.message === 'Email not registered') {
+        setError(t('auth:login.errors.emailNotRegistered'));
+      } else if (error.message === 'Incorrect password') {
+        setError(t('auth:login.errors.incorrectPassword'));
+      } else {
+        setError(t('auth:login.errors.failed'));
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    setError('');
+    setIsLoading(true);
+
+    try {
+      await authService.resendVerification({ email: formData.email });
+      alert(t('auth:login.verificationEmailSent')); // Notify user
+    } catch (error) {
       setError(error.message || t('auth:login.errors.failed'));
     } finally {
       setIsLoading(false);
@@ -92,6 +112,17 @@ const Login = () => {
               sx={{ mt: 3, mb: 2 }}
             >
               {isLoading ? t('common:loading') : t('auth:login.form.submit')}
+            </Button>
+            <Button
+              type="button"
+              fullWidth
+              variant="outlined"
+              color="secondary"
+              onClick={handleResendVerification}
+              disabled={isLoading}
+              sx={{ mt: 2 }}
+            >
+              {t('auth:login.resendVerification')}
             </Button>
           </Box>
 

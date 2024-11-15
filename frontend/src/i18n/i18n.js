@@ -26,7 +26,7 @@ i18n
   .init({
     fallbackLng: 'en',
     supportedLngs: ['en', 'zh'],
-    debug: process.env.NODE_ENV === 'development',
+    debug: false, // Set debug to false to suppress logging
     
     interpolation: {
       escapeValue: false,

@@ -7,8 +7,28 @@ const authService = {
       const response = await apiClient.post('/auth/login', credentials);
       return response.data;
     } catch (error) {
+      if (error.response && error.response.data) {
+        throw new ApiError(
+          error.response.data.message || 'Login failed',
+          error,
+          false
+        );
+      }
       throw new ApiError(
         error.message || 'Login failed',
+        error,
+        false
+      );
+    }
+  },
+
+  resendVerification: async (data) => {
+    try {
+      const response = await apiClient.post('/auth/resend-verification', data);
+      return response.data;
+    } catch (error) {
+      throw new ApiError(
+        error.message || 'Failed to resend verification email',
         error,
         false
       );

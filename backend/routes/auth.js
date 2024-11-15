@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { protect } = require('../middleware/auth');
 const logger = require('../config/logger');
+const nodemailer = require('nodemailer');
 
 // Generate JWT Tokens
 const generateTokens = (id) => {
@@ -26,6 +27,7 @@ router.post(
   '/register',
   [
     check('name', 'Name is required').not().isEmpty(),
+    check('penName', 'Pen name is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
     check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
   ],
@@ -35,7 +37,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password } = req.body;
+    const { name, penName, email, password } = req.body;
 
     try {
       let user = await User.findOne({ email });
@@ -47,9 +49,31 @@ router.post(
 
       user = await User.create({
         name,
+        penName,
         email,
         password,
       });
+
+      // Send validation email
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      const validationUrl = `${req.protocol}://${req.get('host')}/api/auth/verify-email/${token}`;
+
+      const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'Email Verification',
+        text: `Please verify your email by clicking on the following link: ${validationUrl}`,
+      };
+
+      await transporter.sendMail(mailOptions);
 
       const { accessToken, refreshToken } = generateTokens(user._id);
 
@@ -69,6 +93,7 @@ router.post(
         user: {
           id: user._id,
           name: user.name,
+          penName: user.penName,
           email: user.email,
           role: user.role,
         },
@@ -79,6 +104,78 @@ router.post(
     }
   }
 );
+
+// @route   POST /api/auth/resend-verification
+// @desc    Resend verification email
+// @access  Public
+router.post('/resend-verification', [
+  check('email', 'Please include a valid email').isEmail(),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      logger.warn('Resend verification attempt with non-existent email', { email });
+      return res.status(404).json({ message: 'Email not registered' });
+    }
+
+    // Send validation email
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const validationUrl = `${req.protocol}://${req.get('host')}/api/auth/verify-email/${token}`;
+
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Email Verification',
+      text: `Please verify your email by clicking on the following link: ${validationUrl}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: 'Verification email sent' });
+  } catch (error) {
+    logger.error('Resend verification error:', { error: error.message });
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+// @route   GET /api/auth/verify-email/:token
+// @desc    Verify user email
+// @access  Public
+router.get('/verify-email/:token', async (req, res) => {
+  try {
+    const { token } = req.params;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid token' });
+    }
+
+    user.isEmailVerified = true;
+    await user.save();
+
+    res.status(200).json({ message: 'Email verified successfully' });
+  } catch (error) {
+    logger.error('Email verification error:', { error: error.message });
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
 
 // @route   POST /api/auth/login
 // @desc    Login user
@@ -102,14 +199,19 @@ router.post(
 
       if (!user) {
         logger.warn('Login attempt with non-existent email', { email });
-        return res.status(401).json({ message: 'Invalid credentials' });
+        return res.status(401).json({ message: 'Email not registered' });
+      }
+
+      if (!user.isEmailVerified) {
+        logger.warn('Login attempt with unverified email', { email });
+        return res.status(401).json({ message: 'Email not verified' });
       }
 
       const isMatch = await user.matchPassword(password);
 
       if (!isMatch) {
         logger.warn('Login attempt with incorrect password', { userId: user._id });
-        return res.status(401).json({ message: 'Invalid credentials' });
+        return res.status(401).json({ message: 'Incorrect password' });
       }
 
       const { accessToken, refreshToken } = generateTokens(user._id);
