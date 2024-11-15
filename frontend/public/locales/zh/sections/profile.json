@@ -9,6 +9,10 @@
       "required": "请输入姓名",
       "minLength": "姓名至少需要2个字符"
     },
+    "penName": {
+      "label": "笔名",
+      "required": "请输入笔名"
+    },
     "email": {
       "label": "电子邮箱",
       "required": "请输入电子邮箱",

@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   },
   penName: {
     type: String,
-    required: [true, 'Please add a pen name'],
+    required: false, // Changed to optional
   },
   email: {
     type: String,

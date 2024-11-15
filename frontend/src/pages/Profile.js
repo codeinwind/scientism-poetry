@@ -33,6 +33,8 @@ const Profile = () => {
     name: Yup.string()
       .required(t('profile:form.name.required'))
       .min(2, t('profile:form.name.minLength')),
+    penName: Yup.string() // New validation for pen name
+      .required(t('profile:form.penName.required')),
     email: Yup.string()
       .email(t('profile:form.email.invalid'))
       .required(t('profile:form.email.required')),
@@ -49,6 +51,7 @@ const Profile = () => {
   const formik = useFormik({
     initialValues: {
       name: user?.name || '',
+      penName: user?.penName || '', // Initialize pen name
       email: user?.email || '',
       bio: user?.bio || '',
       currentPassword: '',
@@ -162,6 +165,19 @@ const Profile = () => {
                     onBlur={formik.handleBlur}
                     error={formik.touched.name && Boolean(formik.errors.name)}
                     helperText={formik.touched.name && formik.errors.name}
+                    disabled={!isEditing}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label={t('profile:form.penName.label')} // New field for pen name
+                    name="penName"
+                    value={formik.values.penName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.penName && Boolean(formik.errors.penName)}
+                    helperText={formik.touched.penName && formik.errors.penName}
                     disabled={!isEditing}
                   />
                 </Grid>
