@@ -55,7 +55,7 @@ const About = () => {
         <Grid item xs={12} md={6}>
           <Box
             component="img"
-            src="/images/science-poetry.png"
+            src="/images/science-poetry.jpg"
             alt="Science meets Poetry"
             sx={{
               width: '100%',
