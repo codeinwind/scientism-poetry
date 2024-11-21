@@ -15,7 +15,7 @@ import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 
 const HeroSection = styled(Box)(({ theme }) => ({
-  background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-bg.png')`,
+  background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-bg.jpg')`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   color: 'white',
@@ -91,7 +91,7 @@ const Home = () => {
               <CardMedia
                 component="img"
                 height="400"
-                image="/images/book-cover.png"
+                image="/images/book-cover.jpg"
                 alt="Book Cover"
                 sx={{ objectFit: 'contain' }}
               />
@@ -125,7 +125,7 @@ const Home = () => {
               <CardMedia
                 component="img"
                 height="200"
-                image="/images/community.png"
+                image="/images/community.jpg"
                 alt="Community"
               />
               <CardContent>
@@ -143,7 +143,7 @@ const Home = () => {
               <CardMedia
                 component="img"
                 height="200"
-                image="/images/workshops.png"
+                image="/images/workshops.jpg"
                 alt="Workshops"
               />
               <CardContent>
@@ -161,7 +161,7 @@ const Home = () => {
               <CardMedia
                 component="img"
                 height="200"
-                image="/images/publish.png"
+                image="/images/publish.jpg"
                 alt="Publish"
               />
               <CardContent>
