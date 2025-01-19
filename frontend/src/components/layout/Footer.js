@@ -23,7 +23,7 @@ const Footer = () => {
             <Typography variant="h6" gutterBottom>
               {t('footer:about.title')}
             </Typography>
-            <Typography variant="body2">
+            <Typography variant="body2" sx={{color: 'inherit'}}>
               {t('footer:about.description')}
             </Typography>
           </Grid>
@@ -102,10 +102,10 @@ const Footer = () => {
           </Grid>
         </Grid>
         <Box sx={{ mt: 5, borderTop: 1, pt: 2, borderColor: 'rgba(255, 255, 255, 0.2)' }}>
-          <Typography variant="body2" align="center">
+          <Typography variant="body2" align="center" sx={{color: 'inherit'}}>
             {t('footer:copyright', { year: currentYear })}
           </Typography>
-          <Typography variant="body2" align="center" sx={{ mt: 1 }}>
+          <Typography variant="body2" align="center" sx={{color: 'inherit'}}>
             <MuiLink
               component={Link}
               to="/privacy"

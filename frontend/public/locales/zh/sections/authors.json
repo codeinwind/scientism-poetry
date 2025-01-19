@@ -1,0 +1,7 @@
+{
+    "joinedOn": "加入时间:",
+    "allUser": "全部作者",
+    "poemsBy": "{{authorName}}的诗",
+    "publishedOn": "发布于：{{date}}",
+    "noPoems": "这位作者还没有发表过任何诗歌。"
+}

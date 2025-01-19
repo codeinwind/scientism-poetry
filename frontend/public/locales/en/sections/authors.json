@@ -1,0 +1,7 @@
+{
+    "joinedOn": "Member since:",
+    "allUser": "All Authors",
+    "poemsBy": "Poems by {{authorName}}",
+    "publishedOn": "Published on: {{date}}",
+    "noPoems": "This author has not published any poems yet."
+}

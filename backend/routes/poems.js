@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const Poem = require('../models/Poem');
+const User = require('../models/User');
 const { protect, authorize, checkOwnership } = require('../middleware/auth');
 
 // Status transition validation
@@ -16,6 +17,92 @@ const validateStatusTransition = (currentStatus, newStatus) => {
   const validTransitions = VALID_STATUS_TRANSITIONS[currentStatus];
   return validTransitions && validTransitions.includes(newStatus);
 };
+
+// @route  Get /api/poems//:authorId/author
+// @desc   Get all poems by the designated author
+router.get('/:authorId/author', async (req, res) => {
+  try {
+    const { authorId } = req.params;
+
+    const author = await User.findById(authorId).select('name penName email createdAt');
+    if (!author) {
+      return res.status(404).json({ error: 'Author not found' });
+    }
+
+    const poems = await Poem.find({ author: authorId, status: 'published' })
+      .select('title content createdAt') 
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      author, 
+      poems,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// @route   Get /api/poems/authors
+// @desc    Get all users
+router.get('/authors', async (req, res) => {
+  try {
+    // Query all users and filter common users (role: 'user')
+    const authors = await User.find({ role: 'user' }) 
+      .select('name penName createdAt') 
+      .sort({ createdAt: -1 }); 
+
+    res.status(200).json(authors);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// @route   Get /api/poems/authors/top
+// @desc    Get a list of the most published authors
+router.get('/authors/top', async (req, res) => {
+  try {
+    const authors = await Poem.aggregate([
+      {
+        $match: { status: 'published' }, 
+      },
+      {
+        $group: {
+          _id: '$author', 
+          poemCount: { $sum: 1 }, 
+        },
+      },
+      {
+        $sort: { poemCount: -1 }, 
+      },
+      {
+        $limit: 10, 
+      },
+      {
+        $lookup: {
+          from: 'users', 
+          localField: '_id', 
+          foreignField: '_id', 
+          as: 'authorDetails', 
+        },
+      },
+      {
+        $unwind: '$authorDetails', 
+      },
+      {
+        $project: {
+          _id: 1,
+          poemCount: 1,
+          'authorDetails.name': 1,
+          'authorDetails.penName': 1,
+        },
+      },
+    ]);
+
+    res.status(200).json(authors);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // @route   POST /api/poems/:id/comments
 // @desc    Add a comment to a poem

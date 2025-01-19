@@ -12,6 +12,32 @@
     "button": "购买图书"
   },
   "features": {
+    "title": "探索我们的功能",
+    "subtitle": "了解平台每个部分为提升您的体验所提供的功能。",
+    "poems": {
+      "title": "诗歌",
+      "description": "探索、欣赏，并将您的诗歌分享给我们充满活力的社区。"
+    },
+    "association": {
+      "title": "协会",
+      "description": "了解国际科学主义诗歌协会及其活动。"
+    },
+    "journal": {
+      "title": "期刊",
+      "description": "深入科学诗歌期刊和见解的世界。"
+    },
+    "press": {
+      "title": "出版社",
+      "description": "加拿大海狸出版社致力于将科学哲学、理论与方法融入诗歌创作，展现独特的美学与思想深度。"
+    },
+    "news": {
+      "title": "新闻",
+      "description": "获取最新的新闻和活动更新。"
+    },
+    "about": {
+      "title": "关于我们",
+      "description": "了解我们的使命、愿景和目标。"
+    },
     "community": {
       "title": "加入社区",
       "description": "与志同道合的诗人交流，分享对科学和创意表达的热情。分享您的作品并获得灵感。"

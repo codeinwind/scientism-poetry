@@ -19,6 +19,7 @@ import PublicPoemCard from '../components/poems/PublicPoemCard';
 import PoemCTA from '../components/poems/PoemCTA';
 import FeedbackSnackbar from '../components/shared/FeedbackSnackbar';
 import EmptyState from '../components/shared/EmptyState';
+import AuthorsList from '../components/poems/PoemAuthorsList';
 
 const Poems = () => {
   const { t } = useTranslation(['poems']);
@@ -65,6 +66,9 @@ const Poems = () => {
         onChange={setSearchInput}
         onSubmit={handleSearch}
       />
+
+      {/* Top10 authors Section */}
+      <AuthorsList />
 
       {hasPoems ? (
         <>

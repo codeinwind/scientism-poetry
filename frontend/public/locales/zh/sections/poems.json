@@ -8,7 +8,9 @@
     "by": "作者：{{author}}",
     "readMore": "阅读更多",
     "likes": "{{count}}个赞",
-    "comments": "{{count}}条评论"
+    "comments": "{{count}}条评论",
+    "top": "热门作者",
+    "viewAll": "查看所有作者"
   },
   "emptyState": {
     "title": "暂无诗歌",

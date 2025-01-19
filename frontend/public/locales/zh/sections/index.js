@@ -9,6 +9,7 @@ import association from './association.json';
 import press from './press.json';
 import about from './about.json';
 import home from './home.json';
+import authors from './authors.json';
 
 export default {
   common,
@@ -22,4 +23,5 @@ export default {
   press,
   about,
   home,
+  authors,
 };
