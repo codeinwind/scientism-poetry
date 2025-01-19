@@ -38,6 +38,8 @@ import Association from './pages/Association';
 import Journal from './pages/Journal';
 import Press from './pages/Press';
 import News from './pages/News';
+import AuthorsPage from './pages/AuthorsPage';
+import AuthorPoemsPage from './pages/AuthorPoemsPage';
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -187,6 +189,22 @@ function App() {
                               <PoemModerationDashboard />
                             </Layout>
                           </AdminRoute>
+                        }
+                      />
+                      <Route
+                        path="/authors"
+                        element={
+                            <Layout>
+                              <AuthorsPage />
+                            </Layout>
+                        }
+                      />
+                       <Route
+                        path="/author/:authorId" 
+                        element={
+                            <Layout>
+                              <AuthorPoemsPage />
+                            </Layout>
                         }
                       />
 

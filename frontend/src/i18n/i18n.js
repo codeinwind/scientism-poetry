@@ -16,7 +16,8 @@ const sections = [
   'press',
   'about',
   'home',
-  'admin'
+  'admin',
+  'authors'
 ];
 
 i18n

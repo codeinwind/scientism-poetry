@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import FeaturesOverview from '../components/homepage/FeaturesOverview';
 
 const HeroSection = styled(Box)(({ theme }) => ({
   background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-bg.jpg')`,
@@ -108,7 +109,7 @@ const Home = () => {
                 color="primary"
                 size="large"
                 component={Link}
-                href="https://amazon.com/book-link"
+                href="https://www.amazon.com/dp/B0DQJVM15R?ref=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&ref_=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&social_share=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&peakEvent=5&dealEvent=0&language=en_US&skipTwisterOG=1&bestFormat=true"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -117,6 +118,9 @@ const Home = () => {
             </Grid>
           </Grid>
         </Box>
+
+         {/* Overview of navigation features */}
+        <FeaturesOverview />
 
         {/* Featured Sections */}
         <Grid container spacing={4} sx={{ mb: 8 }}>

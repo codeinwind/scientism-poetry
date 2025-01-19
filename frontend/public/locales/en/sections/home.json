@@ -12,6 +12,32 @@
     "button": "Get the Book"
   },
   "features": {
+    "title": "Explore Our Features",
+    "subtitle": "Discover what each section of our platform offers to enhance your experience.",
+    "poems": {
+      "title": "Poems",
+      "description": "Explore, appreciate, and share your  poems to our vibrant community."
+    },
+    "association": {
+      "title": "Association",
+      "description": "Learn about the international scientism poetry association and its events."
+    },
+    "journal": {
+      "title": "Journal",
+      "description": "Dive into scientific poetry journals and insights."
+    },
+    "press": {
+      "title": "Press",
+      "description": "The Canadian Beaver Press is dedicated to integrating scientific philosophy, theories, and methodologies into poetry creation, showcasing unique aesthetics and profound thought."
+    },
+    "news": {
+      "title": "News",
+      "description": "Get the latest news and event updates."
+    },
+    "about": {
+      "title": "About",
+      "description": "Understand our mission, vision, and goals."
+    },
     "community": {
       "title": "Join Our Community",
       "description": "Connect with fellow poets who share your passion for science and creative expression. Share your work and get inspired."

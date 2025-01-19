@@ -129,7 +129,7 @@ const About = () => {
         <Typography variant="h4" gutterBottom>
           {t('about:join.title')}
         </Typography>
-        <Typography variant="body1" paragraph>
+        <Typography variant="body1" color="inherit" paragraph>
           {t('about:join.description')}
         </Typography>
         <Button

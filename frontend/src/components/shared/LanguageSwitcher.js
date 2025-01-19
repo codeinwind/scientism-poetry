@@ -52,6 +52,7 @@ const LanguageSwitcher = () => {
           sx={{
             display: { xs: 'none', sm: 'inline' },
             textTransform: 'none',
+            color: 'inherit', 
           }}
         >
           {getCurrentLanguageName()}

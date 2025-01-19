@@ -2,6 +2,52 @@ import apiClient from './apiClient';
 import ApiError from './ApiError';
 
 const poemService = {
+   // Get the most published authors
+   getTopAuthors: async () => {
+    try {
+      const response = await apiClient.get('/poems/authors/top');
+      return response.data; // Return to author list
+    } catch (error) {
+      throw new ApiError(
+        error.message || 'Failed to fetch top authors',
+        error,
+        false
+      );
+    }
+  },
+
+  // Get poems by designated authors
+  getAuthorPoems: async (authorId) => {
+    try {
+      const response = await apiClient.get(`/poems/${authorId}/author`);
+      return {
+        author: response.data.author, 
+        poems: response.data.poems, 
+      };
+    } catch (error) {
+      throw new ApiError(
+        error.message || 'Failed to fetch author poems',
+        error,
+        false
+      );
+    }
+  },
+  
+
+  // Get all authors
+  getAllAuthors: async () => {
+    try {
+      const response = await apiClient.get('/poems/authors');
+      return response.data; 
+    } catch (error) {
+      throw new ApiError(
+        error.message || 'Failed to fetch all authors',
+        error,
+        false
+      );
+    }
+  },
+
   getAllPoems: async (page = 1, limit = 10, search = '') => {
     try {
       const response = await apiClient.get('/poems', {

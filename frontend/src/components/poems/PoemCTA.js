@@ -23,7 +23,7 @@ const PoemCTA = () => {
       <Typography variant="h5" gutterBottom>
         {t('poems:cta.title')}
       </Typography>
-      <Typography variant="body1" paragraph>
+      <Typography variant="body1" sx={{color: 'inherit'}} paragraph>
         {t('poems:cta.description')}
       </Typography>
       <Button
