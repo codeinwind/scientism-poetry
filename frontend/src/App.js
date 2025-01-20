@@ -192,7 +192,7 @@ function App() {
                         }
                       />
                       <Route
-                        path="/authors"
+                        path="/authors/total"
                         element={
                             <Layout>
                               <AuthorsPage />
