@@ -1,9 +1,10 @@
 {
   "hero": {
-    "title": "Where Science Meets Poetry",
-    "subtitle": "Explore the beauty of scientific concepts through the art of verse. Join our community of poets who blend scientific insight with creative expression.",
-    "joinButton": "Join the Club",
-    "readButton": "Read Poems"
+    "title": "What is Scientism poetry",
+    "subtitle": "Scientism Poetry integrates the philosophy, theories, and methodologies of science into its creative writing, positioning science as a core means of understanding the world and exploring truth. By blending reason with emotion, it delves into the deep connections between nature, the universe, and the human spirit, showcasing a unique combination of aesthetic and intellectual richness through various forms.",
+    "joinButton": "Join Us",
+    "readButton": "Read Poems",
+    "slogan": "Let your poetry and science craft a masterpiece"
   },
   "featuredBook": {
     "title": "Featured Book",
@@ -16,19 +17,19 @@
     "subtitle": "Discover what each section of our platform offers to enhance your experience.",
     "poems": {
       "title": "Poems",
-      "description": "Explore, appreciate, and share your  poems to our vibrant community."
+      "description": "\"Poems\" is a dedicated space for poets to share their creations. Registered members can showcase their poems and engage in thoughtful discussions by commenting on each other's works."
     },
     "association": {
       "title": "Association",
-      "description": "Learn about the international scientism poetry association and its events."
+      "description": "The International Scientific Poetry Association is a Canada-registered nonprofit organization dedicated to merging scientific reasoning with poetic artistry, fostering a profound integration of science and the humanities, and advocating for the advancement of scientific poetry."
     },
     "journal": {
       "title": "Journal",
-      "description": "Dive into scientific poetry journals and insights."
+      "description": "Cosmic Rhymes, the official journal of the ISPA, is dedicated to merging science and poetry. It explores the profound interplay between scientific thought and human emotion, celebrating the unique beauty where science and art converge."
     },
     "press": {
       "title": "Press",
-      "description": "The Canadian Beaver Press is dedicated to integrating scientific philosophy, theories, and methodologies into poetry creation, showcasing unique aesthetics and profound thought."
+      "description": "Canadian Beaver Press is a multidisciplinary publishing house in collaboration with the ISPA, specializing in cross-disciplinary works that bridge literature, science, philosophy, and the arts, fostering innovation and creative synergy."
     },
     "news": {
       "title": "News",
@@ -39,16 +40,16 @@
       "description": "Understand our mission, vision, and goals."
     },
     "community": {
-      "title": "Join Our Community",
+      "title": "Join Us",
       "description": "Connect with fellow poets who share your passion for science and creative expression. Share your work and get inspired."
     },
     "workshops": {
-      "title": "Monthly Workshops",
-      "description": "Participate in our monthly workshops where we explore different scientific concepts through poetry writing exercises."
+      "title": "Canadian Beaver Publishing",
+      "description": "Based in Toronto, Canadian Beaver Publishing is renowned for promoting high-quality literary works and blending science, art, and literature. As a key partner of the International Scientific Poetry Association, the publisher supports creators in transforming their work into print or digital publications, advancing the global reach of scientific poetry."
     },
     "publish": {
-      "title": "Get Published",
-      "description": "Submit your poems for our monthly featured collection and get a chance to be published in our upcoming anthologies."
+      "title": "Post Your Work",
+      "description": "Unleash the power of your imagination and share your poetry with a community that celebrates the fusion of science and art. Let your words explore the cosmos, unravel mysteries, and spark curiosity in minds eager for discovery!"
     }
   }
 }

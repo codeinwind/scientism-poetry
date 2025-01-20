@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Typography, ListItem, ListItemText, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -28,16 +28,6 @@ const FeaturesOverview = () => {
       description: t('home:features.press.description'), 
       link: '/press' 
     },
-    { 
-      title: t('home:features.news.title'), 
-      description: t('home:features.news.description'), 
-      link: '/news' 
-    },
-    { 
-      title: t('home:features.about.title'), 
-      description: t('home:features.about.description'), 
-      link: '/about' 
-    },
   ];
 
   return (
@@ -48,41 +38,44 @@ const FeaturesOverview = () => {
       <Typography variant="body1" align="center" sx={{ mb: 4 }}>
         {t('home:features.subtitle')}
       </Typography>
-      <List sx={{ maxWidth: 800, margin: '0 auto', padding: 0 }}>
+      <Grid container spacing={4} sx={{ maxWidth: 800, margin: '0 auto' }}>
         {features.map((feature, index) => (
-          <ListItem
-            key={index}
-            sx={{
-              display: 'block',
-              marginBottom: 3,
-              padding: 2,
-              border: '1px solid #ddd',
-              borderRadius: 2,
-              backgroundColor: '#f9f9f9',
-              transition: 'background-color 0.2s ease, transform 0.2s ease',
-              '&:hover': {
-                backgroundColor: '#f1f1f1',
-                transform: 'translateY(-2px)',
-              },
-              cursor: 'pointer',
-            }}
-            onClick={() => navigate(feature.link)} 
-          >
-            <ListItemText
-              primary={
-                <Typography variant="h6" gutterBottom>
-                  {feature.title}
-                </Typography>
-              }
-              secondary={
-                <Typography variant="body2" color="textSecondary">
-                  {feature.description}
-                </Typography>
-              }
-            />
-          </ListItem>
+          <Grid item xs={12} sm={6} key={index}>
+            <Box
+              sx={{
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                padding: 2,
+                border: '1px solid #ddd',
+                borderRadius: 2,
+                backgroundColor: '#f9f9f9',
+                transition: 'background-color 0.2s ease, transform 0.2s ease',
+                '&:hover': {
+                  backgroundColor: '#f1f1f1',
+                  transform: 'translateY(-2px)',
+                },
+                cursor: 'pointer',
+              }}
+              onClick={() => navigate(feature.link)}
+            >
+              <ListItemText
+                primary={
+                  <Typography variant="h6" gutterBottom>
+                    {feature.title}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" color="textSecondary">
+                    {feature.description}
+                  </Typography>
+                }
+              />
+            </Box>
+          </Grid>
         ))}
-      </List>
+      </Grid>
     </Box>
   );
 };
