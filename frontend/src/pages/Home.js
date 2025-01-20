@@ -88,103 +88,83 @@ const Home = () => {
       </HeroSection>
 
       <Container maxWidth="lg">
-        {/* Featured Book Section */}
-        <Box sx={{ mb: 8 }}>
-          <Typography variant="h3" gutterBottom align="center">
-            {t('home:featuredBook.title')}
-          </Typography>
-          <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <CardMedia
-                component="img"
-                height="400"
-                image="/images/book-cover.jpg"
-                alt="Book Cover"
-                sx={{ objectFit: 'contain' }}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h4" gutterBottom>
-                {t('home:featuredBook.bookTitle')}
-              </Typography>
-              <Typography variant="body1" paragraph>
-                {t('home:featuredBook.description')}
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                component={Link}
-                href="https://www.amazon.com/dp/B0DQJVM15R?ref=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&ref_=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&social_share=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&peakEvent=5&dealEvent=0&language=en_US&skipTwisterOG=1&bestFormat=true"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t('home:featuredBook.button')}
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
+        <Container maxWidth="lg">
+          {/* Featured Section */}
+          <Box sx={{ mb: 8 }}>
+            <Grid container spacing={6} alignItems="stretch">
+              {/* Left Column: Featured Book */}
+              <Grid item xs={12} md={6}>
+                <Typography variant="h3" gutterBottom align="center">
+                  {t('home:featuredBook.title')}
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <CardMedia
+                    component="img"
+                    image="/images/book-cover.jpg"
+                    alt="Book Cover"
+                    sx={{
+                      height: { xs: 300, md: 450 },
+                      width: '100%',
+                      maxWidth: 400,
+                      objectFit: 'cover',
+                      mb: 2,
+                    }}
+                  />
+                  <Typography variant="h4" gutterBottom align="center">
+                    {t('home:featuredBook.bookTitle')}
+                  </Typography>
+                  <Typography variant="body1" paragraph align="center">
+                    {t('home:featuredBook.description')}
+                  </Typography>
+                </Box>
+              </Grid>
 
-         {/* Overview of navigation features */}
+              {/* Right Column: Featured Poem */}
+              <Grid item xs={12} md={6}>
+                <Typography
+                  variant="h4" 
+                  gutterBottom
+                  align="center"
+                  sx={{ mb: 1 }} 
+                >
+                  {t('home:featuredPoem.title')}
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    height: '100%',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Typography
+                    variant="h5" 
+                    gutterBottom
+                    sx={{ fontStyle: 'italic', mb: 2 }} 
+                  >
+                    {t('home:featuredPoem.poemTitle')}
+                  </Typography>
+                  <Typography
+                    variant="body2" 
+                    sx={{
+                      whiteSpace: 'pre-line',
+                      fontSize: '1rem',  
+                      maxWidth: '80%',
+                      margin: '0 auto',
+                    }}
+                  >
+                    {t('home:featuredPoem.poemText')}
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </Container>
+
+        {/* Overview of navigation features */}
         <FeaturesOverview />
 
-        {/* Featured Sections */}
-        <Grid container spacing={4} sx={{ mb: 8 }}>
-          <Grid item xs={12} md={4}>
-            <FeatureCard>
-              <CardMedia
-                component="img"
-                height="200"
-                image="/images/community.jpg"
-                alt="Community"
-              />
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  {t('home:features.community.title')}
-                </Typography>
-                <Typography variant="body1">
-                  {t('home:features.community.description')}
-                </Typography>
-              </CardContent>
-            </FeatureCard>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <FeatureCard>
-              <CardMedia
-                component="img"
-                height="200"
-                image="/images/workshops.jpg"
-                alt="Workshops"
-              />
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  {t('home:features.workshops.title')}
-                </Typography>
-                <Typography variant="body1">
-                  {t('home:features.workshops.description')}
-                </Typography>
-              </CardContent>
-            </FeatureCard>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <FeatureCard>
-              <CardMedia
-                component="img"
-                height="200"
-                image="/images/publish.jpg"
-                alt="Publish"
-              />
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  {t('home:features.publish.title')}
-                </Typography>
-                <Typography variant="body1">
-                  {t('home:features.publish.description')}
-                </Typography>
-              </CardContent>
-            </FeatureCard>
-          </Grid>
-        </Grid>
       </Container>
     </Box>
   );

@@ -8,9 +8,14 @@
   },
   "featuredBook": {
     "title": "Featured Book",
-    "bookTitle": "The Quantum Verses",
-    "description": "Dive into our latest collection of scientism poetry, where the mysteries of quantum mechanics meet the beauty of artistic expression. Available now on Amazon.",
+    "bookTitle": "New Book Release",
+    "description": "An Introduction to Scientism Poetry is a groundbreaking work that defines scientism poetry, presents its manifesto, outlines methods, and offers key examples. By blending scientific philosophy with poetic expression, it bridges science and art, unveiling profound connections between knowledge and emotion while enriching modern literature with new intellectual and aesthetic dimensions.",
     "button": "Get the Book"
+  },
+  "featuredPoem": {
+    "title": "Featured Poem",
+    "poemTitle": "Crossing the Pacific Night Sky",
+    "poemText": "Soaring at ten thousand meters high,\nFreedom bound by seatbelt, I fly.\nPosition and momentum, unknown at once,\nA whisper of Copenhagen’s brilliance stuns.\n\nThe plane’s tail pursued by the first light,\nThe fuselage slides through the endless night.\nThe pilot presses on with steady grace,\nAbove, starlight spills in endless space.\n\nThrough oval windows, city lights gleam,\nLike scattered stars in an ever-shifting stream.\nAmber and white in a steady flare,\nSendai appears, no god nor stage to share.\n\nWhite clouds form a giant’s thought,\nOpenness where humanity’s glow is caught.\nOppenheimer nods from the screen,\nLost in thoughts of Einstein, unseen.\n\nA sun-browned seatmate, relaxed at ease,\nBound for Saigon, where dreams take their leave.\nOpportunities bloom, the world unfolds,\nAncestors rest beneath the wild grass that holds.\n\nLiving between returns, no end in sight,\nThe Earth split in fractured flight.\nA gleam at the wingtip, soft and bright,\nA masked attendant’s voice, polite and light:\n“Western or Asian meal, sir, tonight?”"
   },
   "features": {
     "title": "Explore Our Features",
