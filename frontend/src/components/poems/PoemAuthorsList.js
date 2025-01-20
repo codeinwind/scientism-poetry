@@ -69,7 +69,7 @@ const AuthorsList = () => {
                 primary={
                   <Stack direction="row" alignItems="center" spacing={1}>
                     <Avatar sx={{ width: 24, height: 24 }}>
-                      {author.authorDetails?.penName?.charAt(0) || 'N/A'} 
+                      {author.authorDetails?.name?.charAt(0) || 'N/A'} 
                     </Avatar>
                     <Typography
                       component="span"
@@ -83,7 +83,7 @@ const AuthorsList = () => {
                         textOverflow: 'ellipsis',
                       }}
                     >
-                    {truncateText(author.authorDetails?.penName || 'Unknown', 12)}
+                    {truncateText(author.authorDetails?.name || 'Unknown', 12)}
                     </Typography>
                   </Stack>
                 }
