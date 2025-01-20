@@ -83,7 +83,7 @@ const AuthorsList = () => {
                         textOverflow: 'ellipsis',
                       }}
                     >
-                    {truncateText(author.authorDetails?.name || 'Unknown', 12)}
+                    {truncateText(author.authorDetails?.name || 'Unknown', 17)}
                     </Typography>
                   </Stack>
                 }
