@@ -43,7 +43,7 @@ const Home = () => {
       <HeroSection>
         <Container maxWidth="lg">
           <Grid container spacing={4}>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={10}>
               <Typography
                 component="h1"
                 variant="h2"
@@ -56,6 +56,12 @@ const Home = () => {
                 {t('home:hero.subtitle')}
               </Typography>
               <Box sx={{ mt: 4 }}>
+                <Typography
+                  variant="subtitle1"
+                  sx={{ color: 'white', fontStyle: 'italic', mb: 2 }}
+                >
+                  {t('home:hero.slogan')}
+                </Typography>
                 <Button
                   component={RouterLink}
                   to="/register"
