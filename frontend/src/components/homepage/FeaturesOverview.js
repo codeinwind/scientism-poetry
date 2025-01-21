@@ -23,25 +23,20 @@ const FeaturesOverview = () => {
     { 
       title: t('home:features.journal.title'), 
       description: t('home:features.journal.description'), 
-      image: '/images/journal.jpg', 
+      image: '/images/workshops.jpg', 
+    
       link: '/journal' 
     },
     { 
       title: t('home:features.press.title'), 
       description: t('home:features.press.description'), 
-      image: '/images/workshops.jpg', 
+      image: '/images/journal.jpg', 
       link: '/press' 
     },
   ];
 
   return (
     <Box sx={{ py: 6 }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        {t('home:features.title')}
-      </Typography>
-      <Typography variant="body1" align="center" sx={{ mb: 4 }}>
-        {t('home:features.subtitle')}
-      </Typography>
       <Grid 
         container 
         spacing={4} 

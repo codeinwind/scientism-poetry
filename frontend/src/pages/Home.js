@@ -116,16 +116,29 @@ const Home = () => {
                   <Typography variant="body1" paragraph align="center">
                     {t('home:featuredBook.description')}
                   </Typography>
+                  <Box sx={{ mt: 3 }}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      component={Link}
+                      href="https://www.amazon.com/dp/B0DQJVM15R?ref=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&ref_=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&social_share=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&peakEvent=5&dealEvent=0&language=en_US&skipTwisterOG=1&bestFormat=true"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {t('home:featuredBook.button')}
+                    </Button>
+                  </Box>
                 </Box>
               </Grid>
 
               {/* Right Column: Featured Poem */}
               <Grid item xs={12} md={6}>
                 <Typography
-                  variant="h4" 
+                  variant="h4"
                   gutterBottom
                   align="center"
-                  sx={{ mb: 1 }} 
+                  sx={{ mb: 1 }}
                 >
                   {t('home:featuredPoem.title')}
                 </Typography>
@@ -139,17 +152,17 @@ const Home = () => {
                   }}
                 >
                   <Typography
-                    variant="h5" 
+                    variant="h5"
                     gutterBottom
-                    sx={{ fontStyle: 'italic', mb: 2 }} 
+                    sx={{ fontStyle: 'italic', mb: 2 }}
                   >
                     {t('home:featuredPoem.poemTitle')}
                   </Typography>
                   <Typography
-                    variant="body2" 
+                    variant="body2"
                     sx={{
                       whiteSpace: 'pre-line',
-                      fontSize: '1rem',  
+                      fontSize: '1rem',
                       maxWidth: '80%',
                       margin: '0 auto',
                     }}
