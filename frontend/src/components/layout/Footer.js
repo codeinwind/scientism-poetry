@@ -23,7 +23,7 @@ const Footer = () => {
             <Typography variant="h6" gutterBottom>
               {t('footer:about.title')}
             </Typography>
-            <Typography variant="body2" sx={{color: 'inherit'}}>
+            <Typography variant="body2" sx={{ color: 'inherit' }}>
               {t('footer:about.description')}
             </Typography>
           </Grid>
@@ -41,13 +41,15 @@ const Footer = () => {
                 {t('footer:links.about')}
               </MuiLink>
               <MuiLink
-                component={Link}
-                to="/book"
+                href="https://www.amazon.com/dp/B0DQJVM15R?ref=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&ref_=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&social_share=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&peakEvent=5&dealEvent=0&language=en_US&skipTwisterOG=1&bestFormat=true"
+                target="_blank"
+                rel="noopener noreferrer"
                 color="inherit"
                 sx={{ mb: 1 }}
               >
                 {t('footer:links.book')}
               </MuiLink>
+
               <MuiLink
                 component={Link}
                 to="/poems"
@@ -57,13 +59,13 @@ const Footer = () => {
                 {t('footer:links.poems')}
               </MuiLink>
               <MuiLink
-                component={Link}
-                to="/contact"
+                href="mailto:ScientismPoetry@gmail.com" 
                 color="inherit"
                 sx={{ mb: 1 }}
               >
                 {t('footer:links.contact')}
               </MuiLink>
+
             </Box>
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -102,10 +104,10 @@ const Footer = () => {
           </Grid>
         </Grid>
         <Box sx={{ mt: 5, borderTop: 1, pt: 2, borderColor: 'rgba(255, 255, 255, 0.2)' }}>
-          <Typography variant="body2" align="center" sx={{color: 'inherit'}}>
+          <Typography variant="body2" align="center" sx={{ color: 'inherit' }}>
             {t('footer:copyright', { year: currentYear })}
           </Typography>
-          <Typography variant="body2" align="center" sx={{color: 'inherit'}}>
+          <Typography variant="body2" align="center" sx={{ color: 'inherit' }}>
             <MuiLink
               component={Link}
               to="/privacy"

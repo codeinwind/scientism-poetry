@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Container,
+  CardMedia,
   Typography,
   Grid,
   Card,
@@ -31,6 +32,48 @@ const Journal = () => {
           {t('journal:description')}
         </Typography>
       </Box>
+
+      {/* Book */}
+      <Grid container spacing={4} alignItems="center" sx={{ mb: 6 }}>
+        <Grid item xs={12} md={6}>
+          <CardMedia
+            component="img"
+            image="/images/book-cover.jpg"
+            alt="Book Cover"
+            sx={{
+              height: { xs: 300, md: 450 },
+              width: '100%',
+              objectFit: 'contain',
+              borderRadius: 2,
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', pl: { md: 4 } }}>
+            <Typography variant="h3" gutterBottom align="left">
+              {t('home:featuredBook.title')}
+            </Typography>
+            <Typography variant="h4" gutterBottom align="left">
+              {t('home:featuredBook.bookTitle')}
+            </Typography>
+            <Typography variant="body1" paragraph align="left">
+              {t('home:featuredBook.description')}
+            </Typography>
+            <Box sx={{ mt: 3 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                href="https://www.amazon.com/dp/B0DQJVM15R?ref=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&ref_=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&social_share=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&peakEvent=5&dealEvent=0&language=en_US&skipTwisterOG=1&bestFormat=true"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t('home:featuredBook.button')}
+              </Button>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
 
       {/* Current Issue */}
       <Paper elevation={2} sx={{ p: 4, mb: 6, bgcolor: 'background.paper' }}>
