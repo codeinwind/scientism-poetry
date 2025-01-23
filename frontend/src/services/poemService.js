@@ -1,6 +1,14 @@
 import apiClient from './apiClient';
 import ApiError from './ApiError';
 
+const handleApiError = (error, defaultMessage) => {
+  console.error('API Error:', error); // Debug log
+  if (error.response?.status === 404) {
+    throw new ApiError(defaultMessage || 'Resource not found', error, false);
+  }
+  throw new ApiError(error.message || defaultMessage || 'API Error', error, false);
+};
+
 const poemService = {
    // Get the most published authors
    getTopAuthors: async () => {
@@ -32,7 +40,22 @@ const poemService = {
       );
     }
   },
-  
+
+  // Update author bio
+  updateAuthorBio: async (authorId, bio) => {
+    try {
+      console.log('Updating author bio:', authorId, bio); // Debug log
+      const response = await apiClient.put(`/poems/authors/${authorId}/bio`, { bio });
+      console.log('Update author bio response:', response.data); // Debug log
+      return {
+        success: true,
+        data: response.data,
+        message: 'Author bio updated successfully',
+      };
+    } catch (error) {
+      handleApiError(error, 'Failed to update author bio');
+    }
+  },
 
   // Get all authors
   getAllAuthors: async () => {
