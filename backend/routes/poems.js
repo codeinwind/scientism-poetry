@@ -18,7 +18,35 @@ const validateStatusTransition = (currentStatus, newStatus) => {
   return validTransitions && validTransitions.includes(newStatus);
 };
 
-// @route  Get /api/poems//:authorId/author
+// @route  Get /api/authors/:authorId/bio
+// @desc   update user's bio
+router.put('/authors/:authorId/bio', async (req, res) => {
+  try {
+    const { authorId } = req.params;
+    const { bio } = req.body;
+
+    const author = await User.findByIdAndUpdate(
+      authorId,
+      { bio },
+      { new: true, runValidators: true } 
+    );
+
+    if (!author) {
+      return res.status(404).json({ error: 'Author not found' });
+    }
+
+    res.status(200).json({
+      message: 'Bio updated successfully',
+      author,
+    });
+  } catch (error) {
+    console.error('Error updating bio:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+// @route  Get /api/poems/:authorId/author
 // @desc   Get all poems by the designated author
 router.get('/:authorId/author', async (req, res) => {
   try {

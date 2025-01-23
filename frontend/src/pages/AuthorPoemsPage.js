@@ -10,7 +10,12 @@ import {
   CardContent,
   Avatar,
   Paper,
+  IconButton,
+  TextField,
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
 import poemService from '../services/poemService';
 import { useTranslation } from 'react-i18next';
 
@@ -22,6 +27,8 @@ const AuthorPoemsPage = () => {
   const [author, setAuthor] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isEditingBio, setIsEditingBio] = useState(false);
+  const [bio, setBio] = useState('');
 
   useEffect(() => {
     const fetchAuthorPoems = async () => {
@@ -31,6 +38,7 @@ const AuthorPoemsPage = () => {
           throw new Error('Invalid response format');
         }
         setAuthor(response.author);
+        setBio(response.author.bio || '');
         setPoems(response.poems);
       } catch (err) {
         setError(err.message);
@@ -46,6 +54,21 @@ const AuthorPoemsPage = () => {
     if (poemId) {
       navigate(`/poems/${poemId}`);
     }
+  };
+
+  const handleSaveBio = async () => {
+    try {
+      await poemService.updateAuthorBio(authorId, bio);
+      setAuthor((prev) => ({ ...prev, bio }));
+      setIsEditingBio(false);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setBio(author.bio || '');
+    setIsEditingBio(false);
   };
 
   if (isLoading) {
@@ -70,25 +93,63 @@ const AuthorPoemsPage = () => {
 
   return (
     <Container maxWidth="lg">
-      {/* Author Personal Information */}
       {author && (
-        <Paper elevation={3} sx={{ p: 3, mb: 6, display: 'flex', alignItems: 'center' }}>
-          <Avatar sx={{ width: 64, height: 64, mr: 3 }}>
-            {author.name?.[0] || 'A'} 
-          </Avatar>
-          <Box>
-            <Typography variant="h5">{author.name || 'Unknown'}</Typography>
-            <Typography variant="caption" display="block">
-              {t('authors:joinedOn')} {author.createdAt ? new Date(author.createdAt).toLocaleDateString() : 'N/A'}
-            </Typography>
+        <Paper elevation={3} sx={{ p: 3, mb: 6 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Avatar sx={{ width: 64, height: 64, mr: 3 }}>
+              {author.name?.[0] || 'A'}
+            </Avatar>
+            <Box>
+              <Typography variant="h5">{author.name || 'Unknown'}</Typography>
+              <Typography variant="caption" display="block">
+                {t('authors:joinedOn')} {author.createdAt ? new Date(author.createdAt).toLocaleDateString() : 'N/A'}
+              </Typography>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 2,
+              mt: 2,
+              cursor: isEditingBio ? 'default' : 'pointer',
+            }}
+            onClick={!isEditingBio ? () => setIsEditingBio(true) : undefined}
+          >
+            {isEditingBio ? (
+              <>
+                <TextField
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  fullWidth
+                  multiline
+                  rows={3}
+                />
+                <IconButton color="primary" onClick={handleSaveBio}>
+                  <SaveIcon />
+                </IconButton>
+                <IconButton color="secondary" onClick={handleCancelEdit}>
+                  <CancelIcon />
+                </IconButton>
+              </>
+            ) : (
+              <>
+                <Typography variant="body1" sx={{ flex: 1 }}>
+                  {author.bio || 'Click to add a bio'}
+                </Typography>
+                <IconButton>
+                  <EditIcon />
+                </IconButton>
+              </>
+            )}
           </Box>
         </Paper>
       )}
-
       {/* List of Poems */}
       <Typography variant="h4" component="h1" gutterBottom>
         {author
-          ? t('authors:poemsBy', { authorName: author.name || 'Unknown' }) 
+          ? t('authors:poemsBy', { authorName: author.name || 'Unknown' })
           : t('authors:unknownAuthor')}
       </Typography>
 
@@ -109,7 +170,7 @@ const AuthorPoemsPage = () => {
                     boxShadow: 4,
                   },
                 }}
-                onClick={() => handleNavigateToDetail(poem._id)} 
+                onClick={() => handleNavigateToDetail(poem._id)}
               >
                 <CardContent>
                   <Typography variant="h6">{poem.title}</Typography>
