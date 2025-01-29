@@ -10,12 +10,7 @@ import {
   CardContent,
   Avatar,
   Paper,
-  IconButton,
-  TextField,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Cancel';
 import poemService from '../services/poemService';
 import { useTranslation } from 'react-i18next';
 
@@ -27,8 +22,6 @@ const AuthorPoemsPage = () => {
   const [author, setAuthor] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isEditingBio, setIsEditingBio] = useState(false);
-  const [bio, setBio] = useState('');
 
   useEffect(() => {
     const fetchAuthorPoems = async () => {
@@ -38,7 +31,6 @@ const AuthorPoemsPage = () => {
           throw new Error('Invalid response format');
         }
         setAuthor(response.author);
-        setBio(response.author.bio || '');
         setPoems(response.poems);
       } catch (err) {
         setError(err.message);
@@ -54,21 +46,6 @@ const AuthorPoemsPage = () => {
     if (poemId) {
       navigate(`/poems/${poemId}`);
     }
-  };
-
-  const handleSaveBio = async () => {
-    try {
-      await poemService.updateAuthorBio(authorId, bio);
-      setAuthor((prev) => ({ ...prev, bio }));
-      setIsEditingBio(false);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setBio(author.bio || '');
-    setIsEditingBio(false);
   };
 
   if (isLoading) {
@@ -106,43 +83,10 @@ const AuthorPoemsPage = () => {
               </Typography>
             </Box>
           </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: 2,
-              mt: 2,
-              cursor: isEditingBio ? 'default' : 'pointer',
-            }}
-            onClick={!isEditingBio ? () => setIsEditingBio(true) : undefined}
-          >
-            {isEditingBio ? (
-              <>
-                <TextField
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  fullWidth
-                  multiline
-                  rows={3}
-                />
-                <IconButton color="primary" onClick={handleSaveBio}>
-                  <SaveIcon />
-                </IconButton>
-                <IconButton color="secondary" onClick={handleCancelEdit}>
-                  <CancelIcon />
-                </IconButton>
-              </>
-            ) : (
-              <>
-                <Typography variant="body1" sx={{ flex: 1 }}>
-                  {author.bio || 'Click to add a bio'}
-                </Typography>
-                <IconButton>
-                  <EditIcon />
-                </IconButton>
-              </>
-            )}
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body1">
+              {author.bio?.trim() || t('poems:poem.noBio')}
+            </Typography>
           </Box>
         </Paper>
       )}

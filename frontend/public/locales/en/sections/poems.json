@@ -10,7 +10,9 @@
     "likes": "{{count}} likes",
     "comments": "{{count}} comments",
     "top": "Top Authors",
-    "viewAll": "View All Authors"
+    "viewAll": "View All Authors",
+    "anonymous": "Anonymous",
+    "noBio": "No biography available"
   },
   "emptyState": {
     "title": "No Poems Available",
@@ -54,5 +56,10 @@
     "commentAdded": "Comment added successfully",
     "loading": "Loading poem...",
     "error": "Error loading poem"
+  },
+  "dialog": {
+    "title": "提示",
+    "message": "用户已注销，无法查看帖子详情。",
+    "ok": "确认"
   }
 }

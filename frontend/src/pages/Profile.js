@@ -12,82 +12,42 @@ import {
   Alert,
   Card,
   CardContent,
+  IconButton,
 } from '@mui/material';
-import { useAuth } from '../contexts/AuthContext';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { authService } from '../services';
 
 const Profile = () => {
   const { t } = useTranslation(['profile', 'common']);
-  const { user, updateUser } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [activityStats, setActivityStats] = useState({ publishedPoems: 0, totalLikes: 0, commentsMade: 0 });
+  const { user: globalUser, updateUser } = useAuth();
 
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .required(t('profile:form.name.required'))
-      .min(2, t('profile:form.name.minLength')),
-    penName: Yup.string()
-      .required(t('profile:form.penName.required')),
-    email: Yup.string()
-      .email(t('profile:form.email.invalid'))
-      .required(t('profile:form.email.required')),
-    bio: Yup.string()
-      .max(500, t('profile:form.bio.maxLength')),
-    currentPassword: Yup.string()
-      .min(6, t('profile:form.password.minLength')),
-    newPassword: Yup.string()
-      .min(6, t('profile:form.password.minLength')),
-    confirmNewPassword: Yup.string()
-      .oneOf([Yup.ref('newPassword'), null], t('profile:form.password.mismatch')),
+  // Maintain a local copy of the user (localUser) and form fields (fieldValues)
+  const [localUser, setLocalUser] = useState(globalUser || {});
+  const [fieldValues, setFieldValues] = useState({
+    bio: localUser.bio || '',
+    penName: localUser.penName || '',
   });
 
-  const formik = useFormik({
-    initialValues: {
-      name: user?.name || '',
-      penName: user?.penName || '',
-      email: user?.email || '',
-      bio: user?.bio || '',
-      currentPassword: '',
-      newPassword: '',
-      confirmNewPassword: '',
-    },
-    validationSchema,
-    onSubmit: async (values) => {
-      try {
-        setLoading(true);
-        setError('');
-        setSuccess('');
+  const [editableFields, setEditableFields] = useState({ bio: false, penName: false });
 
-        const response = await authService.updateProfile(values);
-        updateUser(response.user);
-        setSuccess(t('profile:messages.updateSuccess'));
-        setIsEditing(false);
-        
-        formik.setFieldValue('currentPassword', '');
-        formik.setFieldValue('newPassword', '');
-        formik.setFieldValue('confirmNewPassword', '');
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    },
+  // If the global user changes (for example, a new user is obtained after a new login or page refresh), synchronize the change to the local computer
+  useEffect(() => {
+    setLocalUser(globalUser || {});
+    setFieldValues({
+      bio: globalUser?.bio || '',
+      penName: globalUser?.penName || '',
+    });
+  }, [globalUser]);
+
+  const [activityStats, setActivityStats] = useState({
+    publishedPoems: 0,
+    totalLikes: 0,
+    commentsMade: 0,
   });
-
-  const handleCancel = () => {
-    formik.resetForm();
-    setIsEditing(false);
-    setError('');
-  };
 
   useEffect(() => {
     const fetchActivityStats = async () => {
@@ -100,9 +60,85 @@ const Profile = () => {
         console.error('Failed to fetch activity stats:', error);
       }
     };
-
     fetchActivityStats();
   }, []);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setSuccess('');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
+
+  const handleEditClick = (field) => {
+    setEditableFields((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const handleCancelClick = (field) => {
+    setFieldValues((prev) => ({
+      ...prev,
+      [field]: localUser[field] || '',
+    }));
+    setEditableFields((prev) => ({ ...prev, [field]: false }));
+    setError('');
+    setSuccess('');
+  };
+
+  const handleSaveClick = async (field) => {
+    setLoading(true);
+    setError('');
+    setSuccess('');
+    try {
+      let response;
+
+      if (field === 'bio') {
+        response = await authService.updateAuthorBio(localUser._id, fieldValues.bio);
+      } else if (field === 'penName') {
+         // Validate that the penName is not empty
+        if (!fieldValues.penName.trim()) {
+           setError(t('profile:form.penName.required')); // Use i18n for error message
+           setLoading(false);
+           return;
+        }
+
+        response = await authService.updatePenName(localUser._id, fieldValues.penName);
+      } else {
+        throw new Error('Invalid field to update');
+      }
+
+      if (response && response.author) {
+        const updatedUser = response.author;
+        // Update the local user so that the display area immediately sees the latest data
+        setLocalUser(updatedUser);
+
+        // Update the form fields synchronously as well to prevent them from having the old values the next time you edit them
+        setFieldValues((prev) => ({
+          ...prev,
+          [field]: updatedUser[field] || '',
+        }));
+
+        updateUser(updatedUser);
+        setSuccess(t('profile:messages.updateSuccess'));
+      }
+
+      setEditableFields((prev) => ({ ...prev, [field]: false }));
+    } catch (err) {
+      console.error('Update error:', err);
+      setError(err.message || t('profile:messages.updateFailed'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (field, value) => {
+    setFieldValues((prev) => ({ ...prev, [field]: value }));
+  };
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -111,7 +147,7 @@ const Profile = () => {
     return date.toLocaleDateString(undefined, {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
@@ -126,7 +162,6 @@ const Profile = () => {
           {error}
         </Alert>
       )}
-
       {success && (
         <Alert severity="success" sx={{ mb: 3 }}>
           {success}
@@ -137,151 +172,105 @@ const Profile = () => {
         {/* Profile Information */}
         <Grid item xs={12} md={8}>
           <Paper sx={{ p: 4 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
-              <Typography variant="h5">{t('profile:profileInfo')}</Typography>
-              {!isEditing ? (
-                <Button
-                  startIcon={<EditIcon />}
-                  onClick={() => setIsEditing(true)}
-                >
-                  {t('profile:editProfile')}
-                </Button>
-              ) : (
-                <Box>
-                  <Button
-                    startIcon={<CancelIcon />}
-                    onClick={handleCancel}
+            <Typography variant="h5" gutterBottom>
+              {t('profile:profileInfo')}
+            </Typography>
+
+            <Divider sx={{ my: 2 }} />
+
+            {/* Name */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Typography variant="body1" sx={{ flexBasis: '25%' }}>
+                {t('profile:form.name.label')}
+              </Typography>
+              <Typography variant="body1" sx={{ flex: 1 }}>
+                {localUser?.name || 'N/A'}
+              </Typography>
+            </Box>
+
+            {/* Email */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Typography variant="body1" sx={{ flexBasis: '25%' }}>
+                {t('profile:form.email.label')}
+              </Typography>
+              <Typography variant="body1" sx={{ flex: 1 }}>
+                {localUser?.email || 'N/A'}
+              </Typography>
+            </Box>
+
+            {/* Pen Name */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Typography variant="body1" sx={{ flexBasis: '25%' }}>
+                {t('profile:form.penName.label')}
+              </Typography>
+              {editableFields.penName ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+                  <TextField
+                    value={fieldValues.penName}
+                    onChange={(e) => handleChange('penName', e.target.value)}
+                    fullWidth
+                    size="small"
                     sx={{ mr: 1 }}
-                  >
-                    {t('common:cancel')}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    startIcon={<SaveIcon />}
-                    onClick={formik.handleSubmit}
-                    disabled={loading}
-                  >
-                    {t('profile:saveChanges')}
-                  </Button>
+                  />
+                  <IconButton onClick={() => handleSaveClick('penName')} disabled={loading}>
+                    <SaveIcon />
+                  </IconButton>
+                  <IconButton onClick={() => handleCancelClick('penName')}>
+                    <CancelIcon />
+                  </IconButton>
+                </Box>
+              ) : (
+                <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+                  <Typography variant="body1" sx={{ mr: 1 }}>
+                    {localUser?.penName || t('profile:noValue')}
+                  </Typography>
+                  <IconButton onClick={() => handleEditClick('penName')}>
+                    <EditIcon />
+                  </IconButton>
                 </Box>
               )}
             </Box>
 
-            <form>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
+            {/* Bio */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Typography variant="body1" sx={{ flexBasis: '25%' }}>
+                {t('profile:form.bio.label')}
+              </Typography>
+              {editableFields.bio ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
                   <TextField
-                    fullWidth
-                    label={t('profile:form.name.label')}
-                    name="name"
-                    value={formik.values.name}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.name && Boolean(formik.errors.name)}
-                    helperText={formik.touched.name && formik.errors.name}
-                    disabled={!isEditing}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label={t('profile:form.penName.label')}
-                    name="penName"
-                    value={formik.values.penName}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.penName && Boolean(formik.errors.penName)}
-                    helperText={formik.touched.penName && formik.errors.penName}
-                    disabled={!isEditing}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label={t('profile:form.email.label')}
-                    name="email"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
-                    disabled={!isEditing}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label={t('profile:form.bio.label')}
-                    name="bio"
+                    value={fieldValues.bio}
+                    onChange={(e) => handleChange('bio', e.target.value)}
                     multiline
-                    rows={4}
-                    value={formik.values.bio}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.bio && Boolean(formik.errors.bio)}
-                    helperText={formik.touched.bio && formik.errors.bio}
-                    disabled={!isEditing}
+                    rows={3}
+                    fullWidth
+                    size="small"
+                    sx={{ mr: 1 }}
                   />
-                </Grid>
-
-                {isEditing && (
-                  <>
-                    <Grid item xs={12}>
-                      <Divider sx={{ my: 2 }}>
-                        <Typography variant="body2" color="text.secondary">
-                          {t('profile:form.password.changeTitle')}
-                        </Typography>
-                      </Divider>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        type="password"
-                        label={t('profile:form.password.current')}
-                        name="currentPassword"
-                        value={formik.values.currentPassword}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.currentPassword && Boolean(formik.errors.currentPassword)}
-                        helperText={formik.touched.currentPassword && formik.errors.currentPassword}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        type="password"
-                        label={t('profile:form.password.new')}
-                        name="newPassword"
-                        value={formik.values.newPassword}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.newPassword && Boolean(formik.errors.newPassword)}
-                        helperText={formik.touched.newPassword && formik.errors.newPassword}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        type="password"
-                        label={t('profile:form.password.confirm')}
-                        name="confirmNewPassword"
-                        value={formik.values.confirmNewPassword}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.confirmNewPassword && Boolean(formik.errors.confirmNewPassword)}
-                        helperText={formik.touched.confirmNewPassword && formik.errors.confirmNewPassword}
-                      />
-                    </Grid>
-                  </>
-                )}
-              </Grid>
-            </form>
+                  <IconButton onClick={() => handleSaveClick('bio')} disabled={loading}>
+                    <SaveIcon />
+                  </IconButton>
+                  <IconButton onClick={() => handleCancelClick('bio')}>
+                    <CancelIcon />
+                  </IconButton>
+                </Box>
+              ) : (
+                <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+                  <Typography variant="body1" sx={{ mr: 1 }}>
+                    {localUser?.bio?.trim() || t('profile:form.bio.noBio')}
+                  </Typography>
+                  <IconButton onClick={() => handleEditClick('bio')}>
+                    <EditIcon />
+                  </IconButton>
+                </Box>
+              )}
+            </Box>
           </Paper>
         </Grid>
 
         {/* Profile Stats */}
         <Grid item xs={12} md={4}>
-          <Card sx={{ mb: 3 }}>
+          <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                 <Avatar
@@ -292,29 +281,27 @@ const Profile = () => {
                     fontSize: '2rem',
                   }}
                 >
-                  {user?.name?.charAt(0)}
+                  {localUser?.name?.charAt(0)}
                 </Avatar>
                 <Box sx={{ ml: 2 }}>
-                  <Typography variant="h6">{user?.name}</Typography>
+                  <Typography variant="h6">{localUser?.name}</Typography>
                   <Typography variant="body2" color="text.secondary">
                     {t('profile:stats.memberSince', {
-                      date: formatDate(user?.createdAt)
+                      date: formatDate(localUser?.createdAt),
                     })}
                   </Typography>
                 </Box>
               </Box>
               <Divider sx={{ my: 2 }} />
-              <Typography variant="subtitle2" gutterBottom>
-                {t('profile:stats.title')}
-              </Typography>
+              <Typography variant="subtitle2">{t('profile:stats.title')}</Typography>
               <Box sx={{ mt: 2 }}>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
+                <Typography variant="body2" gutterBottom>
                   {t('profile:stats.publishedPoems', { count: activityStats.publishedPoems })}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
+                <Typography variant="body2" gutterBottom>
                   {t('profile:stats.totalLikes', { count: activityStats.totalLikes })}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
+                <Typography variant="body2" gutterBottom>
                   {t('profile:stats.commentsMade', { count: activityStats.commentsMade })}
                 </Typography>
               </Box>

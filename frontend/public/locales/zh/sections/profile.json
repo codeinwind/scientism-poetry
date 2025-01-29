@@ -20,7 +20,8 @@
     },
     "bio": {
       "label": "个人简介",
-      "maxLength": "个人简介不能超过500个字符"
+      "maxLength": "个人简介不能超过500个字符",
+      "noBio": "你还没有填写个人简介"
     },
     "password": {
       "current": "当前密码",
@@ -28,7 +29,8 @@
       "confirm": "确认新密码",
       "minLength": "密码至少需要6个字符",
       "mismatch": "两次输入的密码不一致",
-      "changeTitle": "修改密码（可选）"
+      "changeTitle": "修改密码",
+      "update": "更新密码"
     }
   },
   "stats": {

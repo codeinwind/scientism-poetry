@@ -58,12 +58,13 @@ router.post(
         success: true,
         token: accessToken,
         user: {
-          id: user._id,
+          _id: user._id,
           name: user.name,
           penName: user.penName,
           email: user.email,
           role: user.role,
           createdAt: user.createdAt,
+          bio: user.bio,
         },
       });
     } catch (error) {

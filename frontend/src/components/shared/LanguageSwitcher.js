@@ -28,7 +28,10 @@ const LanguageSwitcher = () => {
 
   const getCurrentLanguageName = () => {
     const language = languages.find(lang => lang.code === currentLanguage);
-    return language ? language.nativeName : 'English';
+    if (!language) return 'English'; 
+    return currentLanguage === 'en'
+      ? languages.find(lang => lang.code === 'zh')?.nativeName || '中文'
+      : languages.find(lang => lang.code === 'en')?.nativeName || 'English';
   };
 
   return (
@@ -52,7 +55,7 @@ const LanguageSwitcher = () => {
           sx={{
             display: { xs: 'none', sm: 'inline' },
             textTransform: 'none',
-            color: 'inherit', 
+            color: 'inherit',
           }}
         >
           {getCurrentLanguageName()}
@@ -83,7 +86,10 @@ const LanguageSwitcher = () => {
           <MenuItem
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
-            selected={currentLanguage === language.code}
+            selected={
+              currentLanguage === 'en' && language.code === 'zh' || 
+              currentLanguage === 'zh' && language.code === 'en'
+            } 
             sx={{
               py: 1,
               px: 2,
@@ -94,7 +100,11 @@ const LanguageSwitcher = () => {
               secondary={language.name}
               primaryTypographyProps={{
                 variant: 'body2',
-                fontWeight: currentLanguage === language.code ? 'bold' : 'normal',
+                fontWeight: 
+                  (currentLanguage === 'en' && language.code === 'zh') || 
+                  (currentLanguage === 'zh' && language.code === 'en') 
+                    ? 'bold' 
+                    : 'normal',
               }}
               secondaryTypographyProps={{
                 variant: 'caption',

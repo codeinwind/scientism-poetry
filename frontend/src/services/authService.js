@@ -1,6 +1,13 @@
 import apiClient from './apiClient';
 import ApiError from './ApiError';
 
+const handleApiError = (error, defaultMessage) => {
+  if (error.response?.status === 404) {
+    throw new ApiError(defaultMessage || 'Resource not found', error, false);
+  }
+  throw new ApiError(error.message || defaultMessage || 'API Error', error, false);
+};
+
 const authService = {
   login: async (credentials) => {
     try {
@@ -112,6 +119,54 @@ const authService = {
       );
     }
   },
+
+  // Update author bio
+  updateAuthorBio: async (authorId, bio) => {
+    try {
+      const response = await apiClient.put(`/auth/stats/${authorId}/bio/modify`, { bio });
+      return {
+        author: response.data.author,
+      };
+    } catch (error) {
+      handleApiError(error, 'Failed to update author bio');
+    }
+  },
+
+
+  // Update author penName
+  updatePenName: async (authorId, penName) => {
+    try {
+      const response = await apiClient.put(`/auth/stats/${authorId}/penname/modify`, { penName });
+      return {
+        author: response.data.author,
+      };
+    } catch (error) {
+      handleApiError(error, 'Failed to update author penName');
+    }
+  },
+
+  // Change Password API Call
+  changePassword: async ({ userId, currentPassword, newPassword }) => {
+    try {
+      const response = await apiClient.put(`/auth/stats/change-password`, {
+        userId,
+        currentPassword,
+        newPassword,
+      });
+
+      return {
+        success: true,
+        message: 'Password updated successfully',
+        data: response.data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.error || 'Failed to update password',
+      };
+    }
+  },
+
 };
 
 export default authService;

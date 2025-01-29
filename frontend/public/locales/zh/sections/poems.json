@@ -10,7 +10,9 @@
     "likes": "{{count}}个赞",
     "comments": "{{count}}条评论",
     "top": "热门作者",
-    "viewAll": "查看所有作者"
+    "viewAll": "查看所有作者",
+    "anonymous": "匿名",
+    "noBio": "暂无简介"
   },
   "emptyState": {
     "title": "暂无诗歌",
@@ -54,5 +56,10 @@
     "commentAdded": "评论添加成功",
     "loading": "正在加载诗歌...",
     "error": "加载诗歌失败"
+  },
+  "dialog": {
+    "title": "Notice",
+    "message": "The user has been deactivated, and the post details cannot be viewed.",
+    "ok": "Confirm"
   }
 }

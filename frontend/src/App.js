@@ -40,6 +40,7 @@ import Press from './pages/Press';
 import News from './pages/News';
 import AuthorsPage from './pages/AuthorsPage';
 import AuthorPoemsPage from './pages/AuthorPoemsPage';
+import ChangePasswordPage from './pages/ChangePasswordPage';
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -199,11 +200,19 @@ function App() {
                             </Layout>
                         }
                       />
-                       <Route
+                      <Route
                         path="/author/:authorId" 
                         element={
                             <Layout>
                               <AuthorPoemsPage />
+                            </Layout>
+                        }
+                      />
+                      <Route
+                        path="/profile/password/modify" 
+                        element={
+                            <Layout>
+                              <ChangePasswordPage />
                             </Layout>
                         }
                       />

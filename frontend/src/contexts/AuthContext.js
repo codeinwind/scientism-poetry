@@ -69,10 +69,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (userData, token) => {
     console.log('Logging in user:', {
+      _id: userData._id,
       name: userData.name,
       email: userData.email,
       role: userData.role, // Add role to debug log
-      createdAt: userData.createdAt
+      createdAt: userData.createdAt,
+      bio: userData.bio
     }); // Enhanced debug log
     setUser(userData);
     setAccessToken(token);
@@ -97,10 +99,12 @@ export const AuthProvider = ({ children }) => {
 
   const updateUser = (userData) => {
     console.log('Updating user data:', {
+      _id: userData._id,
       name: userData.name,
       email: userData.email,
       role: userData.role, // Add role to debug log
-      createdAt: userData.createdAt
+      createdAt: userData.createdAt,
+      bio: userData.bio
     }); // Enhanced debug log
     setUser(userData);
     sessionStorage.setItem('user', JSON.stringify(userData));
@@ -111,10 +115,12 @@ export const AuthProvider = ({ children }) => {
     console.log('Auth state updated:', {
       isAuthenticated: !!user,
       user: user ? {
+        _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role, // Add role to debug log
-        createdAt: user.createdAt
+        createdAt: user.createdAt,
+        bio: user.bio
       } : null,
       hasToken: !!accessToken
     });
