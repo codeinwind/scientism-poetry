@@ -4,6 +4,7 @@ const { protect } = require('../../middleware/auth');
 const User = require('../../models/User');
 const Poem = require('../../models/Poem');
 const logger = require('../../config/logger');
+const bcrypt = require('bcryptjs');
 
 // @route   GET /api/auth/stats/activity
 // @desc    Get user activity statistics
