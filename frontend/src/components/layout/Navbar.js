@@ -187,7 +187,7 @@ const Navbar = () => {
                   {/* Admin Menu Items */}
                   {user?.role === 'admin' && (
                     <>
-                      <MenuItem component={Link} to="/admin" onClick={handleCloseUserMenu}>
+                      <MenuItem component={Link} to="/admin/dashboard" onClick={handleCloseUserMenu}>
                         <Typography textAlign="center">{t('nav:adminDashboard')}</Typography>
                       </MenuItem>
                       <Divider />
