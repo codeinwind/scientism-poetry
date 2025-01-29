@@ -11,5 +11,6 @@
   "dashboard": "Dashboard",
   "adminDashboard": "Admin Dashboard",
   "profile": "Profile",
-  "logout": "Logout"
+  "logout": "Logout",
+  "changePassword": "Change Password"
 }

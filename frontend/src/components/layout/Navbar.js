@@ -201,6 +201,9 @@ const Navbar = () => {
                   <MenuItem component={Link} to="/profile" onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">{t('nav:profile')}</Typography>
                   </MenuItem>
+                  <MenuItem component={Link} to="/profile/password/modify" onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{t('nav:changePassword')}</Typography>
+                  </MenuItem>
                   <MenuItem onClick={handleLogout}>
                     <Typography textAlign="center">{t('nav:logout')}</Typography>
                   </MenuItem>

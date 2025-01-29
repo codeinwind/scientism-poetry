@@ -11,5 +11,6 @@
   "dashboard": "控制台",
   "adminDashboard": "管理控制台",
   "profile": "个人资料",
-  "logout": "退出"
+  "logout": "退出",
+  "changePassword": "修改密码"
 }

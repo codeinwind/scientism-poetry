@@ -2,7 +2,6 @@ import apiClient from './apiClient';
 import ApiError from './ApiError';
 
 const handleApiError = (error, defaultMessage) => {
-  console.error('API Error:', error); // Debug log
   if (error.response?.status === 404) {
     throw new ApiError(defaultMessage || 'Resource not found', error, false);
   }
@@ -44,9 +43,7 @@ const poemService = {
   // Update author bio
   updateAuthorBio: async (authorId, bio) => {
     try {
-      console.log('Updating author bio:', authorId, bio); // Debug log
       const response = await apiClient.put(`/poems/authors/${authorId}/bio`, { bio });
-      console.log('Update author bio response:', response.data); // Debug log
       return {
         success: true,
         data: response.data,
@@ -98,13 +95,9 @@ const poemService = {
 
   getUserPoems: async (userId) => {
     try {
-      console.log('Fetching poems for user:', userId); // Debug log
-      const response = await apiClient.get(`/poems/user/${userId}`);
-      console.log('User poems API response:', response.data); // Debug log
-      
+      const response = await apiClient.get(`/poems/user/${userId}`);   
       // Get poems directly from response.data.poems
       const poems = response.data.poems || [];
-      console.log('Extracted poems:', poems); // Debug log
       
       return {
         success: true,
@@ -112,7 +105,6 @@ const poemService = {
         count: poems.length,
       };
     } catch (error) {
-      console.error('Error in getUserPoems:', error); // Debug log
       // If it's a 404, return empty data instead of throwing
       if (error.response?.status === 404) {
         return {
@@ -150,15 +142,12 @@ const poemService = {
 
   createPoem: async (poemData) => {
     try {
-      console.log('Creating poem with data:', poemData); // Debug log
       const response = await apiClient.post('/poems', poemData);
-      console.log('Create poem response:', response.data); // Debug log
       return {
         success: true,
         data: response.data.data,
       };
     } catch (error) {
-      console.error('Error creating poem:', error); // Debug log
       throw new ApiError(
         error.message || 'Failed to create poem',
         error,
@@ -169,15 +158,12 @@ const poemService = {
 
   updatePoem: async (id, poemData) => {
     try {
-      console.log('Updating poem:', id, 'with data:', poemData); // Debug log
       const response = await apiClient.put(`/poems/${id}`, poemData);
-      console.log('Update poem response:', response.data); // Debug log
       return {
         success: true,
         data: response.data.data,
       };
     } catch (error) {
-      console.error('Error updating poem:', error); // Debug log
       if (error.response?.status === 404) {
         throw new ApiError('Poem not found', error, false);
       }
@@ -191,15 +177,12 @@ const poemService = {
 
   deletePoem: async (id) => {
     try {
-      console.log('Deleting poem:', id); // Debug log
       const response = await apiClient.delete(`/poems/${id}`);
-      console.log('Delete poem response:', response.data); // Debug log
       return {
         success: true,
         message: response.data.message || 'Poem deleted successfully',
       };
     } catch (error) {
-      console.error('Error deleting poem:', error); // Debug log
       if (error.response?.status === 404) {
         throw new ApiError('Poem not found', error, false);
       }

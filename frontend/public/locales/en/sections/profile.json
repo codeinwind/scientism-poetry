@@ -20,7 +20,8 @@
     },
     "bio": {
       "label": "Bio",
-      "maxLength": "Bio must be 500 characters or less"
+      "maxLength": "Bio must be 500 characters or less",
+      "noBio": "You haven't added a bio yet. Let others know more about you!"
     },
     "password": {
       "current": "Current Password",
@@ -28,7 +29,8 @@
       "confirm": "Confirm New Password",
       "minLength": "Password must be at least 6 characters",
       "mismatch": "Passwords must match",
-      "changeTitle": "Change Password (Optional)"
+      "changeTitle": "Change Password",
+      "update": "Update Password"
     }
   },
   "stats": {

@@ -30,7 +30,6 @@ router.put('/authors/:authorId/bio', async (req, res) => {
       { bio },
       { new: true, runValidators: true } 
     );
-
     if (!author) {
       return res.status(404).json({ error: 'Author not found' });
     }
@@ -314,7 +313,6 @@ router.post(
 
     try {
       const { title, content, tags, status } = req.body;
-      console.log('Creating poem with data:', { title, content, tags, status }); // Debug log
 
       const poem = await Poem.create({
         title,
