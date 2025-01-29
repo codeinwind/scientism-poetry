@@ -14,6 +14,13 @@
     "anonymous": "匿名",
     "noBio": "暂无简介"
   },
+  "helpSection": {
+    "becomeFeaturedAuthor": {
+      "title": "如何成为热门作者？",
+      "steps": "1. 登录或注册账号。\n2. 在个人资料里提交申请。\n3. 等待管理员审核，通过后你的作品会有机会登上热门作者榜单。",
+      "button": "去个人资料"
+    }
+  },
   "emptyState": {
     "title": "暂无诗歌",
     "description": "目前还没有已发布的诗歌。请稍后再来查看新的投稿。",

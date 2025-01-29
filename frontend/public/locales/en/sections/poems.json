@@ -14,6 +14,13 @@
     "anonymous": "Anonymous",
     "noBio": "No biography available"
   },
+  "helpSection": {
+    "becomeFeaturedAuthor": {
+      "title": "How to become a featured author?",
+      "steps": "1. Log in or register an account.\n2. Submit your application in the Profile section.\n3. Wait for admin approval. Approved accounts will have their works featured in the top authors list.",
+      "button": "Go to Profile"
+    }
+  },
   "emptyState": {
     "title": "No Poems Available",
     "description": "There are currently no published poems in our collection. Check back later for new submissions.",
