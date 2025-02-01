@@ -132,7 +132,6 @@ const authService = {
     }
   },
 
-
   // Update author penName
   updatePenName: async (authorId, penName) => {
     try {
@@ -167,6 +166,47 @@ const authService = {
     }
   },
 
+  // Submit/update author applications
+  submitAuthorApplication: async ({ userId, statement }) => {
+    try {
+      const response = await apiClient.post('/auth/stats/hot-user/application', {
+        userId,   
+        statement: statement.trim()
+      });
+
+      return {
+        success: true,
+        application: response.data.data,
+        message: response.data.message
+      };
+
+    } catch (error) {
+      let errorData = {
+        success: false,
+        type: 'SUBMIT_ERROR',
+        message: 'Application submission failed'
+      };
+      return errorData;
+    }
+  },
+
+  getAuthorApplication: async (authorId) => {
+    try {
+      const response = await apiClient.get(
+        `/auth/stats/${authorId}/author-applications/status`
+      );
+  
+      return {
+        success: true,
+        application: response.data.data
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Unable to obtain the application information, please try again later'
+      };
+    }
+  },
 };
 
 export default authService;
