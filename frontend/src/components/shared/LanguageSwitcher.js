@@ -1,9 +1,6 @@
 import React from 'react';
 import {
   IconButton,
-  Menu,
-  MenuItem,
-  ListItemText,
   Typography,
 } from '@mui/material';
 import { Language as LanguageIcon } from '@mui/icons-material';
@@ -11,109 +8,44 @@ import { useLanguage } from '../../contexts/LanguageContext';
 
 const LanguageSwitcher = () => {
   const { currentLanguage, changeLanguage, languages } = useLanguage();
-  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const toggleLanguage = () => {
+    const newLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+    changeLanguage(newLanguage);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLanguageChange = (languageCode) => {
-    changeLanguage(languageCode);
-    handleClose();
-  };
-
-  const getCurrentLanguageName = () => {
-    const language = languages.find(lang => lang.code === currentLanguage);
-    if (!language) return 'English'; 
-    return currentLanguage === 'en'
-      ? languages.find(lang => lang.code === 'zh')?.nativeName || '中文'
-      : languages.find(lang => lang.code === 'en')?.nativeName || 'English';
+  const getOppositeLanguageName = () => {
+    const oppositeLangCode = currentLanguage === 'en' ? 'zh' : 'en';
+    const language = languages.find(lang => lang.code === oppositeLangCode);
+    return language?.nativeName || (oppositeLangCode === 'en' ? 'English' : '中文');
   };
 
   return (
-    <>
-      <IconButton
-        color="inherit"
-        aria-label="change language"
-        onClick={handleClick}
+    <IconButton
+      color="inherit"
+      aria-label="change language"
+      onClick={toggleLanguage}
+      sx={{
+        borderRadius: 1,
+        padding: '4px 8px',
+        '&:hover': {
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        },
+      }}
+    >
+      <LanguageIcon sx={{ mr: 0.5 }} />
+      <Typography
+        variant="body2"
+        component="span"
         sx={{
-          borderRadius: 1,
-          padding: '4px 8px',
-          '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          },
+          display: { xs: 'none', sm: 'inline' },
+          textTransform: 'none',
+          color: 'inherit',
         }}
       >
-        <LanguageIcon sx={{ mr: 0.5 }} />
-        <Typography
-          variant="body2"
-          component="span"
-          sx={{
-            display: { xs: 'none', sm: 'inline' },
-            textTransform: 'none',
-            color: 'inherit',
-          }}
-        >
-          {getCurrentLanguageName()}
-        </Typography>
-      </IconButton>
-
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        PaperProps={{
-          elevation: 3,
-          sx: {
-            mt: 1,
-            minWidth: 180,
-          },
-        }}
-      >
-        {languages.map((language) => (
-          <MenuItem
-            key={language.code}
-            onClick={() => handleLanguageChange(language.code)}
-            selected={
-              currentLanguage === 'en' && language.code === 'zh' || 
-              currentLanguage === 'zh' && language.code === 'en'
-            } 
-            sx={{
-              py: 1,
-              px: 2,
-            }}
-          >
-            <ListItemText
-              primary={language.nativeName}
-              secondary={language.name}
-              primaryTypographyProps={{
-                variant: 'body2',
-                fontWeight: 
-                  (currentLanguage === 'en' && language.code === 'zh') || 
-                  (currentLanguage === 'zh' && language.code === 'en') 
-                    ? 'bold' 
-                    : 'normal',
-              }}
-              secondaryTypographyProps={{
-                variant: 'caption',
-              }}
-            />
-          </MenuItem>
-        ))}
-      </Menu>
-    </>
+        {getOppositeLanguageName()}
+      </Typography>
+    </IconButton>
   );
 };
 

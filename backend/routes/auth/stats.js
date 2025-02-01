@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { protect } = require('../../middleware/auth');
 const User = require('../../models/User');
+const AuthorApplication = require('../../models/AuthorApplication');
 const Poem = require('../../models/Poem');
 const logger = require('../../config/logger');
 const bcrypt = require('bcryptjs');
@@ -101,7 +102,7 @@ router.put('/change-password', protect, async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ error: 'Current password is incorrect' });
     }
-    
+
     // pre('save') in User model
     user.password = newPassword;
 
@@ -111,6 +112,76 @@ router.put('/change-password', protect, async (req, res) => {
   } catch (error) {
     console.error('Password update error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Submit an hot-user application (created/updated)
+router.post('/hot-user/application', protect, async (req, res) => {
+  try {
+    const { statement } = req.body;
+    const userId = req.user.id;
+
+    if (!statement || statement.length < 10 || statement.length > 200) {
+      return res.status(400).json({
+        success: false,
+        message: 'Application statement must be between 10 and 200 characters.'
+      });
+    }
+
+    let existingApplication = await AuthorApplication.findOne({ user: userId });
+    let wasNew = !existingApplication; 
+    
+    const application = await AuthorApplication.findOneAndUpdate(
+      { user: userId },
+      {
+        'content.statement': statement,
+        status: 'under_review'
+      },
+      {
+        new: true,          
+        upsert: true,       
+        setDefaultsOnInsert: true
+      }
+    );
+    
+    res.json({
+      success: true,
+      data: application,
+      message: wasNew
+    });
+
+  } catch (error) {
+    console.error('Application submission failed:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Application request failed. Please try again later.'
+    });
+  }
+});
+
+
+// Get hot-user application status 
+router.get('/:authorId/author-applications/status', async (req, res) => {
+  const { authorId } = req.params;
+  try {
+
+    const application = await AuthorApplication.findOne(
+      { user: authorId },
+      'status content.statement updatedAt'
+    ).lean();
+
+    const responseData = {
+      success: true,
+      data: application
+    };
+
+    res.json(responseData);
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 });
 

@@ -13,6 +13,8 @@ import {
   Card,
   CardContent,
   IconButton,
+  Chip,
+  CircularProgress
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -20,6 +22,9 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { authService } from '../services';
+import DescriptionIcon from '@mui/icons-material/Description';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 
 const Profile = () => {
   const { t } = useTranslation(['profile', 'common']);
@@ -49,6 +54,56 @@ const Profile = () => {
     commentsMade: 0,
   });
 
+  const [authorApplication, setAuthorApplication] = useState(null);
+  const [statement, setStatement] = useState('');
+  const [applicationLoading, setApplicationLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchApplication = async () => {
+      try {
+        const response = await authService.getAuthorApplication(localUser._id);
+        if (response.application) {
+          setAuthorApplication(prev => ({ ...prev, ...response.application }));
+          setStatement(response.application.content.statement);
+        }
+      } catch (error) {
+        console.error('获取申请状态失败:', error);
+      }
+    };
+    fetchApplication();
+  }, []);
+
+  const handleApplicationSubmit = async () => {
+    if (!statement.trim()) {
+      setError(t('profile:authorApplication.sections.statement.validation.required'));
+      return;
+    }
+    if (statement.length < 10 || statement.length > 2000) {
+      setError(t('profile:authorApplication.sections.statement.validation.length'));
+      return;
+    }
+
+    setApplicationLoading(true);
+    const params = {
+      userId: localUser._id,
+      statement: statement.trim()
+    };
+
+    try {
+      const response = await authService.submitAuthorApplication(params);
+      setAuthorApplication(response.application);
+      setSuccess(
+        response.message
+          ? t('profile:authorApplication.messages.submitSuccess') 
+          : t('profile:authorApplication.messages.updateSuccess')  
+      );     
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setApplicationLoading(false);
+    }
+  };
+
   useEffect(() => {
     const fetchActivityStats = async () => {
       try {
@@ -76,6 +131,15 @@ const Profile = () => {
     }
   }, [success]);
 
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError('');
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   const handleEditClick = (field) => {
     setEditableFields((prev) => ({ ...prev, [field]: true }));
   };
@@ -100,11 +164,10 @@ const Profile = () => {
       if (field === 'bio') {
         response = await authService.updateAuthorBio(localUser._id, fieldValues.bio);
       } else if (field === 'penName') {
-         // Validate that the penName is not empty
         if (!fieldValues.penName.trim()) {
-           setError(t('profile:form.penName.required')); // Use i18n for error message
-           setLoading(false);
-           return;
+          setError(t('profile:form.penName.required')); 
+          setLoading(false);
+          return;
         }
 
         response = await authService.updatePenName(localUser._id, fieldValues.penName);
@@ -114,10 +177,7 @@ const Profile = () => {
 
       if (response && response.author) {
         const updatedUser = response.author;
-        // Update the local user so that the display area immediately sees the latest data
         setLocalUser(updatedUser);
-
-        // Update the form fields synchronously as well to prevent them from having the old values the next time you edit them
         setFieldValues((prev) => ({
           ...prev,
           [field]: updatedUser[field] || '',
@@ -307,6 +367,93 @@ const Profile = () => {
               </Box>
             </CardContent>
           </Card>
+        </Grid>
+
+        {/* hot author request block */}
+        <Grid item xs={12} md={8}>
+          <Paper sx={{ p: 4, mt: 4 }}>
+            <Typography variant="h5" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+              <DescriptionIcon sx={{ mr: 1 }} />
+              {t('profile:authorApplication.title')}
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+
+            {authorApplication ? (
+              <Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Typography sx={{ mr: 2 }}>
+                    {t('profile:authorApplication.sections.status.current')}
+                  </Typography>
+                  {authorApplication.status === 'approved' && (
+                    <Chip
+                      icon={<CheckCircleIcon />}
+                      label={t('profile:authorApplication.sections.status.approved')}
+                      color="success"
+                      variant="outlined"
+                    />
+                  )}
+                  {authorApplication.status === 'rejected' && (
+                    <Chip
+                      label={t('profile:authorApplication.sections.status.rejected')}
+                      color="error"
+                      variant="outlined"
+                    />
+                  )}
+                  {['draft', 'submitted', 'under_review'].includes(authorApplication.status) && (
+                    <Chip
+                      icon={<HourglassEmptyIcon />}
+                      label={t(`profile:authorApplication.sections.status.${authorApplication.status}`)}
+                      color="warning"
+                      variant="outlined"
+                    />
+                  )}
+                </Box>
+
+                {authorApplication?.status !== 'approved' && ( // Only show the form when there is no application OR when it's not approved
+                  <>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={4}
+                      value={statement}
+                      onChange={(e) => setStatement(e.target.value)}
+                      label={t('profile:authorApplication.sections.statement.label')}
+                      sx={{ mb: 2 }}
+                    />
+                    <Button
+                      variant="contained"
+                      onClick={handleApplicationSubmit}
+                      disabled={applicationLoading}
+                      startIcon={applicationLoading ? <CircularProgress size={20} /> : null}
+                    >
+                      {t(`profile:authorApplication.actions.${authorApplication.status === 'draft' ? 'saveDraft' : 'update'}`)}
+                    </Button>
+                  </>
+                )}
+              </Box>
+            ) : ( 
+              <Box>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  value={statement}
+                  onChange={(e) => setStatement(e.target.value)}
+                  placeholder={t('profile:authorApplication.sections.statement.placeholder')}
+                  sx={{ mb: 2 }}
+                />
+                <Button
+                  variant="contained"
+                  onClick={handleApplicationSubmit}
+                  disabled={applicationLoading}
+                  startIcon={applicationLoading ? <CircularProgress size={20} /> : null}
+                >
+                  {t('profile:authorApplication.actions.submit')}
+                </Button>
+              </Box>
+            )
+            }
+          </Paper>
         </Grid>
       </Grid>
     </Container>

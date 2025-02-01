@@ -185,15 +185,15 @@ const Navbar = () => {
                   onClose={handleCloseUserMenu}
                 >
                   {/* Admin Menu Items */}
-                  {user?.role === 'admin' && (
-                    <>
+                  {(user?.role === 'admin' || user?.role === 'superadmin') && (
+                    <Box>
                       <MenuItem component={Link} to="/admin/dashboard" onClick={handleCloseUserMenu}>
                         <Typography textAlign="center">{t('nav:adminDashboard')}</Typography>
                       </MenuItem>
                       <Divider />
-                    </>
+                    </Box>
                   )}
-                  
+
                   {/* Regular User Menu Items */}
                   <MenuItem component={Link} to="/dashboard" onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">{t('nav:dashboard')}</Typography>

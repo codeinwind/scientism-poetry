@@ -40,6 +40,43 @@
     "totalLikes": "Total Likes: {{count}}",
     "commentsMade": "Comments Made: {{count}}"
   },
+  "authorApplication": {
+    "title": "Columnist Application",
+    "sections": {
+      "statement": {
+        "label": "Application Statement",
+        "placeholder": "Please write your application statement (10-200 characters)",
+        "validation": {
+          "required": "Application statement is required",
+          "length": "Statement must be between 10-200 characters"
+        }
+      },
+      "status": {
+        "current": "Current Status:",
+        "draft": "Draft",
+        "submitted": "Submitted",
+        "under_review": "Under Review",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "reviewHistory": {
+        "title": "Review History",
+        "action": "Action:",
+        "feedback": "Feedback:",
+        "timestamp": "Date: {{date}}"
+      }
+    },
+    "actions": {
+      "saveDraft": "Save Draft",
+      "update": "Update Application",
+      "submit": "Submit Application"
+    },
+    "messages": {
+      "submitSuccess": "Application submitted successfully",
+      "updateSuccess": "Application updated successfully",
+      "submitError": "Failed to submit application"
+    }
+  },
   "messages": {
     "updateSuccess": "Profile updated successfully",
     "updateError": "Failed to update profile"

@@ -40,6 +40,43 @@
     "totalLikes": "获赞总数：{{count}}",
     "commentsMade": "评论数：{{count}}"
   },
+  "authorApplication": {
+    "title": "专栏作家申请",
+    "sections": {
+      "statement": {
+        "label": "申请陈述",
+        "placeholder": "请填写申请陈述（10-200字符）",
+        "validation": {
+          "required": "申请陈述不能为空",
+          "length": "申请陈述需在10-200字符之间"
+        }
+      },
+      "status": {
+        "current": "当前状态：",
+        "draft": "草稿",
+        "submitted": "已提交",
+        "under_review": "审核中",
+        "approved": "已通过",
+        "rejected": "已拒绝"
+      },
+      "reviewHistory": {
+        "title": "审核记录",
+        "action": "操作：",
+        "feedback": "反馈：",
+        "timestamp": "日期：{{date}}"
+      }
+    },
+    "actions": {
+      "saveDraft": "保存草稿",
+      "update": "更新申请",
+      "submit": "提交申请"
+    },
+    "messages": {
+      "submitSuccess": "申请提交成功",
+      "updateSuccess": "申请更新成功",
+      "submitError": "提交申请失败"
+    }
+  },
   "messages": {
     "updateSuccess": "个人资料更新成功",
     "updateError": "更新个人资料失败"
