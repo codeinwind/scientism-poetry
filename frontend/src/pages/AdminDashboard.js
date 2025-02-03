@@ -20,9 +20,11 @@ import {
   Tooltip,
   IconButton,
 } from '@mui/material';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import RateReviewIcon from '@mui/icons-material/RateReview';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { adminService } from '../services';
@@ -76,7 +78,7 @@ const AdminDashboard = () => {
     try {
       const response = await adminService.updateUserRole(userId, newRole);
       if (response.success) {
-        setUsers(users.map(user => 
+        setUsers(users.map(user =>
           user._id === userId ? { ...user, role: newRole } : user
         ));
 
@@ -110,12 +112,30 @@ const AdminDashboard = () => {
         {/* Quick Actions */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
           {user.role === 'superadmin' && (
-            <Grid item xs={12} md={6}>
-              <Card>
+            <Grid item xs={12} md={user.role === 'superadmin' ? 6 : 12}>
+              <Card sx={{
+                height: '100%',
+                boxShadow: 3,
+                transition: 'transform 0.2s',
+                '&:hover': {
+                  transform: 'translateY(-2px)'
+                }
+              }}>
                 <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <SupervisorAccountIcon sx={{ mr: 1 }} />
-                    <Typography variant="h6">
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    mb: 2,
+                    padding: '12px 16px',
+                    backgroundColor: 'action.hover',
+                    borderRadius: 1
+                  }}>
+                    <SupervisorAccountIcon sx={{
+                      mr: 2,
+                      fontSize: 32,
+                      color: 'primary.dark'
+                    }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       {t('admin:dashboard.userManagement')}
                     </Typography>
                   </Box>
@@ -126,13 +146,31 @@ const AdminDashboard = () => {
               </Card>
             </Grid>
           )}
-          
+
           <Grid item xs={12} md={user.role === 'superadmin' ? 6 : 12}>
-            <Card>
+            <Card sx={{
+              height: '100%',
+              boxShadow: 3,
+              transition: 'transform 0.2s',
+              '&:hover': {
+                transform: 'translateY(-2px)'
+              }
+            }}>
               <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <RateReviewIcon sx={{ mr: 1 }} />
-                  <Typography variant="h6">
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  mb: 2,
+                  padding: '12px 16px',
+                  backgroundColor: 'action.hover',
+                  borderRadius: 1
+                }}>
+                  <RateReviewIcon sx={{
+                    mr: 2,
+                    fontSize: 32,
+                    color: 'secondary.dark'
+                  }} />
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     {t('admin:moderation.title')}
                   </Typography>
                 </Box>
@@ -140,19 +178,128 @@ const AdminDashboard = () => {
                   {t('admin:moderation.description')}
                 </Typography>
               </CardContent>
-              <CardActions>
+              <CardActions sx={{ padding: 2 }}>
                 <Button
                   component={RouterLink}
                   to="/admin/moderation"
                   variant="contained"
                   color="secondary"
-                >
+                  fullWidth
+                  sx={{
+                    py: 1.5,
+                    fontWeight: 'bold',
+                    letterSpacing: 0.5
+                  }}>
                   {t('admin:moderation.actions.viewDetails')}
                 </Button>
               </CardActions>
             </Card>
           </Grid>
+
+          {/* Author review page */}
+          {user.role === 'superadmin' && (
+            <Grid item xs={12} md={user.role === 'superadmin' ? 6 : 12}>
+              <Card sx={{
+                height: '100%',
+                boxShadow: 3,
+                transition: 'transform 0.2s',
+                '&:hover': {
+                  transform: 'translateY(-2px)'
+                }
+              }}>
+                <CardContent>
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    mb: 2,
+                    padding: '12px 16px',
+                    backgroundColor: 'action.hover',
+                    borderRadius: 1
+                  }}>
+                    <LibraryBooksIcon sx={{
+                      mr: 2,
+                      fontSize: 32,
+                      color: 'warning.dark'
+                    }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      {t('admin:dashboard.columnWriterReview')}
+                    </Typography>
+                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('admin:dashboard.columnWriterReviewDesc')}
+                  </Typography>
+                </CardContent>
+                <CardActions sx={{ padding: 2 }}>
+                  <Button
+                    component={RouterLink}
+                    to="/admin/author/review"
+                    variant="contained"
+                    color="warning"
+                    fullWidth
+                    sx={{
+                      py: 1.5,
+                      fontWeight: 'bold',
+                      letterSpacing: 0.5
+                    }}>
+                    {t('admin:dashboard.reviewApplications')}
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          )}
+
+          {user.role === 'superadmin' && (
+            <Grid item xs={12} md={user.role === 'superadmin' ? 6 : 12}>
+              <Card sx={{
+                height: '100%',
+                boxShadow: 3,
+                transition: 'transform 0.2s',
+                '&:hover': {
+                  transform: 'translateY(-2px)'
+                }
+              }}>
+                <CardContent>
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    mb: 2,
+                    padding: '12px 16px',
+                    backgroundColor: 'action.hover',
+                    borderRadius: 1
+                  }}>
+                    <VpnKeyIcon sx={{
+                      mr: 2,
+                      fontSize: 32,
+                      color: 'success.dark'
+                    }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      {t('admin:dashboard.userSecurity')}
+                    </Typography>
+                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('admin:dashboard.userSecurityDesc')}
+                  </Typography>
+                </CardContent>
+                <CardActions sx={{ padding: 2 }}>
+                  <Button
+                    component={RouterLink}
+                    to="/admin/author/managment/reset" 
+                    variant="contained"
+                    color="success"
+                    fullWidth
+                    sx={{
+                      py: 1.5,
+                      fontWeight: 'bold',
+                      letterSpacing: 0.5
+                    }}>
+                    {t('admin:dashboard.manageCredentials')}
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          )}
         </Grid>
+
 
         {/* Stats Overview */}
         <Grid container spacing={3} sx={{ mb: 4 }}>

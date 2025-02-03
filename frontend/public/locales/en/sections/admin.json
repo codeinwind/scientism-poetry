@@ -6,6 +6,20 @@
     "userManagement": "User Management",
     "userManagementDesc": "Manage user roles and permissions",
     "manageUsers": "Manage Users",
+    "columnWriterReview": "Column Writer Review",
+    "columnWriterReviewDesc": "Manage column writer applications",
+    "reviewApplications": "Review Applications",
+    "userSecurity": "User Credentials Management",
+    "userSecurityDesc": "Reset user passwords, verify email addresses, and manage account security",
+    "manageCredentials": "Manage Credentials",
+    "searchByEmail": "Search by email",
+    "newPassword": "New password (min 6 chars)",
+    "resetPassword": "Reset Password",
+    "verifyEmail": "Verify Email",
+    "emailVerified": "Email Verified",
+    "userStatus": "Account Status",
+    "passwordResetSuccess": "Password reset successful",
+    "emailVerifySuccess": "Email verification successful",
     "stats": {
       "title": "System Statistics",
       "totalUsers": "Total Users",
@@ -14,6 +28,20 @@
       "regularUsers": "Regular Users",
       "memberSince": "Member since {{date}}"
     }
+  },
+  "authorApplications": {
+    "title": "Author Applications Review",
+    "name": "Applicant Name",
+    "statement": "Application Statement",
+    "actions": "Actions",
+    "approve": "Approve",
+    "reject": "Reject",
+    "loading": "Loading...",
+    "errorLoad": "Failed to load applications.",
+    "errorReview": "Review action failed.",
+    "reviewSuccess": "Application reviewed successfully.",
+    "noApplications": "No applications available for review.",
+    "pagination": "Page {page} of {totalPages}"
   },
   "moderation": {
     "title": "Content Moderation",
@@ -100,5 +128,10 @@
     "unauthorized": "You are not authorized to access this page",
     "loadFailed": "Failed to load data",
     "actionFailed": "Action failed. Please try again."
+  },
+  "common": {
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "search": "Search"
   }
 }

@@ -41,6 +41,8 @@ import News from './pages/News';
 import AuthorsPage from './pages/AuthorsPage';
 import AuthorPoemsPage from './pages/AuthorPoemsPage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
+import AuthorReviewPage from './pages/AuthorReviewPage';
+import UserSecurityManagement from './pages/UserSecurityManagement';
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -183,6 +185,26 @@ function App() {
                         }
                       />
                       <Route
+                        path="/admin/author/review"
+                        element={
+                          <AdminRoute>
+                            <Layout>
+                              <AuthorReviewPage />
+                            </Layout>
+                          </AdminRoute>
+                        }
+                      />
+                      <Route
+                        path="/admin/author/managment/reset"
+                        element={
+                          <AdminRoute>
+                            <Layout>
+                              <UserSecurityManagement />
+                            </Layout>
+                          </AdminRoute>
+                        }
+                      />
+                      <Route
                         path="/admin/moderation"
                         element={
                           <AdminRoute>
@@ -195,25 +217,25 @@ function App() {
                       <Route
                         path="/authors/total"
                         element={
-                            <Layout>
-                              <AuthorsPage />
-                            </Layout>
+                          <Layout>
+                            <AuthorsPage />
+                          </Layout>
                         }
                       />
                       <Route
-                        path="/author/:authorId" 
+                        path="/author/:authorId"
                         element={
-                            <Layout>
-                              <AuthorPoemsPage />
-                            </Layout>
+                          <Layout>
+                            <AuthorPoemsPage />
+                          </Layout>
                         }
                       />
                       <Route
-                        path="/profile/password/modify" 
+                        path="/profile/password/modify"
                         element={
-                            <Layout>
-                              <ChangePasswordPage />
-                            </Layout>
+                          <Layout>
+                            <ChangePasswordPage />
+                          </Layout>
                         }
                       />
 

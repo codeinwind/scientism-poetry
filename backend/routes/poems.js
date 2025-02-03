@@ -3,7 +3,9 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const Poem = require('../models/Poem');
 const User = require('../models/User');
+const AuthorApplication = require('../models/AuthorApplication');
 const { protect, authorize, checkOwnership } = require('../middleware/auth');
+const logger = require('../config/logger');
 
 // Status transition validation
 const VALID_STATUS_TRANSITIONS = {
@@ -39,7 +41,7 @@ router.put('/authors/:authorId/bio', async (req, res) => {
       author,
     });
   } catch (error) {
-    console.error('Error updating bio:', error);
+    logger.error('Error updating bio:', error)
     res.status(500).json({ error: error.message });
   }
 });
@@ -65,6 +67,7 @@ router.get('/:authorId/author', async (req, res) => {
       poems,
     });
   } catch (error) {
+    logger.error('Get designated author', error)
     res.status(500).json({ error: error.message });
   }
 });
@@ -80,53 +83,46 @@ router.get('/authors', async (req, res) => {
 
     res.status(200).json(authors);
   } catch (error) {
+    logger.error('Get all users', error)
     res.status(500).json({ error: error.message });
   }
 });
 
-// @route   Get /api/poems/authors/top
-// @desc    Get a list of the most published authors
+// @route   GET /api/poems/authors/top
+// @desc    Get a list of authors based on approved author applications (without poemCount)
 router.get('/authors/top', async (req, res) => {
   try {
-    const authors = await Poem.aggregate([
+    const authors = await AuthorApplication.aggregate([
       {
-        $match: { status: 'published' }, 
+        $match: { status: 'approved' }
       },
       {
         $group: {
-          _id: '$author', 
-          poemCount: { $sum: 1 }, 
-        },
-      },
-      {
-        $sort: { poemCount: -1 }, 
-      },
-      {
-        $limit: 10, 
+          _id: '$user'
+        }
       },
       {
         $lookup: {
-          from: 'users', 
-          localField: '_id', 
-          foreignField: '_id', 
-          as: 'authorDetails', 
-        },
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'authorDetails'
+        }
       },
       {
-        $unwind: '$authorDetails', 
+        $unwind: '$authorDetails'
       },
       {
         $project: {
           _id: 1,
-          poemCount: 1,
           'authorDetails.name': 1,
-          'authorDetails.penName': 1,
-        },
-      },
+          'authorDetails.penName': 1
+        }
+      }
     ]);
-
     res.status(200).json(authors);
   } catch (error) {
+    logger.error('Get approved authors', error)
     res.status(500).json({ error: error.message });
   }
 });

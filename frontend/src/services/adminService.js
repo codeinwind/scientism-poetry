@@ -1,6 +1,15 @@
 import apiClient from './apiClient';
 import ApiError from './ApiError';
 
+const handleError = (error, defaultMessage) => {
+  const status = error.response?.status;
+  const messages = {
+    403: 'Not authorized',
+    404: 'Resource not found',
+  };
+  throw new ApiError(messages[status] || error.message || defaultMessage, error, false);
+};
+
 const adminService = {
   // Get admin dashboard statistics
   getStats: async () => {
@@ -158,7 +167,63 @@ const adminService = {
         false
       );
     }
-  }
+  },
+
+  // Get popular author applications for review
+  getAuthorApplications: async (page = 1) => {
+    try {
+      const response = await apiClient.get('/admin/author-applications', { params: { page } });
+      return { success: true, data: response.data.data, pagination: response.data.pagination.totalPages };
+    } catch (error) {
+      handleError(error, 'Failed to fetch author applications');
+    }
+  },
+
+  // Review application (approval/rejection)
+  reviewAuthorApplication: async (applicationId, action) => {
+    try {
+      const response = await apiClient.post('/admin/author-applications/review', { applicationId, action });
+      return { success: true, message: response.data.message };
+    } catch (error) {
+      handleError(error, 'Failed to review author application');
+    }
+  },
+
+  // User Management - User Search
+  searchUserByEmail: async (email) => {
+    try {
+      const response = await apiClient.get('/admin/users/search', { params: { email } });
+      console.log("111111111111111",response.data.data)
+      return { success: true, data: response.data.data };
+    } catch (error) {
+      throw new ApiError(error.response?.data?.message || 'User search failed', error);
+    }
+  },
+
+  // User Management - Reset passowrd
+  resetUserPassword: async (userId, newPassword) => {
+    try {
+      const response = await apiClient.post('/admin/users/reset-password', {
+        userId,
+        newPassword
+      });
+      return { success: true, data: response.data };
+    } catch (error) {
+      throw new ApiError(error.response?.data?.message || 'Password reset failed', error);
+    }
+  },
+  
+  // User Management - verify email address
+  verifyUserEmail: async (userId) => {
+    try {
+      const response = await apiClient.post('/admin/users/verify-email', { userId });
+      console.log("111111111",response.data)
+      return { success: true, data: response.data };
+    } catch (error) {
+      throw new ApiError(error.response?.data?.message || 'Email verification failed', error);
+    }
+  },
+
 };
 
 export default adminService;
