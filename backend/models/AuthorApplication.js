@@ -68,19 +68,4 @@ const applicationSchema = new mongoose.Schema({
 applicationSchema.index({ status: 1, createdAt: -1 });
 applicationSchema.index({ user: 1, status: 1 }, { unique: true, partialFilterExpression: { status: applicationStatus.SUBMITTED } });
 
-applicationSchema.pre('save', function(next) {
-  const allowedTransitions = {
-    [applicationStatus.DRAFT]: [applicationStatus.SUBMITTED],
-    [applicationStatus.SUBMITTED]: [applicationStatus.UNDER_REVIEW, applicationStatus.REJECTED],
-    [applicationStatus.UNDER_REVIEW]: [applicationStatus.APPROVED, applicationStatus.REJECTED, applicationStatus.SUBMITTED],
-    [applicationStatus.APPROVED]: [],
-    [applicationStatus.REJECTED]: [applicationStatus.SUBMITTED]
-  };
-
-  if (this.isModified('status') && !allowedTransitions[this.originalStatus].includes(this.status)) {
-    return next(new Error(`Invalid status transition from ${this.originalStatus} to ${this.status}`));
-  }
-  next();
-});
-
 module.exports = mongoose.model('AuthorApplication', applicationSchema);

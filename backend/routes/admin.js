@@ -3,6 +3,7 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const User = require('../models/User');
 const Poem = require('../models/Poem');
+const AuthorApplication = require('../models/AuthorApplication');
 const { protect, authorize, superadminOnly } = require('../middleware/auth');
 const logger = require('../config/logger');
 
@@ -231,7 +232,7 @@ router.get('/users', protect, superadminOnly, async (req, res) => {
     });
 
     const users = await User.find().select('-password');
-    
+
     logger.info('Users fetched successfully', {
       count: users.length,
       userId: req.user.id
@@ -336,6 +337,180 @@ router.put(
         userId: req.user.id
       });
       res.status(500).json({ message: 'Server Error' });
+    }
+  }
+);
+
+// Get Top author requests for review (pagination)
+router.get('/author-applications', protect, authorize('admin', 'superadmin'), async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    logger.info('Fetching author applications for review', { userId: req.user.id, role: req.user.role });
+
+    const applications = await AuthorApplication.find({ status: 'under_review' })
+      .populate('user', 'name email')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    const total = await AuthorApplication.countDocuments({ status: 'under_review' });
+
+    res.json({
+      success: true,
+      data: applications,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    });
+  } catch (error) {
+    logger.error('Error fetching author applications:', { error: error.message, userId: req.user.id });
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+// Review popular author applications (approved/rejected)
+router.post('/author-applications/review', protect, authorize('admin', 'superadmin'), async (req, res) => {
+  try {
+    const { applicationId, action } = req.body;
+
+    if (!['approved', 'rejected'].includes(action)) {
+      return res.status(400).json({ success: false, message: 'Invalid action' });
+    }
+
+    logger.info('Reviewing author application', { applicationId, action, userId: req.user.id });
+
+    const application = await AuthorApplication.findById(applicationId);
+    if (!application) {
+      return res.status(404).json({ success: false, message: 'Application not found' });
+    }
+
+    application.status = action;
+    await application.save();
+
+    logger.info('Author application reviewed successfully', { applicationId, newStatus: action, userId: req.user.id });
+
+    res.json({ success: true, message: `Application ${action} successfully.` });
+  } catch (error) {
+    logger.error('Error reviewing author application:', { error: error.message, applicationId: req.body.applicationId, userId: req.user.id });
+    res.status(500).json({ message: 'Review action failed' });
+  }
+});
+
+// User credentials manage routing
+// @route   GET /api/admin/users/search
+// @desc    Search user by email (Superadmin only)
+router.get('/users/search',
+  protect,
+  superadminOnly,
+  [
+    check('email', 'Valid email is required').isEmail()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const { email } = req.query;
+      const user = await User.findOne({ email }).select('-password');
+
+      if (!user) {
+        console.log("22222222222222222")
+        return res.status(404).json({
+          success: false,
+          message: 'User not found'
+        });
+      }
+
+      res.json({ success: true, data: user });
+    } catch (error) {
+      res.status(500).json({ message: 'Search operation failed' });
+    }
+  }
+);
+
+// @route   POST /api/admin/users/reset-password
+// @desc    Reset user password (Superadmin only)
+router.post('/users/reset-password',
+  protect,
+  superadminOnly,
+  [
+    check('userId', 'User ID is required').not().isEmpty(),
+    check('newPassword', 'Password must be at least 6 characters').isLength({ min: 6 })
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const { userId, newPassword } = req.body;
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found'
+        });
+      }
+
+      // pre('save') in User model
+      user.password = newPassword;
+      await user.save();
+
+      res.json({
+        success: true,
+        message: 'Password has been reset'
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Password reset failed' });
+    }
+  }
+);
+
+// @route   POST /api/admin/users/verify-email
+// @desc    Manually verify user email (Superadmin only)
+router.post('/users/verify-email',
+  protect,
+  superadminOnly,
+  [
+    check('userId', 'User ID is required').not().isEmpty()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const { userId } = req.body;
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { $set: { isEmailVerified: true } }, 
+        { new: true }
+      ).select('-password');
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Email has been verified',
+        data: user
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Email verification failed' });
     }
   }
 );

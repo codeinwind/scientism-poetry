@@ -135,15 +135,6 @@ const AuthorsList = () => {
                     </Typography>
                   </Stack>
                 }
-                secondary={
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    sx={{ textAlign: 'center', display: 'block' }}
-                  >
-                    Poems: {formatNumber(author.poemCount || 0)}
-                  </Typography>
-                }
               />
             </ListItem>
           ))}

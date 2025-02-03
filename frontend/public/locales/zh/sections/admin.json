@@ -6,6 +6,20 @@
     "userManagement": "用户管理",
     "userManagementDesc": "管理用户角色和权限",
     "manageUsers": "管理用户",
+    "columnWriterReview": "专栏作家审核",
+    "columnWriterReviewDesc": "管理专栏作家资格申请",
+    "reviewApplications": "审核申请",
+    "userSecurity": "用户凭证管理",
+    "userSecurityDesc": "重置用户密码、验证邮箱地址和管理账户安全",
+    "manageCredentials": "管理用户凭证",
+    "searchByEmail": "通过邮箱搜索用户",
+    "newPassword": "新密码（至少6位）",
+    "resetPassword": "重置密码",
+    "verifyEmail": "验证邮箱",
+    "emailVerified": "邮箱已验证",
+    "userStatus": "账户状态",
+    "passwordResetSuccess": "密码重置成功",
+    "emailVerifySuccess": "邮箱验证成功",
     "stats": {
       "title": "系统统计",
       "totalUsers": "总用户数",
@@ -14,6 +28,20 @@
       "regularUsers": "普通用户",
       "memberSince": "注册时间：{{date}}"
     }
+  },
+  "authorApplications": {
+    "title": "热门作者申请审核",
+    "name": "申请人姓名",
+    "statement": "申请陈述",
+    "actions": "操作",
+    "approve": "批准",
+    "reject": "拒绝",
+    "loading": "加载中...",
+    "errorLoad": "加载申请失败。",
+    "errorReview": "审核操作失败。",
+    "reviewSuccess": "申请审核成功。",
+    "noApplications": "暂无待审核申请。",
+    "pagination": "第 {page} 页，共 {totalPages} 页"
   },
   "moderation": {
     "title": "内容审核",
@@ -100,5 +128,10 @@
     "unauthorized": "您无权访问此页面",
     "loadFailed": "加载失败，请稍后重试",
     "actionFailed": "操作失败，请重试"
+  },
+  "common": {
+    "verified": "已验证",
+    "unverified": "未验证",
+    "search": "搜索"
   }
 }
