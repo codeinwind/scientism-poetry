@@ -6,6 +6,7 @@ const User = require('../models/User');
 const AuthorApplication = require('../models/AuthorApplication');
 const { protect, authorize, checkOwnership } = require('../middleware/auth');
 const logger = require('../config/logger');
+const { detectLanguage } = require('../utils/langDetector'); 
 
 // Status transition validation
 const VALID_STATUS_TRANSITIONS = {
@@ -310,15 +311,16 @@ router.post(
     try {
       const { title, content, tags, status } = req.body;
 
+      const language = detectLanguage(content);
+
       const poem = await Poem.create({
         title,
         content,
+        language,
         tags,
         status, // Use status from request body
         author: req.user.id,
       });
-
-      console.log('Created poem:', poem); // Debug log
 
       res.status(201).json({
         success: true,

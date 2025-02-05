@@ -51,7 +51,7 @@ const Login = () => {
     try {
       const response = await authService.login(formData);
       await login(response.user, response.token);
-      
+
       // Redirect based on user role
       if (response.user.role === 'superadmin' || response.user.role === 'admin') {
         navigate('/admin/dashboard');
@@ -131,6 +131,22 @@ const Login = () => {
               margin="normal"
               required
             />
+
+            {/* Forget Password */}
+            <Box sx={{ textAlign: 'right', mt: 1, mb: 2 }}>
+              <Link
+                to="/forgot-password"
+                style={{
+                  textDecoration: 'none',
+                  '&:hover': {
+                    textDecoration: 'underline'
+                  }
+                }}
+              >
+                {t('auth:login.forgotPassword')}
+              </Link>
+            </Box>
+
             <Button
               type="submit"
               fullWidth

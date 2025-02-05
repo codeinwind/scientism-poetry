@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { detectLanguage } = require('../utils/langDetector');
 
 const poemSchema = new mongoose.Schema({
   title: {
@@ -53,6 +54,12 @@ const poemSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
+  },
+  language: { 
+    type: String,
+    enum: ['en', 'zh'],
+    default: 'zh',
+    index: true 
   }
 });
 
@@ -65,5 +72,18 @@ poemSchema.pre('save', function(next) {
 // Add indexes for better query performance
 poemSchema.index({ author: 1, status: 1 });
 poemSchema.index({ createdAt: -1 });
+
+poemSchema.methods.getLanguage = function() {
+
+  if (this.language) return this.language;
+  return detectLanguage(this.content);
+};
+
+poemSchema.virtual('lang').get(function() {
+  return this.getLanguage();
+});
+
+
+poemSchema.set('toJSON', { virtuals: true });
 
 module.exports = mongoose.model('Poem', poemSchema);
