@@ -43,6 +43,8 @@ import AuthorPoemsPage from './pages/AuthorPoemsPage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
 import AuthorReviewPage from './pages/AuthorReviewPage';
 import UserSecurityManagement from './pages/UserSecurityManagement';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -147,6 +149,22 @@ function App() {
                         element={
                           <Layout>
                             <Register />
+                          </Layout>
+                        }
+                      />
+                      <Route
+                        path="/forgot-password"
+                        element={
+                          <Layout>
+                            <ForgotPasswordPage />
+                          </Layout>
+                        }
+                      />
+                      <Route
+                        path="/reset-password/:token"
+                        element={
+                          <Layout>
+                            <ResetPasswordPage />
                           </Layout>
                         }
                       />

@@ -42,6 +42,14 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  passwordResetToken: {
+    type: String,
+    required: false, 
+  },
+  passwordResetExpire: {
+    type: Date,
+    required: false,
+  }
 });
 
 // Encrypt password using bcrypt
@@ -59,12 +67,12 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 };
 
 // Check if user is superadmin
-userSchema.methods.isSuperAdmin = function() {
+userSchema.methods.isSuperAdmin = function () {
   return this.role === 'superadmin';
 };
 
 // Check if user can manage admins (superadmin only)
-userSchema.methods.canManageAdmins = function() {
+userSchema.methods.canManageAdmins = function () {
   return this.isSuperAdmin();
 };
 

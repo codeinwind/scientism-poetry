@@ -170,7 +170,7 @@ const authService = {
   submitAuthorApplication: async ({ userId, statement }) => {
     try {
       const response = await apiClient.post('/auth/stats/hot-user/application', {
-        userId,   
+        userId,
         statement: statement.trim()
       });
 
@@ -195,7 +195,7 @@ const authService = {
       const response = await apiClient.get(
         `/auth/stats/${authorId}/author-applications/status`
       );
-  
+
       return {
         success: true,
         application: response.data.data
@@ -207,6 +207,53 @@ const authService = {
       };
     }
   },
+
+  forgotPassword: async (email) => {
+    try {
+      const response = await apiClient.post('/auth/login/forgot-password', { email });
+      return {
+        success: true,
+        message: response.data.message
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message
+      };
+    }
+  },
+
+  resetPassword: async (token, newPassword) => {
+    try {
+      const response = await apiClient.put(`/auth/login/reset-password/${token}`, {
+        newPassword
+      });
+      return {
+        success: true,
+        message: response.data.message
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Password reset failed'
+      };
+    }
+  },
+
+  validateResetToken: async (token) => {
+    try {
+      const response = await apiClient.get(`/auth/login/validate-reset-token/${token}`);
+      return {
+        valid: response.data.valid,
+        email: response.data.email 
+      };
+    } catch (error) {
+      return {
+        valid: false,
+        message: error.response?.data?.message || 'Token validation failed'
+      };
+    }
+  }
 };
 
 export default authService;
