@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react'; 
 import {
   Box,
   Container,
@@ -22,9 +22,9 @@ import EmptyState from '../components/shared/EmptyState';
 import AuthorsList from '../components/poems/PoemAuthorsList';
 
 const Poems = () => {
-  const { t } = useTranslation(['poems']);
+  const { t, i18n } = useTranslation(['poems']);
   const { isAuthenticated, user } = useAuth();
-  
+
   const {
     poems,
     pagination,
@@ -42,6 +42,10 @@ const Poems = () => {
     setSearchInput,
     handleCloseSnackbar,
   } = usePublicPoems();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [i18n.language]);
 
   if (isLoading) return <LoadingState />;
   if (error) return <ErrorState error={error} />;

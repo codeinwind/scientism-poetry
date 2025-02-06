@@ -6,7 +6,7 @@ const User = require('../models/User');
 const AuthorApplication = require('../models/AuthorApplication');
 const { protect, authorize, checkOwnership } = require('../middleware/auth');
 const logger = require('../config/logger');
-const { detectLanguage } = require('../utils/langDetector'); 
+const { detectLanguage } = require('../utils/langDetector');
 
 // Status transition validation
 const VALID_STATUS_TRANSITIONS = {
@@ -31,7 +31,7 @@ router.put('/authors/:authorId/bio', async (req, res) => {
     const author = await User.findByIdAndUpdate(
       authorId,
       { bio },
-      { new: true, runValidators: true } 
+      { new: true, runValidators: true }
     );
     if (!author) {
       return res.status(404).json({ error: 'Author not found' });
@@ -60,11 +60,11 @@ router.get('/:authorId/author', async (req, res) => {
     }
 
     const poems = await Poem.find({ author: authorId, status: 'published' })
-      .select('title content createdAt') 
+      .select('title content createdAt')
       .sort({ createdAt: -1 });
 
     res.status(200).json({
-      author, 
+      author,
       poems,
     });
   } catch (error) {
@@ -78,9 +78,9 @@ router.get('/:authorId/author', async (req, res) => {
 router.get('/authors', async (req, res) => {
   try {
     // Query all users and filter common users (role: 'user')
-    const authors = await User.find({ role: 'user' }) 
-      .select('name penName createdAt') 
-      .sort({ createdAt: -1 }); 
+    const authors = await User.find({ role: 'user' })
+      .select('name penName createdAt')
+      .sort({ createdAt: -1 });
 
     res.status(200).json(authors);
   } catch (error) {
@@ -340,10 +340,21 @@ router.get('/', async (req, res) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 10;
+    const lang = req.query.lang;
     const startIndex = (page - 1) * limit;
+    if (lang && !['en', 'zh'].includes(lang)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid language parameter'
+      });
+    }
+    const query = {
+      status: 'published',
+      ...(lang && { language: lang })
+    };
 
     // First check if there are any published poems
-    const total = await Poem.countDocuments({ status: 'published' });
+    const total = await Poem.countDocuments(query);
 
     // If no poems exist, return early with empty data
     if (total === 0) {
@@ -359,7 +370,7 @@ router.get('/', async (req, res) => {
       });
     }
 
-    const poems = await Poem.find({ status: 'published' })
+    const poems = await Poem.find(query)
       .populate('author', 'name')
       .sort('-createdAt')
       .skip(startIndex)

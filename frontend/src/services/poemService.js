@@ -9,8 +9,8 @@ const handleApiError = (error, defaultMessage) => {
 };
 
 const poemService = {
-   // Get the most published authors
-   getTopAuthors: async () => {
+  // Get the most published authors
+  getTopAuthors: async () => {
     try {
       const response = await apiClient.get('/poems/authors/top');
       return response.data; // Return to author list
@@ -28,8 +28,8 @@ const poemService = {
     try {
       const response = await apiClient.get(`/poems/${authorId}/author`);
       return {
-        author: response.data.author, 
-        poems: response.data.poems, 
+        author: response.data.author,
+        poems: response.data.poems,
       };
     } catch (error) {
       throw new ApiError(
@@ -58,7 +58,7 @@ const poemService = {
   getAllAuthors: async () => {
     try {
       const response = await apiClient.get('/poems/authors');
-      return response.data; 
+      return response.data;
     } catch (error) {
       throw new ApiError(
         error.message || 'Failed to fetch all authors',
@@ -68,12 +68,11 @@ const poemService = {
     }
   },
 
-  getAllPoems: async (page = 1, limit = 10, search = '') => {
+  getAllPoems: async (page = 1, limit = 10, search = '', language) => {
     try {
       const response = await apiClient.get('/poems', {
-        params: { page, limit, search },
+        params: { page, limit, search, lang:language },
       });
-      
       return {
         success: true,
         data: response.data.data || [],
@@ -95,10 +94,10 @@ const poemService = {
 
   getUserPoems: async (userId) => {
     try {
-      const response = await apiClient.get(`/poems/user/${userId}`);   
+      const response = await apiClient.get(`/poems/user/${userId}`);
       // Get poems directly from response.data.poems
       const poems = response.data.poems || [];
-      
+
       return {
         success: true,
         poems: poems,
