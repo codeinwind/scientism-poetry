@@ -30,7 +30,8 @@
     },
     "poemsManagement": "诗歌管理",
     "poemsManagementDesc": "批量删除或定点删除已发表的诗歌。",
-    "managePoems": "管理诗歌"
+    "managePoems": "管理诗歌",
+    "authorityManagement":"权限管理"
   },
   "poemsManagement": {
     "title": "诗歌管理",
