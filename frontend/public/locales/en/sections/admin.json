@@ -10,7 +10,7 @@
     "columnWriterReviewDesc": "Manage column writer applications",
     "reviewApplications": "Review Applications",
     "userSecurity": "User Credentials Management",
-    "userSecurityDesc": "Reset user passwords, verify email addresses, and manage account security",
+    "userSecurityDesc": "Reset user passwords, verify email addresses",
     "manageCredentials": "Manage Credentials",
     "searchByEmail": "Search by email",
     "newPassword": "New password (min 6 chars)",
@@ -30,7 +30,8 @@
     },
     "poemsManagement": "Poems Management",
     "poemsManagementDesc": "Bulk delete or selectively remove published poems.",
-    "managePoems": "Manage Poems"
+    "managePoems": "Manage Poems",
+    "authorityManagement":"Authority Management"
   },
   "poemsManagement": {
     "title": "Poems Management",

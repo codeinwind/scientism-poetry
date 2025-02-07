@@ -46,6 +46,7 @@ import UserSecurityManagement from './pages/UserSecurityManagement';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import AdminPoemsDeletePage from './pages/AdminPoemsDeletePage';
+import UserManagement from './pages/UserManagement';
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -209,6 +210,16 @@ function App() {
                           <AdminRoute>
                             <Layout>
                               <AuthorReviewPage />
+                            </Layout>
+                          </AdminRoute>
+                        }
+                      />
+                      <Route
+                        path="/admin/user/management/permission"
+                        element={
+                          <AdminRoute>
+                            <Layout>
+                              <UserManagement />
                             </Layout>
                           </AdminRoute>
                         }
