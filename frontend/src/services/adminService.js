@@ -224,6 +224,47 @@ const adminService = {
     }
   },
 
+  // Delete a poem
+deletePoem: async (poemId) => {
+  try {
+    const response = await apiClient.delete(`/admin/poems/${poemId}`);
+    return { success: true, data: response.data.data };
+  } catch (error) {
+    if (error.response?.status === 403) {
+      throw new ApiError('Not authorized to delete poem', error, false);
+    }
+    throw new ApiError(
+      error.message || 'Failed to delete poem',
+      error,
+      false
+    );
+  }
+},
+
+// Get published poems (Supported search: incoming search keyword q)
+getPublishedPoems: async (search = '', page = 1, limit = 10) => {
+  try {
+    const params = { status: 'published', page, limit };
+    if (search) {
+      params.q = search;
+    }
+    const response = await apiClient.get('/admin/poems/published/check', { params });
+    return {
+      success: true,
+      data: response.data.data,
+      pagination: response.data.pagination
+    };
+  } catch (error) {
+    if (error.response?.status === 403) {
+      throw new ApiError('Not authorized to access poems', error, false);
+    }
+    throw new ApiError(
+      error.message || 'Failed to fetch poems',
+      error,
+      false
+    );
+  }
+}
 };
 
 export default adminService;

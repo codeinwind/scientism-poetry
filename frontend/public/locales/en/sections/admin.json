@@ -27,7 +27,30 @@
       "moderators": "Moderators",
       "regularUsers": "Regular Users",
       "memberSince": "Member since {{date}}"
-    }
+    },
+    "poemsManagement": "Poems Management",
+    "poemsManagementDesc": "Bulk delete or selectively remove published poems.",
+    "managePoems": "Manage Poems"
+  },
+  "poemsManagement": {
+    "title": "Poems Management",
+    "pageTitle": "Manage Published Poems",
+    "poemsManagementDesc": "Bulk delete or selectively remove published poems.",
+    "managePoems": "Manage Poems",
+    "searchPlaceholder": "Search by title",
+    "searchButton": "Search",
+    "deleteSelected": "Delete Selected",
+    "confirmDelete": "Are you sure you want to delete this poem?",
+    "confirmDeleteSelected": "Are you sure you want to delete the selected poems?",
+    "tableHeaders": {
+      "select": "Select",
+      "title": "Title",
+      "author": "Author",
+      "createdAt": "Created At",
+      "actions": "Actions"
+    },
+    "loadFailed": "Failed to load data.",
+    "actionFailed": "Action failed. Please try again."
   },
   "authorApplications": {
     "title": "Author Applications Review",

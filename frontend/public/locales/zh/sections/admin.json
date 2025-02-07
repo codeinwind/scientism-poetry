@@ -27,7 +27,30 @@
       "moderators": "版主",
       "regularUsers": "普通用户",
       "memberSince": "注册时间：{{date}}"
-    }
+    },
+    "poemsManagement": "诗歌管理",
+    "poemsManagementDesc": "批量删除或定点删除已发表的诗歌。",
+    "managePoems": "管理诗歌"
+  },
+  "poemsManagement": {
+    "title": "诗歌管理",
+    "pageTitle": "管理已发表的诗歌",
+    "poemsManagementDesc": "批量删除或定点删除已发表的诗歌。",
+    "managePoems": "管理诗歌",
+    "searchPlaceholder": "搜索标题",
+    "searchButton": "搜索",
+    "deleteSelected": "删除选中项",
+    "confirmDelete": "确定要删除此诗歌吗？",
+    "confirmDeleteSelected": "确定要删除选中的诗歌吗？",
+    "tableHeaders": {
+      "select": "选择",
+      "title": "标题",
+      "author": "作者",
+      "createdAt": "创建日期",
+      "actions": "操作"
+    },
+    "loadFailed": "加载数据失败。",
+    "actionFailed": "操作失败，请重试。"
   },
   "authorApplications": {
     "title": "热门作者申请审核",
