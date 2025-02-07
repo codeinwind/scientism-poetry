@@ -1,39 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Container,
   Typography,
-  Paper,
   Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Button,
   Box,
   Alert,
   Card,
   CardContent,
   CardActions,
-  Tooltip,
-  IconButton,
 } from '@mui/material';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
-import { adminService } from '../services';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 const AdminDashboard = () => {
   const { t } = useTranslation(['admin', 'common']);
   const { user } = useAuth();
-  const [error, setError] = useState(null);
 
   return (
     <Container maxWidth="lg">
@@ -41,12 +29,6 @@ const AdminDashboard = () => {
         <Typography variant="h4" component="h1" gutterBottom>
           {t('admin:dashboard.title')}
         </Typography>
-
-        {error && (
-          <Alert severity="error" sx={{ mb: 3 }}>
-            {error}
-          </Alert>
-        )}
 
         {/* Quick Actions */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
