@@ -58,6 +58,7 @@ const poemSchema = new mongoose.Schema({
   language: { 
     type: String,
     enum: ['en', 'zh'],
+    required: true,
     default: 'zh',
     index: true 
   }
@@ -73,16 +74,11 @@ poemSchema.pre('save', function(next) {
 poemSchema.index({ author: 1, status: 1 });
 poemSchema.index({ createdAt: -1 });
 
-poemSchema.methods.getLanguage = function() {
-
-  if (this.language) return this.language;
-  return detectLanguage(this.content);
-};
-
-poemSchema.virtual('lang').get(function() {
-  return this.getLanguage();
+poemSchema.index({
+  status: 1,
+  language: 1,
+  createdAt: -1
 });
-
 
 poemSchema.set('toJSON', { virtuals: true });
 

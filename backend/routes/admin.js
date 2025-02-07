@@ -515,4 +515,70 @@ router.post('/users/verify-email',
   }
 );
 
+// @route GET /api/admin//poems/published/check
+// @desc   Get published poems (supported search: by title or author name)
+router.get(
+  '/poems/published/check',
+  protect,
+  authorize('superadmin'),
+  async (req, res) => {
+    try {
+      const { page = 1, limit = 10, q } = req.query;
+      const skip = (page - 1) * limit;
+      let query = { status: 'published' };
+
+      if (q) {
+        query.title = { $regex: q, $options: 'i' };
+      }
+
+      const poems = await Poem.find(query)
+        .populate('author', 'name email')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(parseInt(limit));
+
+      const total = await Poem.countDocuments(query);
+
+      res.json({
+        success: true,
+        data: poems,
+        pagination: {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching published poems:', error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  }
+);
+
+// @route DELETE /api/admin/poems/:id
+// @desc  Delete assigned poems
+router.delete(
+  '/poems/:id',
+  protect,
+  authorize('superadmin'),
+  async (req, res) => {
+    try {
+      const poem = await Poem.findById(req.params.id);
+      if (!poem) {
+        return res.status(404).json({ success: false, message: 'Poem not found' });
+      }
+      await poem.deleteOne();  
+
+      res.json({
+        success: true,
+        data: poem
+      });
+    } catch (error) {
+      console.error('Error deleting poem:', error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  }
+);
+
 module.exports = router;

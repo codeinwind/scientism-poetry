@@ -28,6 +28,7 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { adminService } from '../services';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 const AdminDashboard = () => {
   const { t } = useTranslation(['admin', 'common']);
@@ -283,7 +284,7 @@ const AdminDashboard = () => {
                 <CardActions sx={{ padding: 2 }}>
                   <Button
                     component={RouterLink}
-                    to="/admin/author/managment/reset" 
+                    to="/admin/author/managment/reset"
                     variant="contained"
                     color="success"
                     fullWidth
@@ -293,6 +294,47 @@ const AdminDashboard = () => {
                       letterSpacing: 0.5
                     }}>
                     {t('admin:dashboard.manageCredentials')}
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          )}
+          {/* Poetry Management card */}
+          {user.role === 'superadmin' && (
+            <Grid item xs={12} md={6}>
+              <Card sx={{
+                height: '100%',
+                boxShadow: 3,
+                transition: 'transform 0.2s',
+                '&:hover': { transform: 'translateY(-2px)' }
+              }}>
+                <CardContent>
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    mb: 2,
+                    p: '12px 16px',
+                    backgroundColor: 'action.hover',
+                    borderRadius: 1
+                  }}>
+                    <MenuBookIcon sx={{ mr: 2, fontSize: 32, color: 'info.dark' }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      {t('admin:dashboard.poemsManagement')}
+                    </Typography>
+                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('admin:dashboard.poemsManagementDesc')}
+                  </Typography>
+                </CardContent>
+                <CardActions sx={{ p: 2 }}>
+                  <Button
+                    component={RouterLink}
+                    to="/admin/poem/managment/delete"
+                    variant="contained"
+                    color="info"
+                    fullWidth
+                    sx={{ py: 1.5, fontWeight: 'bold', letterSpacing: 0.5 }}>
+                    {t('admin:dashboard.managePoems')}
                   </Button>
                 </CardActions>
               </Card>

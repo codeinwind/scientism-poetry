@@ -2,7 +2,8 @@ import { useQuery } from 'react-query';
 import { poemService } from '../services';
 import { useAuth } from '../contexts/AuthContext';
 
-export const usePoems = (page = 1, limit = 10, search = '') => {
+// This component was not found to be in use, and the language was fixed to en
+export const usePoems = (language = 'en', page = 1, limit = 10, search = '') => {
   const { isAuthenticated } = useAuth();
 
   const {
@@ -12,7 +13,7 @@ export const usePoems = (page = 1, limit = 10, search = '') => {
     refetch
   } = useQuery(
     ['poems', page, search],
-    () => poemService.getAllPoems(page, limit, search),
+    () => poemService.getAllPoems(page, limit, search, language),
     {
       keepPreviousData: true,
       staleTime: 30000, // Consider data stale after 30 seconds

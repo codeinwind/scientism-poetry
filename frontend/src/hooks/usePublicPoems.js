@@ -3,9 +3,10 @@ import { useQuery, useQueryClient } from 'react-query';
 import { useTranslation } from 'react-i18next';
 import { poemService } from '../services';
 import { useDebounce } from './useDebounce';
+import { useEffect } from 'react'; 
 
 export const usePublicPoems = () => {
-  const { t } = useTranslation(['poems']);
+  const { t, i18n } = useTranslation(['poems']); 
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -13,16 +14,21 @@ export const usePublicPoems = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const debouncedSearch = useDebounce(search, 500);
 
+  const currentLanguage = i18n.language.split('-')[0] || 'en'; 
   // Fetch poems query
   const { data, isLoading, error } = useQuery(
-    ['poems', page, debouncedSearch],
-    () => poemService.getAllPoems(page, 10, debouncedSearch),
+    ['poems', page, debouncedSearch, currentLanguage],
+    () => poemService.getAllPoems(page, 10, debouncedSearch,currentLanguage),
     {
       keepPreviousData: true,
       staleTime: 30000,
       refetchInterval: 60000,
     }
   );
+
+    useEffect(() => {
+      setPage(1);
+    }, [currentLanguage]);
 
   // Event handlers
   const handleSearch = (e) => {
