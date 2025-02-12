@@ -85,7 +85,7 @@ const Poems = () => {
                   onLike={handleLike}
                   onTagClick={handleTagClick}
                   isAuthenticated={isAuthenticated}
-                  isLiked={poem.likes?.includes(user?.id)}
+                  isLiked={poem.likes?.includes(user?._id)}
                 />
               </Grid>
             ))}

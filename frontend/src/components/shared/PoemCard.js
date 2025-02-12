@@ -27,7 +27,7 @@ const PoemCard = ({
   elevation = 1,
 }) => {
   const { user, isAuthenticated } = useAuth();
-  const isLiked = poem.likes?.includes(user?.id);
+  const isLiked = poem.likes?.includes(user?._id);
 
   const handleLike = (e) => {
     e.preventDefault();

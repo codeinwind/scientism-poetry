@@ -46,7 +46,7 @@ const Dashboard = () => {
     deletePoemMutation,
     getFilteredPoems,
     getTabCounts,
-  } = usePoemManagement(user?.id);
+  } = usePoemManagement(user?._id);
 
   const {
     openDialog,

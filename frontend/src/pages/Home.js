@@ -36,8 +36,18 @@ const FeatureCard = styled(Card)(({ theme }) => ({
 }));
 
 const Home = () => {
-  const { t } = useTranslation(['home', 'common']);
-
+  const { t , i18n} = useTranslation(['home', 'common']);
+  const currentLanguage = i18n.language.split('-')[0] || 'en';
+  const FEATURE_CONFIG = {
+    coverImages: {
+      en: '/images/book-cover-en.jpg',
+      zh: '/images/book-cover-zh.jpg'
+    },
+    amazonLinks: {
+    en: "https://www.amazon.com/dp/B0DQJVM15R?ref=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&ref_=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&social_share=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&peakEvent=5&dealEvent=0&language=en_US&skipTwisterOG=1&bestFormat=true",
+    zh: "https://a.co/d/a42plM1"
+    }
+  };
   return (
     <Box>
       <HeroSection>
@@ -100,7 +110,7 @@ const Home = () => {
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <CardMedia
                     component="img"
-                    image="/images/book-cover.jpg"
+                    image={FEATURE_CONFIG.coverImages[currentLanguage]}
                     alt="Book Cover"
                     sx={{
                       height: { xs: 300, md: 450 },
@@ -122,7 +132,7 @@ const Home = () => {
                       color="primary"
                       size="large"
                       component={Link}
-                      href="https://www.amazon.com/dp/B0DQJVM15R?ref=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&ref_=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&social_share=cm_sw_r_ffobk_mwn_dp_Z7E6A701AFW0KZ3N7KQS&peakEvent=5&dealEvent=0&language=en_US&skipTwisterOG=1&bestFormat=true"
+                      href={FEATURE_CONFIG.amazonLinks[currentLanguage]}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
