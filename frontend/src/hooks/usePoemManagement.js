@@ -23,9 +23,7 @@ export const usePoemManagement = (userId) => {
     ['userPoems', userId],
     async () => {
       try {
-        console.log('Fetching poems for user:', userId); // Debug log
         const response = await poemService.getUserPoems(userId);
-        console.log('User poems response:', response); // Debug log
 
         // Ensure all poems have valid status
         const poems = response.poems?.map(poem => ({
@@ -33,7 +31,6 @@ export const usePoemManagement = (userId) => {
           status: STATUS_MAP[poem.status] || 'under_review'
         })) || [];
 
-        console.log('Processed poems:', poems); // Debug log
         return {
           poems,
           count: poems.length

@@ -85,10 +85,10 @@ const PoemDetail = () => {
     }
 
     try {
-      const isCurrentlyLiked = poem.likes.includes(user.id);
+      const isCurrentlyLiked = poem.likes.includes(user._id);
       const updatedLikes = isCurrentlyLiked
-        ? poem.likes.filter(id => id !== user.id)
-        : [...poem.likes, user.id];
+        ? poem.likes.filter(id => id !== user._id)
+        : [...poem.likes, user._id];
       
       setPoem(prev => ({
         ...prev,
@@ -96,7 +96,7 @@ const PoemDetail = () => {
       }));
 
       const response = await poemService.likePoem(id);
-      
+
       setPoem(prev => ({
         ...prev,
         likes: response.data.likes
@@ -149,7 +149,7 @@ const PoemDetail = () => {
 
   if (!poem) return null;
 
-  const isLiked = poem.likes?.includes(user?.id);
+  const isLiked = poem.likes?.includes(user?._id);
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>

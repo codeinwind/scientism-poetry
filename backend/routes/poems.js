@@ -166,8 +166,8 @@ router.post(
 
       // Populate the user information for the new comment
       const populatedPoem = await Poem.findById(req.params.id)
-        .populate('comments.user', 'name')
-        .populate('author', 'name');
+        .populate('comments.user', 'name penName')
+        .populate('author', 'name penName');
 
       res.json({
         success: true,
