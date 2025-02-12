@@ -54,7 +54,7 @@ router.get('/:authorId/author', async (req, res) => {
   try {
     const { authorId } = req.params;
 
-    const author = await User.findById(authorId).select('name penName email createdAt');
+    const author = await User.findById(authorId).select('name penName email bio createdAt');
     if (!author) {
       return res.status(404).json({ error: 'Author not found' });
     }
@@ -231,7 +231,7 @@ router.get('/user/:id', protect, async (req, res) => {
     }
 
     const poems = await Poem.find({ author: req.params.id })
-      .populate('author', 'name')
+      .populate('author', 'name penName')
       .sort('-createdAt');
 
     res.json({
@@ -251,8 +251,8 @@ router.get('/user/:id', protect, async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const poem = await Poem.findById(req.params.id)
-      .populate('author', 'name')
-      .populate('comments.user', 'name');
+      .populate('author', 'name penName')
+      .populate('comments.user', 'name penName');
 
     if (!poem) {
       return res.status(404).json({
@@ -371,7 +371,7 @@ router.get('/', async (req, res) => {
     }
 
     const poems = await Poem.find(query)
-      .populate('author', 'name')
+      .populate('author', 'name penName')
       .sort('-createdAt')
       .skip(startIndex)
       .limit(limit);

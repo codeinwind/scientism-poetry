@@ -27,6 +27,7 @@ const AuthorPoemsPage = () => {
     const fetchAuthorPoems = async () => {
       try {
         const response = await poemService.getAuthorPoems(authorId);
+    
         if (!response.author || !response.poems) {
           throw new Error('Invalid response format');
         }
@@ -77,7 +78,7 @@ const AuthorPoemsPage = () => {
               {author.name?.[0] || 'A'}
             </Avatar>
             <Box>
-              <Typography variant="h5">{author.name || 'Unknown'}</Typography>
+              <Typography variant="h5">{author.penName || 'Unknown'}</Typography>
               <Typography variant="caption" display="block">
                 {t('authors:joinedOn')} {author.createdAt ? new Date(author.createdAt).toLocaleDateString() : 'N/A'}
               </Typography>
@@ -93,7 +94,7 @@ const AuthorPoemsPage = () => {
       {/* List of Poems */}
       <Typography variant="h4" component="h1" gutterBottom>
         {author
-          ? t('authors:poemsBy', { authorName: author.name || 'Unknown' })
+          ? t('authors:poemsBy', { authorName: author.penName || 'Unknown' })
           : t('authors:unknownAuthor')}
       </Typography>
 

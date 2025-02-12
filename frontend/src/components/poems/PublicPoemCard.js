@@ -69,7 +69,7 @@ const PublicPoemCard = ({
             {poem.title}
           </Typography>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            {t('poems:poem.by', { author: poem.author?.name || t('poems:poem.anonymous') })}
+            {t('poems:poem.by', { author: poem.author?.penName || t('poems:poem.anonymous') })}
           </Typography>
           <Typography
             variant="body1"
