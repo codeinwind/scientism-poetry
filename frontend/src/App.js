@@ -47,6 +47,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import AdminPoemsDeletePage from './pages/AdminPoemsDeletePage';
 import UserManagement from './pages/UserManagement';
+import SuperAdminManagement from './pages/SuperAdminManagement';
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -220,6 +221,16 @@ function App() {
                           <AdminRoute>
                             <Layout>
                               <UserManagement />
+                            </Layout>
+                          </AdminRoute>
+                        }
+                      />
+                      <Route
+                        path="/admin/superadmin-management/permission"
+                        element={
+                          <AdminRoute>
+                            <Layout>
+                              <SuperAdminManagement />
                             </Layout>
                           </AdminRoute>
                         }

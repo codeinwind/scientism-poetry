@@ -31,7 +31,10 @@
     "poemsManagement": "Poems Management",
     "poemsManagementDesc": "Bulk delete or selectively remove published poems.",
     "managePoems": "Manage Poems",
-    "authorityManagement":"Authority Management"
+    "authorityManagement":"Authority Management",
+    "superAdminManagement": "Super administrator management",
+    "superAdminManagementDesc": "Manage all super administrator accounts",
+    "manageSuperAdmins": "Managing super administrators"
   },
   "poemsManagement": {
     "title": "Poems Management",
@@ -118,6 +121,19 @@
         "manageContent": "Manage content",
         "viewStats": "View statistics",
         "moderateContent": "Moderate content"
+      },
+      "searchTitle": "Search & Promote Users",
+      "emailPlaceholder": "Enter user email",
+      "searchButton": "Search",
+      "promoteButton": "Promote to Super Admin",
+      "alreadyAdmin": "Already Super Admin",
+      "searchResults": {
+        "title": "Search Results",
+        "noResults": "No users found"
+      },
+      "errors": {
+        "emailRequired": "Email is required",
+        "invalidEmail": "Please enter a valid email"
       }
     },
     "admin": {

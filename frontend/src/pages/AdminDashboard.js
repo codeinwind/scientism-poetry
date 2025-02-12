@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Container,
@@ -6,7 +6,6 @@ import {
   Grid,
   Button,
   Box,
-  Alert,
   Card,
   CardContent,
   CardActions,
@@ -18,6 +17,7 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 const AdminDashboard = () => {
   const { t } = useTranslation(['admin', 'common']);
@@ -65,20 +65,20 @@ const AdminDashboard = () => {
                   </Typography>
                 </CardContent>
                 <CardActions sx={{ padding: 2 }}>
-                <Button
-                  component={RouterLink}
-                  to="/admin/user/management/permission"
-                  variant="contained"
-                  color="secondary"
-                  fullWidth
-                  sx={{
-                    py: 1.5,
-                    fontWeight: 'bold',
-                    letterSpacing: 0.5
-                  }}>
-                  {t('admin:dashboard.authorityManagement')}
-                </Button>
-              </CardActions>
+                  <Button
+                    component={RouterLink}
+                    to="/admin/user/management/permission"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    sx={{
+                      py: 1.5,
+                      fontWeight: 'bold',
+                      letterSpacing: 0.5
+                    }}>
+                    {t('admin:dashboard.authorityManagement')}
+                  </Button>
+                </CardActions>
               </Card>
             </Grid>
           )}
@@ -270,6 +270,54 @@ const AdminDashboard = () => {
                     fullWidth
                     sx={{ py: 1.5, fontWeight: 'bold', letterSpacing: 0.5 }}>
                     {t('admin:dashboard.managePoems')}
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          )}
+          {user.role === 'superadmin' && (
+            <Grid item xs={12} md={6}>
+              <Card sx={{
+                height: '100%',
+                boxShadow: 3,
+                transition: 'transform 0.2s',
+                '&:hover': { transform: 'translateY(-2px)' }
+              }}>
+                <CardContent>
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    mb: 2,
+                    p: '12px 16px',
+                    backgroundColor: 'action.hover',
+                    borderRadius: 1
+                  }}>
+                    <AdminPanelSettingsIcon sx={{
+                      mr: 2,
+                      fontSize: 32,
+                      color: 'error.main'
+                    }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      {t('admin:dashboard.superAdminManagement')}
+                    </Typography>
+                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('admin:dashboard.superAdminManagementDesc')}
+                  </Typography>
+                </CardContent>
+                <CardActions sx={{ p: 2 }}>
+                  <Button
+                    component={RouterLink}
+                    to="/admin/superadmin-management/permission"
+                    variant="contained"
+                    color="error"
+                    fullWidth
+                    sx={{
+                      py: 1.5,
+                      fontWeight: 'bold',
+                      letterSpacing: 0.5
+                    }}>
+                    {t('admin:dashboard.manageSuperAdmins')}
                   </Button>
                 </CardActions>
               </Card>

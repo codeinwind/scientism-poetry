@@ -1,7 +1,7 @@
 {
   "title": "Cosmic Poetry Journal",
   "subtitle": "A Platform for Scientific Expression Through Poetry",
-  "description": "The Cosmic Poetry Journal is a unique publication that bridges the gap between scientific understanding and poetic expression. Each issue features carefully curated poems that explore scientific concepts through creative verse.",
+  "description": "Cosmic Rhymes is the official journal of ISPA, covering various types, genres, and styles of poetry, with a particular focus on scientism poetry. The journal is dedicated to exploring the intersection of science and poetry, revealing the deep connections between scientific philosophy and human emotions, and showcasing the unique beauty where science and art converge. It is planned to be published in both English and Chinese.",
   "currentIssue": {
     "title": "Current Issue",
     "number": "Issue {{number}}",
@@ -17,5 +17,16 @@
     "title": "Archive",
     "description": "Browse our past issues and discover the evolution of scientism poetry through the years.",
     "button": "View Archive"
+  },
+  "featuredBook": {
+    "title": "Featured Book",
+    "bookTitle": "New Book Release",
+    "description": "\"An Introduction to Scientism Poetry\" is a pioneering work that systematically constructs the theory of scientism poetry, defining its principles, creative manifesto, methodology, and classic examples. The author integrates scientific philosophy, theories, and methods into poetic creation, establishing science as a central approach to understanding the world and exploring truth. Through the fusion of reason and emotion, the work delves into the profound connections between nature, the universe, and the human spiritual realm, presenting its unique aesthetic and intellectual depth in diverse forms.",
+    "button": "Get the Book"
+  },
+  "newBookAnnouncement": {
+    "title": "New Book Announcement",
+    "details": "\"Schrödinger’s Cat: A Scientism Poetry Collection\" ",
+    "date": "Publication Date: March 2025"
   }
 }

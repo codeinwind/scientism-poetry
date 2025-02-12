@@ -421,7 +421,6 @@ router.get('/users/search',
       const user = await User.findOne({ email }).select('-password');
 
       if (!user) {
-        console.log("22222222222222222")
         return res.status(404).json({
           success: false,
           message: 'User not found'
@@ -577,6 +576,150 @@ router.delete(
     } catch (error) {
       console.error('Error deleting poem:', error);
       res.status(500).json({ message: 'Server Error' });
+    }
+  }
+);
+
+// Obtain all super administrators
+router.get('/superadmin/users', protect, superadminOnly, async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    const [users, total] = await Promise.all([
+      User.find({ role: 'superadmin' })
+        .select('-password')
+        .skip(skip)
+        .limit(parseInt(limit)),
+      User.countDocuments({ role: 'superadmin' })
+    ]);
+
+    res.json({
+      success: true,
+      data: users,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        pages: Math.ceil(total / limit)
+      }
+    });
+  } catch (error) {
+    logger.error('Description Failed to query the super administrator: ' + error.message);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// Modify the permissions of the super administrator
+router.put('/superadmin/modify/users/:id',
+  protect,
+  superadminOnly,
+  [
+    check('role')
+      .isIn(['superadmin', 'admin', 'moderator', 'user'])
+      .withMessage('Invalid role type')
+  ],
+  async (req, res) => {
+
+    const errors = validationResult(req);
+ 
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        success: false,
+        errors: errors.array() 
+      });
+    }
+
+    try {
+      const targetUser = await User.findById(req.params.id);
+      if (!targetUser) {
+        return res.status(404).json({
+          success: false,
+          message: 'User does not exist'
+        });
+      }
+      // Anti-self-modification
+      if (targetUser._id.toString() === req.user.id) {
+        return res.status(403).json({
+          success: false,
+          message: 'You cannot modify your own permissions'
+        });
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        { role: req.body.role },
+        { 
+          new: true,
+          runValidators: true  
+        }
+      ).select('-password');
+
+      logger.info(`Role modified successfully`, {
+        operator: req.user.id,
+        targetUser: targetUser._id,
+        newRole: req.body.role
+      });
+
+      res.json({ 
+        success: true, 
+        data: updatedUser 
+      });
+
+    } catch (error) {
+      logger.error(`Role modification failed: ${error.message}`, {
+        userId: req.params.id,
+        error: error.stack
+      });
+      
+      res.status(500).json({ 
+        success: false,
+        message: 'Server internal error'
+      });
+    }
+  }
+);
+
+// Search for users by email
+router.get('/superadmin/users/search',
+  protect,
+  superadminOnly,
+  [
+    check('email')
+      .isEmail().withMessage('invalid_email')
+      .normalizeEmail()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        errors: errors.array().map(e => ({ msg: e.msg }))
+      });
+    }
+
+    try {
+      const user = await User.findOne({ 
+        email: req.query.email 
+      }).select('-password');
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          code: 'user_not_found'
+        });
+      }
+
+      res.json({
+        success: true,
+        data: user
+      });
+    } catch (error) {
+      logger.error(`User search failed: ${error.message}`);
+      res.status(500).json({
+        success: false,
+        code: 'server_error'
+      });
     }
   }
 );

@@ -31,7 +31,10 @@
     "poemsManagement": "诗歌管理",
     "poemsManagementDesc": "批量删除或定点删除已发表的诗歌。",
     "managePoems": "管理诗歌",
-    "authorityManagement":"权限管理"
+    "authorityManagement":"权限管理",
+    "superAdminManagement": "超级管理员管理",
+    "superAdminManagementDesc": "管理系统内所有超级管理员账户及其权限",
+    "manageSuperAdmins": "管理超级管理员"
   },
   "poemsManagement": {
     "title": "诗歌管理",
@@ -118,6 +121,19 @@
         "manageContent": "管理内容",
         "viewStats": "查看统计",
         "moderateContent": "审核内容"
+      },
+      "searchTitle": "搜索并提升用户",
+      "emailPlaceholder": "输入用户邮箱",
+      "searchButton": "搜索",
+      "promoteButton": "提升为超级管理员",
+      "alreadyAdmin": "已是超级管理员",
+      "searchResults": {
+        "title": "搜索结果",
+        "noResults": "未找到匹配用户"
+      },
+      "errors": {
+        "emailRequired": "邮箱不能为空",
+        "invalidEmail": "请输入有效的邮箱地址"
       }
     },
     "admin": {

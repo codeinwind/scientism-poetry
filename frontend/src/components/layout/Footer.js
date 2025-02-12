@@ -74,7 +74,7 @@ const Footer = () => {
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <MuiLink
-                href="https://twitter.com/scientismpoetry"
+                href="https://x.com/ScientismPoetry"
                 target="_blank"
                 rel="noopener noreferrer"
                 color="inherit"
@@ -83,7 +83,7 @@ const Footer = () => {
                 {t('footer:social.twitter')}
               </MuiLink>
               <MuiLink
-                href="https://facebook.com/scientismpoetry"
+                href="https://www.facebook.com/profile.php?id=61573033499932"
                 target="_blank"
                 rel="noopener noreferrer"
                 color="inherit"
@@ -92,7 +92,7 @@ const Footer = () => {
                 {t('footer:social.facebook')}
               </MuiLink>
               <MuiLink
-                href="https://instagram.com/scientismpoetry"
+                href="https://www.instagram.com/poetryscientism/"
                 target="_blank"
                 rel="noopener noreferrer"
                 color="inherit"

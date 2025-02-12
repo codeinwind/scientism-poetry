@@ -200,7 +200,7 @@ const PoemDetail = () => {
               mb: 3
             }}
           >
-            {t('poems:poem.by', { author: poem.author.name })}
+            {t('poems:poem.by', { author: poem.author.penName })}
           </Typography>
 
           <Typography 
@@ -211,7 +211,8 @@ const PoemDetail = () => {
               lineHeight: 1.8,
               fontSize: '1.1rem',
               fontFamily: '"Merriweather", serif',
-              color: '#2c3e50'
+              color: '#2c3e50',
+              textAlign: 'left' 
             }}
           >
             {poem.content}
@@ -343,7 +344,7 @@ const PoemDetail = () => {
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
                   <Avatar sx={{ bgcolor: 'primary.main' }}>
-                    {comment.user.name[0]}
+                    {comment.user.penName[0]}
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
@@ -354,7 +355,7 @@ const PoemDetail = () => {
                         color: 'primary.dark'
                       }}
                     >
-                      {comment.user.name}
+                      {comment.user.penName}
                     </Typography>
                   }
                   secondary={

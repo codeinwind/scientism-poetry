@@ -67,7 +67,7 @@ const Profile = () => {
           setStatement(response.application.content.statement);
         }
       } catch (error) {
-        console.error('获取申请状态失败:', error);
+        console.error('Failed to obtain the application status. Procedure:', error);
       }
     };
     fetchApplication();
@@ -94,9 +94,9 @@ const Profile = () => {
       setAuthorApplication(response.application);
       setSuccess(
         response.message
-          ? t('profile:authorApplication.messages.submitSuccess') 
-          : t('profile:authorApplication.messages.updateSuccess')  
-      );     
+          ? t('profile:authorApplication.messages.submitSuccess')
+          : t('profile:authorApplication.messages.updateSuccess')
+      );
     } catch (err) {
       setError(err.message);
     } finally {
@@ -165,7 +165,7 @@ const Profile = () => {
         response = await authService.updateAuthorBio(localUser._id, fieldValues.bio);
       } else if (field === 'penName') {
         if (!fieldValues.penName.trim()) {
-          setError(t('profile:form.penName.required')); 
+          setError(t('profile:form.penName.required'));
           setLoading(false);
           return;
         }
@@ -431,7 +431,7 @@ const Profile = () => {
                   </>
                 )}
               </Box>
-            ) : ( 
+            ) : (
               <Box>
                 <TextField
                   fullWidth

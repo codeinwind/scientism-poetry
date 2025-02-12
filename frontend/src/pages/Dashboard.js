@@ -134,10 +134,11 @@ const Dashboard = () => {
 
   const hasPoems = poemsData?.poems && poemsData.poems.length > 0;
 
+
   return (
     <Container maxWidth="lg">
       <DashboardHeader
-        userName={user.name}
+        userName={user.penName}
         title={t('dashboard:title')} // Add title translation
         onCreateNew={handleCreateNew}
       />

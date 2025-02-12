@@ -70,7 +70,7 @@ const AuthorsPage = () => {
               }}
             >
               <CardContent>
-                <Typography variant="h6">{author.name}</Typography>
+                <Typography variant="h6">{author.penName}</Typography>
                 <Typography variant="body2" color="textSecondary">
                   {t('authors:joinedOn')} {new Date(author.createdAt).toLocaleDateString()}
                 </Typography>

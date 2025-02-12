@@ -19,7 +19,7 @@ const Journal = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <PageHeader title={t('nav:journal')} />
-      
+
       {/* Introduction */}
       <Box sx={{ mb: 6, textAlign: 'center' }}>
         <Typography variant="h3" gutterBottom>
@@ -32,6 +32,61 @@ const Journal = () => {
           {t('journal:description')}
         </Typography>
       </Box>
+
+      {/* New book preview */}
+      <Grid item xs={12}>
+        <Paper elevation={0} sx={{
+          p: 3,
+          bgcolor: 'grey.50',
+          borderRadius: 2,
+          border: '1px solid',
+          borderColor: 'grey.300',
+          mb: 6,
+          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.05)'
+        }}>
+          <Typography
+            variant="h4"
+            gutterBottom
+            color="grey.800"
+            sx={{
+              fontWeight: 'bold',
+              letterSpacing: '0.5px',
+              mb: 2
+            }}
+          >
+            {t('journal:newBookAnnouncement.title')}
+          </Typography>
+
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{
+              fontFamily: '"Times New Roman", serif',
+              lineHeight: 1.3,
+              color: 'grey.700',
+              fontStyle: 'italic'
+            }}
+          >
+            {t('journal:newBookAnnouncement.details')}
+          </Typography>
+
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{
+              fontFamily: '"Times New Roman", serif',
+              lineHeight: 1.3,
+              color: 'grey.700',
+              fontStyle: 'italic'
+            }}
+          >
+            {t('journal:newBookAnnouncement.date')}
+          </Typography>
+
+
+        </Paper>
+      </Grid>
+
 
       {/* Book */}
       <Grid container spacing={4} alignItems="center" sx={{ mb: 6 }}>
@@ -51,15 +106,15 @@ const Journal = () => {
         <Grid item xs={12} md={6}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', pl: { md: 4 } }}>
             <Typography variant="h3" gutterBottom align="left">
-              {t('home:featuredBook.title')}
+              {t('journal:featuredBook.title')}
             </Typography>
             <Typography variant="h4" gutterBottom align="left">
-              {t('home:featuredBook.bookTitle')}
+              {t('journal:featuredBook.bookTitle')}
             </Typography>
             <Typography variant="body1" paragraph align="left">
-              {t('home:featuredBook.description')}
+              {t('journal:featuredBook.description')}
             </Typography>
-            <Box sx={{ mt: 3 }}>
+            <Box sx={{ mt: 0.1 }}>
               <Button
                 variant="contained"
                 color="primary"
