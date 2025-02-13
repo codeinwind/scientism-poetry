@@ -18,5 +18,16 @@
       "3": "Long-term Collaboration Benefits: Authors establishing long-term partnerships with the press can enjoy ongoing publishing fee discounts and priority publishing rights."
     }
   },
-  "contact": "For more information or to apply for membership, please visit our official website: www.scientismpoetry.com"
+  "contact": "For more information or to apply for membership, please visit our official website: www.scientismpoetry.com",
+  "featuredBook": {
+    "title": "Featured Book",
+    "bookTitle": "New Book Release",
+    "description": "\"An Introduction to Scientism Poetry\" is a pioneering work that systematically constructs the theory of scientism poetry, defining its principles, creative manifesto, methodology, and classic examples. The author integrates scientific philosophy, theories, and methods into poetic creation, establishing science as a central approach to understanding the world and exploring truth. Through the fusion of reason and emotion, the work delves into the profound connections between nature, the universe, and the human spiritual realm, presenting its unique aesthetic and intellectual depth in diverse forms.",
+    "button": "Get the Book"
+  },
+  "newBookAnnouncement": {
+    "title": "New Book Announcement",
+    "details": "\"Schrödinger’s Cat: A Scientism Poetry Collection\" ",
+    "date": "Publication Date: March 2025"
+  }
 }
