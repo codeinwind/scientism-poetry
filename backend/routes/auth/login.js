@@ -122,7 +122,7 @@ router.post('/forgot-password',
           // user: process.env.EMAIL_USER,
           // pass: process.env.EMAIL_PASS,
           user: "ScientismPoetry@gmail.com",
-          pass: "frvs sknl yjor uppb",
+          pass: "icyq ckak fppf lhiv",
         },
       });
 
